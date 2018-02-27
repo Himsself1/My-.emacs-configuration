@@ -62,6 +62,17 @@
       ;; elpy-rpc-backend "jedi"
       elpy-rpc-python-command "/usr/bin/python3.6")
 
+;; Enabline auto-complete for python
+(defvar ac-source-python
+  '((candidates .
+		(lambda ()
+		  (mapcar '(lambda (completion)
+			     (first (last (split-string completion "\\." t))))
+			  (python-symbol-completions (python-partial-symbol)))))))
+(add-hook 'python-mode-hook
+	    (lambda() (setq ac-sources '(ac-source-python))))
+
+
 ;; (add-to-list 'load-path "~/.emacs.d/python-mode.el-6.2.3") 
 ;; (setq py-install-directory "~/.emacs.d/python-mode.el-6.2.3")
 ;; (require 'python-mode)
