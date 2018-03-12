@@ -39,33 +39,27 @@
 (add-to-list 'package-archives
 	     '("elpy" . "https://jorgenschaefer.github.io/packages/"))
 
-;; ;; pymacs
-;; (add-to-list 'load-path "~/.emacs.d/Pymacs/")
-;; (autoload 'pymacs-apply "pymacs")
-;; (autoload 'pymacs-call "pymacs")
-;; (autoload 'pymacs-eval "pymacs" nil t)
-;; (autoload 'pymacs-exec "pymacs" nil t)
-;; (autoload 'pymacs-load "pymacs" nil t)
-;; (autoload 'pymacs-autoload "pymacs")
-
-;; ;; ropemacs
-;; (require 'pymacs)
-;; (pymacs-load "ropemacs" "rope-")
-
 
 
 (package-initialize)
-(elpy-enable)
+;; (elpy-enable)
+
+(add-to-list 'load-path "~/.emacs.d/elpa/anaconda-mode-20180209.1147") 
+(setq py-install-directory "~/.emacs.d/elpa/anaconda-mode-20180209.1147")
+(add-to-list 'load-path py-install-directory)
+(require 'anaconda-mode)
 
 (setq python-shell-interpreter "/usr/bin/ipython3"
-      python-shell-interpreter-args "-i --simple-prompt"
+      python-shell-interpreter-args "-i --simple-prompt --pprint --colors=LightBG"
       ;; elpy-rpc-backend "jedi"
       elpy-rpc-python-command "/usr/bin/python3.6")
 
-;; (add-to-list 'load-path "~/.emacs.d/python-mode.el-6.2.3") 
 ;; (setq py-install-directory "~/.emacs.d/python-mode.el-6.2.3")
-;; (require 'python-mode)
-
+;; (require 'anaconda-mode)
+;; (add-to-list 'load-path "~/.emacs.d/elpa/jedi-20160425.2156")
+(add-hook 'python-mode-hook 'anaconda-mode)
+;; (add-hook 'python-mode-hook 'jedi:setup)
+;; (setq jedi:complete-on-dot t)                 ; optional
 
 ;; (defvar myPackages
 ;;   '(better-defaults
@@ -82,7 +76,6 @@
 
 (add-to-list 'load-path  "/home/himsself/.emacs.d/ess-14.09/lisp/")
 (require 'ess-site)
-
 ;; (load "ess-site")
 (setq-default inferior-S+6-program-name "Splus")
 (setq-default inferior-R-program-name "R")
@@ -107,12 +100,18 @@ auto-mode-alist (append (list '("\\.c$" . c-mode)
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ ;; '(company-auto-complete t)
+ ;; '(company-auto-complete-chars (quote (32 41 119 46)))
+ '(company-tooltip-limit 20)
  '(elpy-django-always-prompt t)
  '(elpy-modules
    (quote
     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-yasnippet elpy-module-django elpy-module-sane-defaults)))
  '(elpy-rpc-python-command "/usr/bin/python3.6")
- '(elpy-syntax-check-command "")
+ '(elpy-syntax-check-command "flake8")
+ '(package-selected-packages
+   (quote
+    (python-mode material-theme jedi elpy better-defaults anaconda-mode)))
  '(py-split-window-on-execute (quote just-two)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
