@@ -52,7 +52,21 @@
 (setq python-shell-interpreter "/usr/bin/ipython3"
       python-shell-interpreter-args "-i --simple-prompt --pprint --colors=LightBG"
       ;; elpy-rpc-backend "jedi"
-      elpy-rpc-python-command "/usr/bin/python3.6")
+      ;;elpy-rpc-python-command "/usr/bin/python3.6"
+      )
+
+;; Enabline auto-complete for python
+(defvar ac-source-python
+  '((candidates .
+		(lambda ()
+		  (mapcar '(lambda (completion)
+			     (first (last (split-string completion "\\." t))))
+			  (python-symbol-completions (python-partial-symbol)))))))
+(add-hook 'python-mode-hook
+	    (lambda() (setq ac-sources '(ac-source-python))))
+
+
+;; (add-to-list 'load-path "~/.emacs.d/python-mode.el-6.2.3") 
 
 ;; (setq py-install-directory "~/.emacs.d/python-mode.el-6.2.3")
 ;; (require 'anaconda-mode)
@@ -95,30 +109,30 @@ auto-mode-alist (append (list '("\\.c$" . c-mode)
 ;; (load "~/.emacs.d/ess-14.09/lisp/ess-site")
 
 
-(custom-set-variables
+;; (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  ;; '(company-auto-complete t)
  ;; '(company-auto-complete-chars (quote (32 41 119 46)))
- '(company-tooltip-limit 20)
- '(elpy-django-always-prompt t)
- '(elpy-modules
-   (quote
-    (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-yasnippet elpy-module-django elpy-module-sane-defaults)))
- '(elpy-rpc-python-command "/usr/bin/python3.6")
- '(elpy-syntax-check-command "flake8")
- '(package-selected-packages
-   (quote
-    (python-mode material-theme jedi elpy better-defaults anaconda-mode)))
- '(py-split-window-on-execute (quote just-two)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+;;  '(company-tooltip-limit 20)
+;;  '(elpy-django-always-prompt t)
+;;  '(elpy-modules
+;;    (quote
+;;     (elpy-module-company elpy-module-eldoc elpy-module-pyvenv elpy-module-highlight-indentation elpy-module-yasnippet elpy-module-django elpy-module-sane-defaults)))
+;;  '(elpy-rpc-python-command "/usr/bin/python3.6")
+;;  '(elpy-syntax-check-command "flake8")
+;;  '(package-selected-packages
+;;    (quote
+;;     (python-mode material-theme jedi elpy better-defaults anaconda-mode)))
+;;  '(py-split-window-on-execute (quote just-two)))
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  )
 
 
 
