@@ -61,12 +61,14 @@
 	enable-recursive-minibuffers t))
 
 (use-package counsel
+  :config
+  (setq ivy-initial-inputs-alist nil) ;; Doesn't start searches with ^
   :bind (("M-x" . counsel-M-x)
 	 ("C-x b" . counsel-ibuffer)
 	 ("C-x C-f" . counsel-find-file)
 	 ("C-x C-b" . ibuffer-list-buffers))
-  :config
-  (setq ivy-initial-inputs-alist nil)) ;; Doesn't start searches with ^
+  )
+
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -95,17 +97,17 @@
   (counsel-load-theme-action "misterioso")
   )
 
-(use-package lsp-mode
-  :commands (lsp lsp-deffered)
-  :init
-  (setq lsp-keymap-prefic "C-c l")
-  :hook(
-	(python-mode . lsp)
-	(ess-r-mode . lsp)
-	)
-  :config
-  (lsp-enable-which-key-integration t)
-  )
+;; (use-package lsp-mode
+;;   :commands (lsp lsp-deffered)
+;;   :init
+;;   (setq lsp-keymap-prefic "C-c l")
+;;   :hook(
+;; 	(python-mode . lsp)
+;; 	(ess-r-mode . lsp)
+;; 	)
+;;   :config
+;;   (lsp-enable-which-key-integration t)
+;;   )
 
 (use-package ess
   ;; :load-path "/usr/share/emacs/site-lisp/ess"
@@ -117,6 +119,8 @@
          ;;    (ess-load-file (make-temp-file nil nil nil
          ;;                                "Sys.setenv(\"DISPLAY\"=\":0.0\")")))
          )
+  :bind (("M--" . " <- ")) 
   :commands R
   )
 ;; Use hydra to make movewindow keybind prefix
+
