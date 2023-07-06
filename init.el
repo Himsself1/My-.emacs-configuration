@@ -89,38 +89,87 @@
   (counsel-describe-function-function #'helpful-callable)
   (counsel-describe-variable-function #'helpful-variable)
   :bind
-  ([remap describe-function] . counsel-describe-function)
-  ([remap describe-command] . helpful-command)
-  ([remap describe-variable]. counsel-describe-variable)
-  ([remap describe-key] . helpful-key)
+  (([remap describe-function] . counsel-describe-function)
+   ([remap describe-command] . helpful-command)
+   ([remap describe-variable]. counsel-describe-variable)
+   ([remap describe-key] . helpful-key))
   :init
-  (counsel-load-theme-action "misterioso")
+  (counsel-load-theme-action "misterioso"))
+
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :init
+  (setq lsp-keymap-prefic "C-c l")
+  :bind
+  (("C-c d" . lsp-describe-thing-at-point)
+   ("C-c a" . lsp-execute-code-action))
+  :hook
+  ((python-mode . lsp-deferred)
+   (ess-r-mode . lsp-deferred))
+  :config
+  (lsp-enable-which-key-integration t)
   )
 
-;; (use-package lsp-mode
-;;   :commands (lsp lsp-deffered)
-;;   :init
-;;   (setq lsp-keymap-prefic "C-c l")
-;;   :hook(
-;; 	(python-mode . lsp)
-;; 	(ess-r-mode . lsp)
-;; 	)
-;;   :config
-;;   (lsp-enable-which-key-integration t)
-;;   )
+(use-package lsp-ui
+  :diminish
+  :hook (lsp-mode . lsp-ui-mode))
+
+
+(use-package lsp-ivy
+  :after lsp)
+
+(use-package company
+  :config
+  (setq company-idle-delay 0.05
+	company-minimum-prefix-length 1)
+  (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
+  ;; ((company-mode)
+  ;;  )
+  :hook
+  (emacs-lisp-mode . (lambda()
+		       (setq-local company-backends '(company-elisp))))
+  (emacs-lisp-mode . company-mode)
+  (lsp-mode . company-mode)
+  :bind( :map lsp-mode-map
+	 ("<tab>" . company-indent-or-complete-common)
+	 :map company-mode-map
+	 ("C-s" . company-search-filtering ))
+  )
+
+(use-package company-box
+  :hook (company-mode . company-box-mode) )
 
 (use-package ess
   ;; :load-path "/usr/share/emacs/site-lisp/ess"
-  :init (require 'ess-site)  ;; seems like this is needed to load the minor modes as well keybindings don't work without it
-  ;; :mode (ess-r-mode . lsp-deferred)
-  :hook (
-         ((ess-r-mode inferior-ess-r-mode) . electric-layout-mode)
-         ;; (ess-r-post-run . (lambda ()
-         ;;    (ess-load-file (make-temp-file nil nil nil
-         ;;                                "Sys.setenv(\"DISPLAY\"=\":0.0\")")))
-         )
-  :bind (("M--" . " <- ")) 
+  :mode "\\.[rR]\\'"
+  :init
+  (require 'ess-site)  ;; seems like this is needed to load the minor modes as well keybindings don't work without it
+  ;; :hook
+  ;; (
+  ;;  ((ess-r-mode inferior-ess-r-mode) . electric-layout-mode)
+  ;;  ;; (ess-r-post-run . (lambda ()
+  ;;  ;;    (ess-load-file (make-temp-file nil nil nil
+  ;;  ;;                                "Sys.setenv(\"DISPLAY\"=\":0.0\")")))
+  ;;  )
+  :bind
+  (("M--" . " <- ")) 
   :commands R
   )
-;; Use hydra to make movewindow keybind prefix
+
+;; Change windows intuitively 
+(use-package winum
+  :config
+  (winum-mode)
+  :bind
+  (("M-1" . 'winum-select-window-1)
+   ("M-2" . 'winum-select-window-2)
+   ("M-3" . 'winum-select-window-3)
+   ("M-4" . 'winum-select-window-4)
+   ("M-5" . 'winum-select-window-5)
+   ("M-6" . 'winum-select-window-6)
+   ("M-7" . 'winum-select-window-7)
+   ("M-8" . 'winum-select-window-8)
+   ("M-/" . 'winum-select-window-by-number))
+  )
+
 
