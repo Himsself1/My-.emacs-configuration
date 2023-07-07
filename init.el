@@ -187,13 +187,20 @@
   :after python-mode
   :config (require 'lsp-pyright))
 
+;; Following setting modifies the fontline
+;; This took a good deal of tinkering to set up
+;; Steps to reproduce:
+;; 1) run nerd-icons-install-fonts in emacs. find the name of font with 'fc-list | grep .local'
+;; 2) open dconf-editor and search for "font" in search bar. terminal profiles will pop up
+;; 3) copy the name of the font above to the 'font' menu
+;; 4) change terminal profile, then change back
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-height 55)
+  (setq doom-modeline-buffer-file-name-style 'relative-to-project)
+  (setq doom-line-numbers-style 'relative)
+  (setq doom-modeline-major-mode-icon t)
+  (setq doom-modeline-buffer-state-icon t)
+  (setq doom-modeline-major-mode-color-icon t))
 
-;; (use-package doom-modeline
-;;   :init (doom-modeline-mode 1)
-;;   :config
-;;   (setq doom-modeline-height 55)
-;;   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
-;;   (setq doom-line-numbers-style 'relative)
-;;   (setq doom-modeline-major-mode-icon t)
-;;   (setq doom-modeline-buffer-state-icon t)
-;;   (setq doom-modeline-major-mode-color-icon t))
