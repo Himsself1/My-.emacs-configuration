@@ -102,6 +102,7 @@
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
 
+;; Need to install language interpreter for each language
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
