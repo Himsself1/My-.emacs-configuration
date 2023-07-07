@@ -114,7 +114,6 @@
   :diminish
   :hook (lsp-mode . lsp-ui-mode))
 
-
 (use-package lsp-ivy
   :after lsp)
 
@@ -123,36 +122,27 @@
   (setq company-idle-delay 0.05
 	company-minimum-prefix-length 1)
   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
-  ;; ((company-mode)
-  ;;  )
   :hook
   (emacs-lisp-mode . (lambda()
 		       (setq-local company-backends '(company-elisp))))
   (emacs-lisp-mode . company-mode)
   (lsp-mode . company-mode)
-  :bind( :map lsp-mode-map
-	 ("<tab>" . company-indent-or-complete-common)
-	 :map company-mode-map
-	 ("C-s" . company-search-filtering ))
+  :bind(;; :map lsp-mode-map
+	;; ("<tab>" . company-indent-or-complete-common)
+	:map company-mode-map
+	("C-/" . company-search-filtering))
   )
 
 (use-package company-box
-  :hook (company-mode . company-box-mode) )
+  :hook (company-mode . company-box-mode))
 
 (use-package ess
   ;; :load-path "/usr/share/emacs/site-lisp/ess"
   :mode "\\.[rR]\\'"
   :init
-  (require 'ess-site)  ;; seems like this is needed to load the minor modes as well keybindings don't work without it
-  ;; :hook
-  ;; (
-  ;;  ((ess-r-mode inferior-ess-r-mode) . electric-layout-mode)
-  ;;  ;; (ess-r-post-run . (lambda ()
-  ;;  ;;    (ess-load-file (make-temp-file nil nil nil
-  ;;  ;;                                "Sys.setenv(\"DISPLAY\"=\":0.0\")")))
-  ;;  )
+  (require 'ess-site)  
   :bind
-  (("M--" . " <- ")) 
+  (("M--" . " <- "))
   :commands R
   )
 
