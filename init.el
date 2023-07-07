@@ -22,7 +22,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(ess lsp-mode helpful ivy-rich which-key rainbow-delimiters mood-line doom-modeline counsel ivy use-package)))
+   '(lsp-pyright origami all-the-icons ess lsp-mode helpful ivy-rich which-key rainbow-delimiters mood-line doom-modeline counsel ivy use-package)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -48,6 +48,8 @@
 		term-mode-hook
 		eshel-mode-hook))
   (add-hook mode (lambda() (display-line-numbers-mode 0))))
+
+(use-package nerd-icons)  
 
 ;; Completion of emacs specific tasks
 (use-package ivy 
@@ -96,6 +98,10 @@
   :init
   (counsel-load-theme-action "misterioso"))
 
+(defun efs/lsp-mode-setup ()
+  (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
+  (lsp-headerline-breadcrumb-mode))
+
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
@@ -105,7 +111,8 @@
    ("C-c a" . lsp-execute-code-action))
   :hook
   ((python-mode . lsp-deferred)
-   (ess-r-mode . lsp-deferred))
+   (ess-r-mode . lsp-deferred)
+   (lsp-mode . efs/lsp-mode-setup))
   :config
   (lsp-enable-which-key-integration t)
   )
@@ -117,7 +124,9 @@
 (use-package lsp-ivy
   :after lsp)
 
+
 (use-package company
+  :after lsp-mode
   :config
   (setq company-idle-delay 0.05
 	company-minimum-prefix-length 1)
@@ -127,8 +136,8 @@
 		       (setq-local company-backends '(company-elisp))))
   (emacs-lisp-mode . company-mode)
   (lsp-mode . company-mode)
-  :bind(;; :map lsp-mode-map
-	;; ("<tab>" . company-indent-or-complete-common)
+  :bind(:map lsp-mode-map
+	("<tab>" . company-indent-or-complete-common)
 	:map company-mode-map
 	("C-/" . company-search-filtering))
   )
@@ -162,4 +171,29 @@
    ("M-/" . 'winum-select-window-by-number))
   )
 
+(use-package python-mode
+  :mode "\\.py\\'" 
+  :hook (python-mode . lsp-deferred)
+  :config (setq python-shell-interpreter "python3.8"
+		;; python-shell-interpreter-args "console --simple-prompt"
+		)
+  )
 
+(use-package origami
+  :hook (prog-mode . origami-mode)
+  )
+
+(use-package lsp-pyright
+  :after python-mode
+  :config (require 'lsp-pyright))
+
+
+;; (use-package doom-modeline
+;;   :init (doom-modeline-mode 1)
+;;   :config
+;;   (setq doom-modeline-height 55)
+;;   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
+;;   (setq doom-line-numbers-style 'relative)
+;;   (setq doom-modeline-major-mode-icon t)
+;;   (setq doom-modeline-buffer-state-icon t)
+;;   (setq doom-modeline-major-mode-color-icon t))
