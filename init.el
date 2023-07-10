@@ -198,12 +198,15 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :config
-  (setq doom-modeline-bar-width 10)
-  (setq doom-modeline-height 10)
+  ;; (setq doom-modeline-bar-width 10) ;; Only usefull in gui
+  ;; (setq doom-modeline-height 1) ;; Only usefull in gui
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
   (setq doom-line-numbers-style 'relative)
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-buffer-state-icon t)
   (setq doom-modeline-major-mode-color-icon t)
-  (setq doom-modeline-project-detection 'auto))
+  (setq doom-modeline-project-detection 'auto)
+  (setq doom-modeline-highlight-modified-buffer-name t)
+  (setq find-file-visit-truename t))
+
 
