@@ -71,7 +71,6 @@
 	 ("C-x C-b" . ibuffer-list-buffers))
   )
 
-
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -125,7 +124,6 @@
 (use-package lsp-ivy
   :after lsp)
 
-
 (use-package company
   :after lsp-mode
   :config
@@ -175,7 +173,7 @@
 (use-package python-mode
   :mode "\\.py\\'" 
   :hook (python-mode . lsp-deferred)
-  :config (setq python-shell-interpreter "python3.8"
+  :config (setq python-shell-interpreter "python3"
 		;; python-shell-interpreter-args "console --simple-prompt"
 		)
   )
@@ -198,8 +196,10 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :config
+
   ;; (setq doom-modeline-bar-width 10) ;; Only usefull in gui
   ;; (setq doom-modeline-height 1) ;; Only usefull in gui
+
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
   (setq doom-line-numbers-style 'relative)
   (setq doom-modeline-major-mode-icon t)
@@ -210,3 +210,4 @@
   (setq find-file-visit-truename t))
 
 
+(use-package magit)
