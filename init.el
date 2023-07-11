@@ -95,7 +95,7 @@
    ([remap describe-variable]. counsel-describe-variable)
    ([remap describe-key] . helpful-key))
   :init
-  (counsel-load-theme-action "misterioso"))
+  (counsel-load-theme-action "wombat"))
 
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -173,13 +173,9 @@
 (use-package python-mode
   :mode "\\.py\\'" 
   :hook (python-mode . lsp-deferred)
-  :config (setq python-shell-interpreter "python3"
-		;; python-shell-interpreter-args "console --simple-prompt"
+  :init (setq python-shell-interpreter "ipython3"
+	      python-shell-interpreter-args "console --simple-prompt -i"
 		)
-  )
-
-(use-package origami
-  :hook (prog-mode . origami-mode)
   )
 
 (use-package lsp-pyright
@@ -205,4 +201,9 @@
   (setq doom-modeline-major-mode-color-icon t)
   (setq doom-modeline-project-detection 'auto))
 
-(use-package magit)
+(use-package magit
+  :bind("C-c C-g" . magit-status) )
+
+(use-package python-x
+  :after python-mode
+  :hook (python-mode-hook . python-x))
