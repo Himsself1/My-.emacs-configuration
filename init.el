@@ -174,7 +174,7 @@
   :mode "\\.py\\'" 
   :hook (python-mode . lsp-deferred)
   :init (setq python-shell-interpreter "ipython3"
-	      python-shell-interpreter-args "console --simple-prompt -i"
+	      python-shell-interpreter-args "--simple-prompt -i"
 		)
   )
 
