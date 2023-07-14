@@ -62,6 +62,7 @@
 	ivy-count-format "(%d/%d) "
 	enable-recursive-minibuffers t))
 
+;; Functions and utilities integrated with ivy.
 (use-package counsel
   :config
   (setq ivy-initial-inputs-alist nil) ;; Doesn't start searches with ^
@@ -74,17 +75,18 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
+;; List of available shortcuts.
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.5))
 
-;; M-x menu comes with documentation
+;; M-x menu comes with documentation.
 (use-package ivy-rich
   :init (ivy-rich-mode 1))
 
-;; More helpful
+;; More helpful descriptions.
 (use-package helpful
   :custom
   (counsel-describe-function-function #'helpful-callable)
@@ -141,9 +143,11 @@
 	("C-/" . company-search-filtering))
   )
 
+;; Front end customizations for company-mode
 (use-package company-box
   :hook (company-mode . company-box-mode))
 
+;; Interactive shell for R
 (use-package ess
   ;; :load-path "/usr/share/emacs/site-lisp/ess"
   :mode "\\.[rR]\\'"
@@ -151,7 +155,7 @@
   (require 'ess-site)  
   :bind
   (("M--" . " <- "))
-  :commands R
+  :commands( R )
   )
 
 ;; Change windows intuitively 
@@ -170,14 +174,15 @@
    ("M-/" . 'winum-select-window-by-number))
   )
 
+;; Interactive shell and other utilities for python
 (use-package python-mode
   :mode "\\.py\\'" 
   :hook (python-mode . lsp-deferred)
   :init (setq python-shell-interpreter "ipython3"
-	      python-shell-interpreter-args "--simple-prompt -i"
-		)
+	      python-shell-interpreter-args "--simple-prompt -i")
   )
 
+;; Communication with the language server
 (use-package lsp-pyright
   :after python-mode
   :config (require 'lsp-pyright))
@@ -192,10 +197,6 @@
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :config
-
-  ;; (setq doom-modeline-bar-width 10) ;; Only usefull in gui
-  ;; (setq doom-modeline-height 1) ;; Only usefull in gui
-
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
   (setq doom-line-numbers-style 'relative)
   (setq doom-modeline-major-mode-icon t)
@@ -205,10 +206,10 @@
   (setq doom-modeline-highlight-modified-buffer-name t)
   (setq find-file-visit-truename t))
 
-
 (use-package magit
   :bind("C-c C-g" . magit-status) )
 
 (use-package python-x
   :after python-mode
   :hook (python-mode-hook . python-x))
+
