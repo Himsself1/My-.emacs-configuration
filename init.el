@@ -209,7 +209,17 @@
 (use-package magit
   :bind("C-c C-g" . magit-status) )
 
+;; usefull python functions
 (use-package python-x
   :after python-mode
   :hook (python-mode-hook . python-x))
 
+;; Highlight Indentation
+(use-package highlight-indent-guides
+  :hook
+  (prog-mode . highlight-indent-guides-mode)
+  :config
+  (setq highlight-indent-guides-method 'character
+	highlight-indent-guides-character ?\|
+	highlight-indent-guides-responsive 'top)
+  )
