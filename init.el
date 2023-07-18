@@ -35,13 +35,13 @@
 (unless package-archive-contents
   (package-refresh-contents))
 
+;;; Configuring use-package
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
-
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;; Adds line numbers except in case of eshell
+;;; Adds line numbers except in case of eshell
 (column-number-mode)
 (global-display-line-numbers-mode t)
 (dolist (mode '(org-mode-hook
@@ -49,9 +49,10 @@
 		eshel-mode-hook))
   (add-hook mode (lambda() (display-line-numbers-mode 0))))
 
+;;; Install fonts
 (use-package nerd-icons)  
 
-;; Completion of emacs specific tasks
+;;; Completion of emacs specific tasks
 (use-package ivy 
   :diminish
   :bind ("C-s". swiper)
@@ -62,7 +63,7 @@
 	ivy-count-format "(%d/%d) "
 	enable-recursive-minibuffers t))
 
-;; Functions and utilities integrated with ivy.
+;;; Functions and utilities integrated with ivy.
 (use-package counsel
   :config
   (setq ivy-initial-inputs-alist nil) ;; Doesn't start searches with ^
@@ -75,18 +76,18 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-;; List of available shortcuts.
+;;; M-x menu comes with documentation.
+(use-package ivy-rich
+  :init (ivy-rich-mode 1))
+
+;;; Popup that lists all available shortcuts.
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.5))
 
-;; M-x menu comes with documentation.
-(use-package ivy-rich
-  :init (ivy-rich-mode 1))
-
-;; More helpful descriptions.
+;;; More helpful descriptions.
 (use-package helpful
   :custom
   (counsel-describe-function-function #'helpful-callable)
@@ -99,6 +100,29 @@
   :init
   (counsel-load-theme-action "wombat"))
 
+;;; Auto completion
+(use-package company
+  :after lsp-mode
+  :config
+  (setq company-idle-delay 0.05
+	company-minimum-prefix-length 1)
+  (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
+  :hook
+  (emacs-lisp-mode . (lambda()
+		       (setq-local company-backends '(company-elisp))))
+  (emacs-lisp-mode . company-mode)
+  (lsp-mode . company-mode)
+  :bind(:map lsp-mode-map
+	("<tab>" . company-indent-or-complete-common)
+	:map company-mode-map
+	("C-/" . company-search-filtering))
+  )
+
+;; Front end customizations for company-mode
+(use-package company-box
+  :hook (company-mode . company-box-mode))
+
+;;; Configuring Language server Protocol
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
@@ -126,28 +150,12 @@
 (use-package lsp-ivy
   :after lsp)
 
-(use-package company
-  :after lsp-mode
-  :config
-  (setq company-idle-delay 0.05
-	company-minimum-prefix-length 1)
-  (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
-  :hook
-  (emacs-lisp-mode . (lambda()
-		       (setq-local company-backends '(company-elisp))))
-  (emacs-lisp-mode . company-mode)
-  (lsp-mode . company-mode)
-  :bind(:map lsp-mode-map
-	("<tab>" . company-indent-or-complete-common)
-	:map company-mode-map
-	("C-/" . company-search-filtering))
-  )
+;;;; Python communication with the language server
+(use-package lsp-pyright
+  :after python-mode
+  :config (require 'lsp-pyright))
 
-;; Front end customizations for company-mode
-(use-package company-box
-  :hook (company-mode . company-box-mode))
-
-;; Interactive shell for R
+;;; Interactive shell for R
 (use-package ess
   ;; :load-path "/usr/share/emacs/site-lisp/ess"
   :mode "\\.[rR]\\'"
@@ -158,7 +166,7 @@
   :commands( R )
   )
 
-;; Change windows intuitively 
+;;; Change windows intuitively 
 (use-package winum
   :config
   (winum-mode)
@@ -174,7 +182,7 @@
    ("M-/" . 'winum-select-window-by-number))
   )
 
-;; Interactive shell and other utilities for python
+;;; Interactive shell and other utilities for python
 (use-package python-mode
   :mode "\\.py\\'" 
   :hook (python-mode . lsp-deferred)
@@ -182,12 +190,7 @@
 	      python-shell-interpreter-args "--simple-prompt -i")
   )
 
-;; Communication with the language server
-(use-package lsp-pyright
-  :after python-mode
-  :config (require 'lsp-pyright))
-
-;; Following setting modifies the fontline
+;;; Following setting modifies the modeline
 ;; This took a good deal of tinkering to set up
 ;; Steps to reproduce:
 ;; 1) run nerd-icons-install-fonts in emacs. find the name of font with 'fc-list | grep .local'
@@ -209,12 +212,12 @@
 (use-package magit
   :bind("C-c C-g" . magit-status) )
 
-;; usefull python functions
+;;; usefull python functions
 (use-package python-x
   :after python-mode
   :hook (python-mode-hook . python-x))
 
-;; Highlight Indentation
+;;; Highlight Indentation
 (use-package highlight-indent-guides
   :hook
   (prog-mode . highlight-indent-guides-mode)  
@@ -224,3 +227,21 @@
 	highlight-indent-guides-responsive 'top)
   )
 
+;;; Use outli for headers
+;; Headers for non-lisp languages are [comment-start + space + *]
+(use-package outli
+  :load-path "~/.emacs.d/outli"
+  :hook( ((prog-mode text-mode) . outli-mode)
+	 ((prog-mode text-mode) . outline-minor-mode) )
+  :bind ( ([M-down] . outline-next-heading)
+	  ([M-up] . outline-previous-heading) ))
+
+(use-package imenu-list
+  :after outli-mode
+  :init
+  ((setq imenu-list-focus-after-activation t
+	 imenu-list-position left
+	 imenu-list-focus-after-activation t))
+  :bind
+  ("C-c l" . imenu-list-smart-toggle))
+	
