@@ -1,3 +1,4 @@
+;;; Remove meny bar and stop message
 (setq inhibit-startup-message t ;;Doesn't display startup message
       visible-bell t ;;Doesn't work in terminal
       use-dialog-box nil) ;;Disables graphical windows that may pop up
@@ -7,7 +8,7 @@
 (scroll-bar-mode -1)
 
 ;; (set-fringe-mode 10)
-
+;;; Melpa and package
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (require 'package)
 
@@ -15,7 +16,7 @@
 			 ("melpa" . "https://melpa.org/packages/")
 			 ("org" . "http://orgmode.org/elpa/")))
 
-
+;;; Custom
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -210,7 +211,7 @@
   (setq find-file-visit-truename t))
 
 (use-package magit
-  :bind("C-c C-g" . magit-status) )
+  :bind("C-c C-m" . magit-status) )
 
 ;;; usefull python functions
 (use-package python-x
@@ -237,11 +238,10 @@
 	  ([M-up] . outline-previous-heading) ))
 
 (use-package imenu-list
-  :after outli-mode
-  :init
-  ((setq imenu-list-focus-after-activation t
-	 imenu-list-position left
-	 imenu-list-focus-after-activation t))
-  :bind
-  ("C-c l" . imenu-list-smart-toggle))
-	
+  :bind (("C-c l" . imenu-list-smart-toggle))
+  :config
+  (setq imenu-list-focus-after-activation t
+        imenu-list-auto-resize nil
+	imenu-list-size 0.25))
+  
+
