@@ -187,6 +187,8 @@
 (use-package python-mode
   :mode "\\.py\\'" 
   :hook (python-mode . lsp-deferred)
+  :bind (:map python-mode-map
+	      ( "C-c C-c" . python-shell-send-paragraph-and-step ))
   :init (setq python-shell-interpreter "ipython3"
 	      python-shell-interpreter-args "--simple-prompt -i")
   )
@@ -233,7 +235,7 @@
 (use-package outli
   :load-path "~/.emacs.d/outli"
   :hook( ((prog-mode text-mode) . outli-mode)
-	 ((prog-mode text-mode) . outline-minor-mode) )
+  	 ((prog-mode text-mode) . outline-minor-mode) )
   :bind ( ([M-down] . outline-next-heading)
 	  ([M-up] . outline-previous-heading)
 	  ))
