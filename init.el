@@ -132,7 +132,7 @@
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
   :init
-  (setq lsp-keymap-prefic "C-c l")
+  (setq lsp-keymap-prefic "C-c k")
   :bind
   (("C-c d" . lsp-describe-thing-at-point)
    ("C-c a" . lsp-execute-code-action))
@@ -235,10 +235,12 @@
   :hook( ((prog-mode text-mode) . outli-mode)
 	 ((prog-mode text-mode) . outline-minor-mode) )
   :bind ( ([M-down] . outline-next-heading)
-	  ([M-up] . outline-previous-heading) ))
+	  ([M-up] . outline-previous-heading)
+	  ))
 
 (use-package imenu-list
-  :bind (("C-c l" . imenu-list-smart-toggle))
+  :bind
+  (("C-c l" . imenu-list-smart-toggle))
   :config
   (setq imenu-list-focus-after-activation t
         imenu-list-auto-resize nil
