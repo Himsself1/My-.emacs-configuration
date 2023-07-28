@@ -101,7 +101,7 @@
   :init
   (counsel-load-theme-action "wombat"))
 
-;;; Auto completion
+;;; Auto completion with company
 (use-package company
   :after lsp-mode
   :config
@@ -138,7 +138,8 @@
    ("C-c a" . lsp-execute-code-action))
   :hook
   ((python-mode . lsp-deferred)
-   (ess-r-mode . lsp-deferred)
+   (ess-mode . lsp-deferred)
+   (cperl-mode . lsp-deferred)
    (lsp-mode . efs/lsp-mode-setup))
   :config
   (lsp-enable-which-key-integration t)
@@ -192,6 +193,11 @@
   :init (setq python-shell-interpreter "ipython3"
 	      python-shell-interpreter-args "--simple-prompt -i")
   )
+
+;;; Set up cperl
+(use-package cperl-mode
+  :mode "\\.(pl|perl)\\'"
+  :hook (cperl-mode . lsp-deferred)
 
 ;;; Following setting modifies the modeline
 ;; This took a good deal of tinkering to set up
