@@ -124,6 +124,7 @@
   :hook (company-mode . company-box-mode))
 
 ;;; Configuring Language server Protocol
+;; Adds a line on the top of the screen that tells you where you are
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
   (lsp-headerline-breadcrumb-mode))
