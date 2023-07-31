@@ -198,6 +198,7 @@
 (use-package cperl-mode
   :mode "\\.(pl|perl)\\'"
   :hook (cperl-mode . lsp-deferred)
+)
 
 ;;; Following setting modifies the modeline
 ;; This took a good deal of tinkering to set up
