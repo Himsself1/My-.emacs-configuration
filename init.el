@@ -139,7 +139,7 @@
    ("C-c a" . lsp-execute-code-action))
   :hook
   ((python-mode . lsp-deferred)
-   (ess-mode . lsp-deferred)
+   (ess-mode . lsp)
    (cperl-mode . lsp-deferred)
    (lsp-mode . efs/lsp-mode-setup))
   :config
@@ -160,12 +160,21 @@
 
 ;;; Interactive shell for R
 (use-package ess
-  ;; :load-path "/usr/share/emacs/site-lisp/ess"
-  :mode "\\.[rR]\\'"
+  :load-path "/usr/share/emacs/site-lisp/elpa/ess-18.10.3snapshot"
+  :mode(
+        ("/R/.*\\.q\\'"       . R-mode)
+        ("\\.[rR]\\'"         . R-mode)
+        ("\\.[rR]profile\\'"  . R-mode)
+        ("NAMESPACE\\'"       . R-mode)
+        ("CITATION\\'"        . R-mode)
+        ("\\.[Rr]out"         . R-transcript-mode)
+        ("\\.Rd\\'"           . Rd-mode)
+        )
   :init
-  (require 'ess-site)  
+  (require 'ess-site)
+  ;; :hook (ess-mode . lsp)
   :bind
-  (("M--" . " <- "))
+  ("M--" . " <- ")
   :commands( R )
   )
 
