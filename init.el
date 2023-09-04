@@ -178,7 +178,13 @@
   ;; :hook (ess-mode . lsp)
   :bind
   ("M--" . " <- ")
-  :commands( R )
+  :custom(
+	  (ess-r-backend 'lsp)
+	  (ess-style 'RStudio)
+	  (ess-auto-width 'window)
+	  )
+  :commands
+  ( R )
   )
 
 ;;; Change windows intuitively 
