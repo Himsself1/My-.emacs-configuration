@@ -50,8 +50,11 @@
 		eshel-mode-hook))
   (add-hook mode (lambda() (display-line-numbers-mode 0))))
 
-;;; Install fonts
+;;; Install fonts and all-the-icons
 (use-package nerd-icons)  
+
+(use-package all-the-icons)
+;; Also run M-x all-the-icons-isntall-fonts
 
 ;;; Completion of emacs specific tasks
 (use-package ivy 
@@ -99,7 +102,7 @@
    ([remap describe-variable]. counsel-describe-variable)
    ([remap describe-key] . helpful-key))
   :init
-  (counsel-load-theme-action "wombat"))
+  (counsel-load-theme-action "tsdh-dark"))
 
 ;;; Auto completion with company
 (use-package company
@@ -242,8 +245,8 @@
   :hook
   (prog-mode . highlight-indent-guides-mode)  
 :config
-  (setq highlight-indent-guides-method 'character
-	highlight-indent-guides-character ?\|
+  (setq highlight-indent-guides-method 'column
+	;; highlight-indent-guides-character ?\|
 	highlight-indent-guides-responsive 'top)
   )
 
@@ -253,9 +256,9 @@
   :load-path "~/.emacs.d/outli"
   :hook( ((prog-mode text-mode) . outli-mode)
   	 ((prog-mode text-mode) . outline-minor-mode) )
-  :bind ( ([M-down] . outline-next-heading)
-	  ([M-up] . outline-previous-heading)
-	  ))
+  :bind( ([M-down] . outline-next-heading)
+	 ([M-up] . outline-previous-heading)
+	 ))
 
 (use-package imenu-list
   :bind
@@ -265,5 +268,5 @@
         imenu-list-auto-resize nil
 	imenu-list-size 0.25
 	imenu-list-position 'left))
-  
-
+			    
+	
