@@ -25,6 +25,7 @@
  '(package-selected-packages
    '(lsp-pyright origami all-the-icons ess lsp-mode helpful ivy-rich which-key rainbow-delimiters mood-line doom-modeline counsel ivy use-package)))
 (custom-set-faces
+ '(region ((t :extend nil)))
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
@@ -107,8 +108,8 @@
 	modus-themes-region '(accented bg-only)
 	modus-themes-paren-match '(bold intense)
 	modus-themes-syntax '(yellow-comments)
-	modus-themes-headings '((1 . (rainbow background bold 1.3))
-				(2 . (rainbow bold 1.2))
+	modus-themes-headings '((1 . (rainbow extrabold 1.3))
+				(2 . (rainbow semibold 1.2))
 				(3 . (rainbow 1.1)))
 	modus-themes-scale-headings t
 	modus-themes-completions '(selection .(rainbow background))
@@ -168,6 +169,7 @@
   :after lsp)
 
 ;;;; Python communication with the language server
+
 (use-package lsp-pyright
   :after python-mode
   :config (require 'lsp-pyright))
@@ -278,7 +280,6 @@
 	 highlight-indent-guides-delay 0
 	 )
   )
-
 
 ;;; Use outli for headers
 ;; Headers for non-lisp languages are [comment-start + space + *]
