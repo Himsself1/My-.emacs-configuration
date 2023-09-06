@@ -92,6 +92,7 @@
   (setq which-key-idle-delay 0.5))
 
 ;;; More helpful descriptions.
+
 (use-package helpful
   :custom
   (counsel-describe-function-function #'helpful-callable)
@@ -109,7 +110,9 @@
 	modus-themes-headings '((1 . (rainbow background bold 1.3))
 				(2 . (rainbow bold 1.2))
 				(3 . (rainbow 1.1)))
-	modus-themes-scale-headings t)
+	modus-themes-scale-headings t
+	modus-themes-completions '(selection .(rainbow background))
+	)
   (counsel-load-theme-action "modus-vivendi"))
 
 ;;; Auto completion with company
@@ -234,17 +237,17 @@
 ;; 2) open dconf-editor and search for "font" in search bar. terminal profiles will pop up
 ;; 3) copy the name of the font above to the 'font' menu
 ;; 4) change terminal profile, then change back
-;; (use-package doom-modeline
-;;   :init (doom-modeline-mode 1)
-;;   :config
-;;   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
-;;   (setq doom-line-numbers-style 'relative)
-;;   (setq doom-modeline-major-mode-icon t)
-;;   (setq doom-modeline-buffer-state-icon t)
-;;   (setq doom-modeline-major-mode-color-icon t)
-;;   (setq doom-modeline-project-detection 'auto)
-;;   (setq doom-modeline-highlight-modified-buffer-name t)
-;;   (setq find-file-visit-truename t))
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-buffer-file-name-style 'relative-to-project)
+  (setq doom-line-numbers-style 'relative)
+  (setq doom-modeline-major-mode-icon t)
+  (setq doom-modeline-buffer-state-icon t)
+  (setq doom-modeline-major-mode-color-icon t)
+  (setq doom-modeline-project-detection 'auto)
+  (setq doom-modeline-highlight-modified-buffer-name t)
+  (setq find-file-visit-truename t))
 
 (use-package magit
   :bind("C-c C-m" . magit-status) )
@@ -255,14 +258,27 @@
   :hook (python-mode-hook . python-x))
 
 ;;; Highlight Indentation
+
+(defun my-highlight-guides-faces ()
+  ;; Custom functiuon that sets indent guides colors so that they match modis-vivendi
+  (set-face-background 'highlight-indent-guides-odd-face "darkslateblue")
+  (set-face-background 'highlight-indent-guides-even-face "darkslateblue")
+  (set-face-background 'highlight-indent-guides-top-odd-face "thistle4")
+  (set-face-background 'highlight-indent-guides-top-even-face "thistle4"))
+
 (use-package highlight-indent-guides
   :hook
-  (prog-mode . highlight-indent-guides-mode)  
+  (prog-mode . highlight-indent-guides-mode)
+  (highlight-indent-guides-mode . my-highlight-guides-faces)
   :config
-  (setq highlight-indent-guides-method 'column
-	;; highlight-indent-guides-character ?\|
-	highlight-indent-guides-responsive 'top)
+  (setq highlight-indent-guides-auto-enables nil
+	 highlight-indent-guides-method 'column
+	 ;; highlight-indent-guides-character ?\|
+	 highlight-indent-guides-responsive 'top
+	 highlight-indent-guides-delay 0
+	 )
   )
+
 
 ;;; Use outli for headers
 ;; Headers for non-lisp languages are [comment-start + space + *]
