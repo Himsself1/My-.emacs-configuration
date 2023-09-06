@@ -54,7 +54,7 @@
 (use-package nerd-icons)  
 
 (use-package all-the-icons)
-;; Also run M-x all-the-icons-isntall-fonts
+;; Also run M-x all-the-icons-install-fonts
 
 ;;; Completion of emacs specific tasks
 (use-package ivy 
@@ -102,7 +102,15 @@
    ([remap describe-variable]. counsel-describe-variable)
    ([remap describe-key] . helpful-key))
   :init
-  (counsel-load-theme-action "tsdh-dark"))
+  (setq modus-themes-mode-line '(accented borderless)
+	modus-themes-region '(accented bg-only)
+	modus-themes-paren-match '(bold intense)
+	modus-themes-syntax '(yellow-comments)
+	modus-themes-headings '((1 . (rainbow background bold 1.3))
+				(2 . (rainbow bold 1.2))
+				(3 . (rainbow 1.1)))
+	modus-themes-scale-headings t)
+  (counsel-load-theme-action "modus-vivendi"))
 
 ;;; Auto completion with company
 (use-package company
@@ -226,17 +234,17 @@
 ;; 2) open dconf-editor and search for "font" in search bar. terminal profiles will pop up
 ;; 3) copy the name of the font above to the 'font' menu
 ;; 4) change terminal profile, then change back
-(use-package doom-modeline
-  :init (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-buffer-file-name-style 'relative-to-project)
-  (setq doom-line-numbers-style 'relative)
-  (setq doom-modeline-major-mode-icon t)
-  (setq doom-modeline-buffer-state-icon t)
-  (setq doom-modeline-major-mode-color-icon t)
-  (setq doom-modeline-project-detection 'auto)
-  (setq doom-modeline-highlight-modified-buffer-name t)
-  (setq find-file-visit-truename t))
+;; (use-package doom-modeline
+;;   :init (doom-modeline-mode 1)
+;;   :config
+;;   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
+;;   (setq doom-line-numbers-style 'relative)
+;;   (setq doom-modeline-major-mode-icon t)
+;;   (setq doom-modeline-buffer-state-icon t)
+;;   (setq doom-modeline-major-mode-color-icon t)
+;;   (setq doom-modeline-project-detection 'auto)
+;;   (setq doom-modeline-highlight-modified-buffer-name t)
+;;   (setq find-file-visit-truename t))
 
 (use-package magit
   :bind("C-c C-m" . magit-status) )
@@ -250,7 +258,7 @@
 (use-package highlight-indent-guides
   :hook
   (prog-mode . highlight-indent-guides-mode)  
-:config
+  :config
   (setq highlight-indent-guides-method 'column
 	;; highlight-indent-guides-character ?\|
 	highlight-indent-guides-responsive 'top)
