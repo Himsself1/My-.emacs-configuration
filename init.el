@@ -6,6 +6,8 @@
 (menu-bar-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+;; HOW DID I NOT KNOW ABOUT THIS?!?!?!
+(xterm-mouse-mode 1)
 
 ;; (set-fringe-mode 10)
 ;;; Melpa and package
