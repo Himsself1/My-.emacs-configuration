@@ -87,6 +87,9 @@
 (use-package ivy-rich
   :init (ivy-rich-mode 1))
 
+(use-package all-the-icons-ivy-rich
+  :after (ivy-rich-mode))
+
 ;;; Popup that lists all available shortcuts.
 (use-package which-key
   :init (which-key-mode)
