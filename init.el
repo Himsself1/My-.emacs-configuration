@@ -225,7 +225,7 @@
   :bind (:map python-mode-map
 	      ( "C-c C-c" . python-shell-send-paragraph-and-step ))
   :init (setq python-shell-interpreter "ipython3"
-	      python-shell-interpreter-args "--simple-prompt -i")
+	      python-shell-interpreter-args "--simple-prompt -i --pprint --colors=LightBG")
   )
 
 ;;; Set up cperl
