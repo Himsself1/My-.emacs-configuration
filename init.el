@@ -121,6 +121,23 @@
 	)
   (counsel-load-theme-action "modus-vivendi"))
 
+;;; Setting up tabs
+
+(use-package centaur-tabs
+  :demand
+  :init
+  :config
+  (centaur-tabs-mode t)
+  (setq centaur-tabs-style "wave"
+	centaur-tabs-set-icons t
+	centaur-tabs-set-bar 'under
+	x-underline-at-descent-line t)
+  :bind
+  ([C-M-left] . centaur-tabs-backward-tab)
+  ([C-M-right] . centaur-tabs-forward-tab)
+  ("C-c n" . centaur-tabs--create-new-tab)
+  )
+
 ;;; Auto completion with company
 (use-package company
   :after lsp-mode
