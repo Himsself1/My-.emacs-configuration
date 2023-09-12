@@ -123,6 +123,10 @@
 
 ;;; Setting up tabs
 
+;; Carefull! Centaur tabs interferes with mouce support on terminal
+;; `centaur-tabs-local-mode` toggles the package in current buffer
+;; allowing for mouce resizing
+
 (use-package centaur-tabs
   :demand
   :init
@@ -136,6 +140,7 @@
   ([C-M-left] . centaur-tabs-backward-tab)
   ([C-M-right] . centaur-tabs-forward-tab)
   ("C-c n" . centaur-tabs--create-new-tab)
+  ("C-c t" . centaur-tabs-local-mode)
   )
 
 ;;; Auto completion with company
