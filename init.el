@@ -54,7 +54,7 @@
   (add-hook mode (lambda() (display-line-numbers-mode 0))))
 
 ;;; Install fonts and all-the-icons
-(use-package nerd-icons)  
+(use-package nerd-icons)
 
 (use-package all-the-icons)
 ;; Also run M-x all-the-icons-install-fonts
@@ -211,10 +211,9 @@
   :init
   (require 'ess-site)
   ;; :hook (ess-mode . lsp)
-  :hook
-  (inferior-ess-mode . lambda()
-		     (setq-local ansi-color-for-comint-mode 'filter))
-  
+  ;; :hook
+  (inferior-ess-mode . (lambda()
+			 (setq-local ansi-color-for-comint-mode 'filter)))
   :bind
   ("M--" . " <- ")
   :custom(
