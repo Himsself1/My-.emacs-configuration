@@ -211,7 +211,7 @@
   :init
   (require 'ess-site)
   ;; :hook (ess-mode . lsp)
-  ;; :hook
+  :hook
   (inferior-ess-mode . (lambda()
 			 (setq-local ansi-color-for-comint-mode 'filter)))
   :bind
