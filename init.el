@@ -200,11 +200,13 @@
   )
 
 (use-package tree-sitter
+  :custom
+  (treesit-font-lock-level 4)
   )
 
 (use-package treesit-auto
   :custom
-  (setq treesit-auto-install 'prompt)
+  (treesit-auto-install 'prompt)
   :config
   (global-treesit-auto-mode))
 
@@ -242,11 +244,10 @@
 			 (setq-local ansi-color-for-comint-mode 'filter)))
   :bind
   ("M--" . " <- ")
-  :custom(
-	  (ess-r-backend 'lsp)
-	  (ess-style 'RStudio)
-	  (ess-auto-width 'window)
-	  )
+  :custom
+  ((ess-r-backend 'lsp)
+   (ess-style 'RStudio)
+   (ess-auto-width 'window))
   :commands
   ( R )
   )
