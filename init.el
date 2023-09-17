@@ -203,7 +203,6 @@
   )
 
 (use-package treesit-auto
-  :after tree-sitter
   :custom
   (setq treesit-auto-install 'prompt)
   :config
