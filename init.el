@@ -1,4 +1,5 @@
 ;;; Remove meny bar and stop message
+
 (setq inhibit-startup-message t ;;Doesn't display startup message
       visible-bell t ;;Doesn't work in terminal
       use-dialog-box nil) ;;Disables graphical windows that may pop up
@@ -11,6 +12,7 @@
 
 ;; (set-fringe-mode 10)
 ;;; Melpa and package
+
 (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
 (require 'package)
 
@@ -19,6 +21,7 @@
 			 ("org" . "http://orgmode.org/elpa/")))
 
 ;;; Custom
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -40,12 +43,14 @@
   (package-refresh-contents))
 
 ;;; Configuring use-package
+
 (unless (package-installed-p 'use-package)
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
 
 ;;; Adds line numbers except in case of eshell
+
 (column-number-mode)
 (global-display-line-numbers-mode t)
 (dolist (mode '(org-mode-hook
@@ -54,12 +59,14 @@
   (add-hook mode (lambda() (display-line-numbers-mode 0))))
 
 ;;; Install fonts and all-the-icons
+
 (use-package nerd-icons)
 
 (use-package all-the-icons)
 ;; Also run M-x all-the-icons-install-fonts
 
 ;;; Completion of emacs specific tasks
+
 (use-package ivy 
   :diminish
   :bind ("C-s". swiper)
@@ -71,6 +78,7 @@
 	enable-recursive-minibuffers t))
 
 ;;; Functions and utilities integrated with ivy.
+
 (use-package counsel
   :config
   (setq ivy-initial-inputs-alist nil) ;; Doesn't start searches with ^
@@ -84,6 +92,7 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 ;;; M-x menu comes with documentation.
+
 (use-package ivy-rich
   :init (ivy-rich-mode 1))
 
@@ -91,6 +100,7 @@
   :after (ivy-rich-mode))
 
 ;;; Popup that lists all available shortcuts.
+
 (use-package which-key
   :init (which-key-mode)
   :diminish which-key-mode
@@ -144,8 +154,8 @@
   )
 
 ;;; Auto completion with company
+
 (use-package company
-  :after lsp-mode
   :config
   (setq company-idle-delay 0.05
 	company-minimum-prefix-length 1)
@@ -155,7 +165,7 @@
 		       (setq-local company-backends '(company-elisp))))
   (emacs-lisp-mode . company-mode)
   (lsp-mode . company-mode)
-  :bind(:map lsp-mode-map
+  :bind(:map prog-mode-map
 	("<tab>" . company-indent-or-complete-common)
 	:map company-mode-map
 	("C-/" . company-search-filtering))
@@ -166,6 +176,7 @@
   :hook (company-mode . company-box-mode))
 
 ;;; Configuring Language server Protocol
+
 ;; Adds a line on the top of the screen that tells you where you are
 (defun efs/lsp-mode-setup ()
   (setq lsp-headerline-breadcrumb-segments '(path-up-to-project file symbols))
@@ -188,6 +199,16 @@
   (lsp-enable-which-key-integration t)
   )
 
+(use-package tree-sitter
+  )
+
+(use-package treesit-auto
+  :after tree-sitter
+  :custom
+  (setq treesit-auto-install 'prompt)
+  :config
+  (global-treesit-auto-mode))
+
 (use-package lsp-ui
   :diminish
   :hook (lsp-mode . lsp-ui-mode))
@@ -202,6 +223,7 @@
   :config (require 'lsp-pyright))
 
 ;;; Interactive shell for R
+
 (use-package ess
   :load-path "/usr/share/emacs/site-lisp/elpa/ess-18.10.3snapshot"
   :mode(
@@ -231,6 +253,7 @@
   )
 
 ;;; Change windows intuitively 
+
 (use-package winum
   :config
   (winum-mode)
@@ -247,6 +270,7 @@
   )
 
 ;;; Interactive shell and other utilities for python
+
 (use-package python-mode
   :mode "\\.py\\'" 
   :hook (python-mode . lsp-deferred)
@@ -257,12 +281,14 @@
   )
 
 ;;; Set up cperl
+
 (use-package cperl-mode
   :mode "\\.(pl|perl)\\'"
   :hook (cperl-mode . lsp-deferred)
 )
 
 ;;; Following setting modifies the modeline
+
 ;; This took a good deal of tinkering to set up
 ;; Steps to reproduce:
 ;; 1) run nerd-icons-install-fonts in emacs. find the name of font with 'fc-list | grep .local'
@@ -285,6 +311,7 @@
   :bind("C-c C-m" . magit-status) )
 
 ;;; usefull python functions
+
 (use-package python-x
   :after python-mode
   :hook (python-mode-hook . python-x))
@@ -312,6 +339,7 @@
   )
 
 ;;; Use outli for headers
+
 ;; Headers for non-lisp languages are [comment-start + space + *]
 (use-package outli
   :load-path "~/.emacs.d/outli"
