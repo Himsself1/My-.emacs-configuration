@@ -57,6 +57,14 @@
 		term-mode-hook
 		eshel-mode-hook))
   (add-hook mode (lambda() (display-line-numbers-mode 0))))
+(global-hl-line-mode 1)
+
+;;; Automatically update file that was modified elsewhere
+
+(use-package autorevert
+  :config
+  (global-auto-revert-mode 1)
+  )
 
 ;;; Install fonts and all-the-icons
 
@@ -166,9 +174,9 @@
   (emacs-lisp-mode . company-mode)
   (lsp-mode . company-mode)
   :bind(:map prog-mode-map
-	("<tab>" . company-indent-or-complete-common)
-	:map company-mode-map
-	("C-/" . company-search-filtering))
+	     ("<tab>" . company-indent-or-complete-common)
+	     :map company-mode-map
+	     ("C-/" . company-search-filtering))
   )
 
 ;; Front end customizations for company-mode
@@ -307,6 +315,8 @@
   (setq doom-modeline-highlight-modified-buffer-name t)
   (setq find-file-visit-truename t))
 
+;;; Magit
+
 (use-package magit
   :bind("C-c C-m" . magit-status) )
 
@@ -316,7 +326,7 @@
   :after python-mode
   :hook (python-mode-hook . python-x))
 
-;;; Highlight Indentation
+;;; Highlight Indentation and other indentation utilities
 
 (defun my-highlight-guides-faces ()
   ;; Custom functiuon that sets indent guides colors so that they match modis-vivendi
@@ -338,13 +348,24 @@
 	 )
   )
 
+(use-package aggressive-indent
+  ;; Doesn't allow you to escape indentation
+  :config
+  (aggressive-indent-mode 1)
+  )
+
+(use-package apheleia
+  :config
+  (apheleia-global-mode 1)
+  )
+
 ;;; Use outli for headers
 
 ;; Headers for non-lisp languages are [comment-start + space + *]
 (use-package outli
   :load-path "~/.emacs.d/outli"
   :hook( ((prog-mode text-mode) . outli-mode)
-  	 ((prog-mode text-mode) . outline-minor-mode) )
+         ((prog-mode text-mode) . outline-minor-mode) )
   :bind( ([M-down] . outline-next-heading)
 	 ([M-up] . outline-previous-heading)
 	 ))
@@ -367,3 +388,4 @@
   (auto-package-update-hide-results t)
   :config
   (auto-package-update-maybe))
+
