@@ -59,6 +59,17 @@
   (add-hook mode (lambda() (display-line-numbers-mode 0))))
 (global-hl-line-mode 1)
 
+;;; Auto Update
+
+(use-package auto-package-update
+  :custom
+  (auto-package-update-interval 7)
+  (auto-package-update-prompt-before-update t)
+  (auto-package-update-hide-results t)
+  :config
+  (auto-package-update-maybe))
+
+
 ;;; Automatically update file that was modified elsewhere
 
 (use-package autorevert
@@ -379,13 +390,3 @@
 	imenu-list-size 0.25
 	imenu-list-position 'left))
 			    
-;;; Auto Update
-
-(use-package auto-package-update
-  :custom
-  (auto-package-update-interval 7)
-  (auto-package-update-prompt-before-update t)
-  (auto-package-update-hide-results t)
-  :config
-  (auto-package-update-maybe))
-
