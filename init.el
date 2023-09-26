@@ -84,6 +84,11 @@
 (use-package all-the-icons)
 ;; Also run M-x all-the-icons-install-fonts
 
+(use-package all-the-icons-completion
+  :config
+  (all-the-icons-completion-mode 1)
+  )
+
 ;;; Completion of emacs specific tasks
 
 (use-package ivy 
@@ -192,9 +197,12 @@
 
 ;; Front end customizations for company-mode
 (use-package company-box
-  :hook (company-mode . company-box-mode))
+  :hook
+  (company-mode . company-box-mode)
+  :init
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
-;;; Configuring Language server Protocol
+;;; Configuring Language Server Protocol
 
 ;; Adds a line on the top of the screen that tells you where you are
 (defun efs/lsp-mode-setup ()
