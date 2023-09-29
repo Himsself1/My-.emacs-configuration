@@ -1,5 +1,5 @@
 ;;; Remove meny bar and stop message
-
+n
 (setq inhibit-startup-message t ;;Doesn't display startup message
       visible-bell t ;;Doesn't work in terminal
       use-dialog-box nil) ;;Disables graphical windows that may pop up
@@ -68,7 +68,6 @@
   (auto-package-update-hide-results t)
   :config
   (auto-package-update-maybe))
-
 
 ;;; Automatically update file that was modified elsewhere
 
@@ -398,3 +397,12 @@
 	imenu-list-size 0.25
 	imenu-list-position 'left))
 			    
+;;; Dired functionality
+
+(use-package dired-sidebar
+  :bind
+  ("C-c s" . dired-sidebar-toggle-sidebar)
+  :custom
+  ((dired-sidebar-theme 'vscode)
+   (dired-sidebar-use-term-integration t))
+  :commands (dired-sidebar-toggle-sidebar))
