@@ -1,5 +1,5 @@
 ;;; Remove meny bar and stop message
-n
+
 (setq inhibit-startup-message t ;;Doesn't display startup message
       visible-bell t ;;Doesn't work in terminal
       use-dialog-box nil) ;;Disables graphical windows that may pop up
