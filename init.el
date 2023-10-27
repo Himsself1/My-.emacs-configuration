@@ -232,9 +232,10 @@
   )
 
 (use-package tree-sitter
+  :config
+  (tree-sitter-hl-mode 1)
   :custom
   (treesit-font-lock-level 4)
-  (tree-sitter-hl-mode 1)
   )
 
 (use-package tree-sitter-langs)
