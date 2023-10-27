@@ -234,7 +234,10 @@
 (use-package tree-sitter
   :custom
   (treesit-font-lock-level 4)
+  (tree-sitter-hl-mode 1)
   )
+
+(use-package tree-sitter-langs)
 
 (use-package treesit-auto
   :custom
@@ -283,6 +286,10 @@
   :commands
   ( R )
   )
+
+(use-package tree-sitter-ess-r
+  :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
+
 
 ;;; Change windows intuitively 
 
