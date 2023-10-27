@@ -111,6 +111,9 @@
 	 ("C-x C-b" . ibuffer-list-buffers))
   )
 
+(use-package nerd-icons-ibuffer
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -121,6 +124,9 @@
 
 (use-package all-the-icons-ivy-rich
   :after (ivy-rich-mode))
+
+(use-package all-the-icons-dired
+  :after (dired-mode))
 
 ;;; Popup that lists all available shortcuts.
 
@@ -311,7 +317,7 @@
 (use-package cperl-mode
   :mode "\\.(pl|perl)\\'"
   :hook (cperl-mode . lsp-deferred)
-)
+  )
 
 ;;; Following setting modifies the modeline
 
@@ -359,11 +365,11 @@
   (highlight-indent-guides-mode . my-highlight-guides-faces)
   :config
   (setq highlight-indent-guides-auto-enables nil
-	 highlight-indent-guides-method 'column
-	 ;; highlight-indent-guides-character ?\|
-	 highlight-indent-guides-responsive 'top
-	 highlight-indent-guides-delay 0
-	 )
+	highlight-indent-guides-method 'column
+	;; highlight-indent-guides-character ?\|
+	highlight-indent-guides-responsive 'top
+	highlight-indent-guides-delay 0
+	)
   )
 
 (use-package aggressive-indent
@@ -373,6 +379,7 @@
   )
 
 (use-package apheleia
+  ;; code reformating on save
   :config
   (apheleia-global-mode 1)
   )
@@ -396,7 +403,7 @@
         imenu-list-auto-resize nil
 	imenu-list-size 0.25
 	imenu-list-position 'left))
-			    
+
 ;;; Dired functionality
 
 (use-package dired-sidebar
