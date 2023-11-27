@@ -418,6 +418,8 @@
   :bind
   ("C-c s" . dired-sidebar-toggle-sidebar)
   :custom
-  ((dired-sidebar-theme 'vscode)
+  ((dired-sidebar-theme 'nerd)
    (dired-sidebar-use-term-integration t))
+  :config
+  (all-the-icons-dired-mode)
   :commands (dired-sidebar-toggle-sidebar))
