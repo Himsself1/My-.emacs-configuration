@@ -148,17 +148,17 @@
    ([remap describe-variable]. counsel-describe-variable)
    ([remap describe-key] . helpful-key))
   :init
-  (setq modus-themes-mode-line '(accented borderless)
-	modus-themes-region '(accented bg-only)
-	modus-themes-paren-match '(bold intense)
-	modus-themes-syntax '(yellow-comments)
-	modus-themes-headings '((1 . (rainbow extrabold 1.3))
-				(2 . (rainbow semibold 1.2))
-				(3 . (rainbow 1.1)))
-	modus-themes-scale-headings t
-	modus-themes-completions '(selection .(rainbow background))
-	)
-  (counsel-load-theme-action "modus-vivendi"))
+  ;; (setq modus-themes-mode-line '(accented borderless)
+  ;; 	modus-themes-region '(accented bg-only)
+  ;; 	modus-themes-paren-match '(bold intense)
+  ;; 	modus-themes-syntax '(yellow-comments)
+  ;; 	modus-themes-headings '((1 . (rainbow extrabold 1.3))
+  ;; 				(2 . (rainbow semibold 1.2))
+  ;; 				(3 . (rainbow 1.1)))
+  ;; 	modus-themes-scale-headings t
+  ;; 	modus-themes-completions '(selection .(rainbow background))
+  ;; 	)
+  (counsel-load-theme-action "ef-dark"))
 
 ;;; Setting up tabs
 
