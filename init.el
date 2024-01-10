@@ -158,6 +158,10 @@
   ;; 	modus-themes-scale-headings t
   ;; 	modus-themes-completions '(selection .(rainbow background))
   ;; 	)
+  )
+
+(use-package ef-themes
+  :config
   (counsel-load-theme-action "ef-dark"))
 
 ;;; Setting up tabs
@@ -377,7 +381,7 @@
 	;; highlight-indent-guides-character ?\|
 	highlight-indent-guides-responsive 'top
 	highlight-indent-guides-delay 0
-	)
+	)  
   )
 
 (use-package aggressive-indent
