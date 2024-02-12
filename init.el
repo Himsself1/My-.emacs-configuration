@@ -144,8 +144,9 @@
 	modus-themes-scale-headings t
 	modus-themes-completions '(selection .(rainbow background))
 	modus-operandi-tinted-palette-overrides
-	'((bg-main "#c9c9c9")
-	  (bg-dim "#f8f8f8"))
+	'((bg-main "#efe9e9")
+	  (bg-dim "#c9c9c9")
+	  )
 	)
   :config
   (counsel-load-theme-action "modus-operandi-tinted"))
