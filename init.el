@@ -1,25 +1,3 @@
-;;; Remove meny bar and stop message
-
-(setq inhibit-startup-message t ;;Doesn't display startup message
-      visible-bell t ;;Doesn't work in terminal
-      use-dialog-box nil) ;;Disables graphical windows that may pop up
-
-(menu-bar-mode -1)
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-;; HOW DID I NOT KNOW ABOUT THIS?!?!?!
-(xterm-mouse-mode 1)
-
-;; (set-fringe-mode 10)
-;;; Melpa and package
-
-(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-(require 'package)
-
-(setq package-archives '(("gnu" . "http://mirrors.163.com/elpa/gnu/")
-			 ("melpa" . "https://melpa.org/packages/")
-			 ("org" . "http://orgmode.org/elpa/")))
-
 ;;; Custom
 
 (custom-set-variables
@@ -48,6 +26,10 @@
   (package-install 'use-package))
 (require 'use-package)
 (setq use-package-always-ensure t)
+
+;;; xterm-mouse-mode toggle
+
+(global-set-key [f4] 'xterm-mouse-mode)
 
 ;;; Adds line numbers except in case of eshell
 
@@ -147,22 +129,31 @@
    ([remap describe-command] . helpful-command)
    ([remap describe-variable]. counsel-describe-variable)
    ([remap describe-key] . helpful-key))
-  :init
-  ;; (setq modus-themes-mode-line '(accented borderless)
-  ;; 	modus-themes-region '(accented bg-only)
-  ;; 	modus-themes-paren-match '(bold intense)
-  ;; 	modus-themes-syntax '(yellow-comments)
-  ;; 	modus-themes-headings '((1 . (rainbow extrabold 1.3))
-  ;; 				(2 . (rainbow semibold 1.2))
-  ;; 				(3 . (rainbow 1.1)))
-  ;; 	modus-themes-scale-headings t
-  ;; 	modus-themes-completions '(selection .(rainbow background))
-  ;; 	)
+  
   )
 
-(use-package ef-themes
+(use-package modus-themes
+  :init
+  (setq modus-themes-mode-line '(accented borderless)
+	modus-themes-region '(accented bg-only)
+	modus-themes-paren-match '(bold intense)
+	modus-themes-syntax '(yellow-comments)
+	modus-themes-headings '((1 . (rainbow extrabold 1.3))
+				(2 . (rainbow semibold 1.2))
+				(3 . (rainbow 1.1)))
+	modus-themes-scale-headings t
+	modus-themes-completions '(selection .(rainbow background))
+	modus-operandi-tinted-palette-overrides
+	'((bg-main "#c9c9c9")
+	  (bg-dim "#f8f8f8"))
+	)
   :config
-  (counsel-load-theme-action "ef-dark"))
+  (counsel-load-theme-action "modus-operandi-tinted"))
+
+(use-package ef-themes
+  ;; :config
+  ;; (counsel-load-theme-action "modus-operandi")
+  )
 
 ;;; Setting up tabs
 
@@ -374,7 +365,7 @@
 (use-package highlight-indent-guides
   :hook
   (prog-mode . highlight-indent-guides-mode)
-  (highlight-indent-guides-mode . my-highlight-guides-faces)
+  ;; (highlight-indent-guides-mode . my-highlight-guides-faces)
   :config
   (setq highlight-indent-guides-auto-enables nil
 	highlight-indent-guides-method 'column
