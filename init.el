@@ -149,7 +149,7 @@
 	  )
 	)
   :config
-  (counsel-load-theme-action "modus-operandi-tinted"))
+  (counsel-load-theme-action "modus-vivendi"))
 
 (use-package ef-themes
   ;; :config
