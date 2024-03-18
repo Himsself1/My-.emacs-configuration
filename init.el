@@ -1,3 +1,9 @@
+;;; Disable menu bar scroll bar and tool bar
+
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(menu-bar-mode -1)
+
 ;;; Custom
 
 (custom-set-variables
@@ -331,10 +337,13 @@
 ;; 2) open dconf-editor and search for "font" in search bar. terminal profiles will pop up
 ;; 3) copy the name of the font above to the 'font' menu
 ;; 4) change terminal profile, then change back
+
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :config
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
+  (setq doom-modeline-bar-width 4)
+  (setq doom-modeline-height 30)
   (setq doom-line-numbers-style 'relative)
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-buffer-state-icon t)
