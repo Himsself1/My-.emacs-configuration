@@ -4,6 +4,12 @@
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 
+;;; Package archives
+
+(setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+			 ("marmalade" . "http://marmalade-repo.org/packages/")
+			 ("melpa" . "http://melpa.org/packages/")))
+
 ;;; Custom
 
 (custom-set-variables
@@ -44,7 +50,7 @@
 (dolist (mode '(org-mode-hook
 		term-mode-hook
 		eshel-mode-hook))
-  (add-hook mode (lambda() (display-line-numbers-mode 0))))
+  (add-hook mode (lambda() (display-line-numbers-mode -1))))
 (global-hl-line-mode 1)
 
 ;;; Auto Update
