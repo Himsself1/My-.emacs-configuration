@@ -122,6 +122,30 @@
           ("C-x C-q" . wgrep-change-to-wgrep-mode)
           ("C-c C-c" . wgrep-finish-edit)))
 
+;;; Corfu and add-ons
+
+(use-package corfu
+  :bind
+  (:map corfu-map
+	("<escape>" . corfu-quit)
+	("<return>" . corfu-insert)
+	("C-d" . corfu-show-documentation))
+  :custom
+  (corfu-auto 1)
+  (corfu-auto-prefix 1)
+  (corfu-cycle t)
+  (corfu-echo-mode)
+  (corfu-min-width 40)
+  (corfu-quit-no-match t)
+  (corfu-echo-documentation t)
+  :init
+  (global-corfu-mode)
+  )
+
+(use-package nerd-icons-corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+  )
 
 ;;; Popup that lists all available shortcuts.
 
@@ -240,17 +264,22 @@
 	imenu-list-size 0.25
 	imenu-list-position 'left))
 
-;;; Dired functionality
+;;; Dired functionality 
 
-(use-package dired-sidebar
+(use-package treemacs
   :bind
-  ("C-c s" . dired-sidebar-toggle-sidebar)
-  :custom
-  ((dired-sidebar-theme 'nerd)
-   (dired-sidebar-use-term-integration t))
-  :config
-  (all-the-icons-dired-mode)
-  :commands (dired-sidebar-toggle-sidebar))
+  ("C-c s" . treemacs))
+
+
+;; (use-package dired-sidebar
+;;   :bind
+;;   ("C-c s" . dired-sidebar-toggle-sidebar)
+;;   :custom
+;;   ((dired-sidebar-theme 'nerd)
+;;    (dired-sidebar-use-term-integration t))
+;;   :config
+;;   (all-the-icons-dired-mode)
+;;   :commands (dired-sidebar-toggle-sidebar))
 
 
 ;;; Change windows intuitively 
