@@ -91,14 +91,14 @@
 	 ("C-s" . consult-line)
          ;; Switch to another buffer, or bookmarked file, or recently
          ;; opened file.
-         ("M-s M-b" . consult-buffer)))
+         ("C-x b" . consult-buffer)))
 
 (use-package orderless
   :config
   (setq completion-styles '(orderless basic)))
 
-(use-package swiper
-  :bind ( "C-s" . swiper ))
+;; (use-package swiper
+;;   :bind ( "C-s" . swiper ))
 
 (use-package embark
   :bind (("C-." . embark-act)
@@ -172,7 +172,7 @@
   :config
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
   (setq doom-modeline-bar-width 4)
-  (setq doom-modeline-height 30)
+  (setq doom-modeline-height 40)
   (setq doom-line-numbers-style 'relative)
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-buffer-state-icon t)
