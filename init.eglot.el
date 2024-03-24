@@ -266,21 +266,17 @@
 
 ;;; Dired functionality 
 
-(use-package treemacs
+(use-package dired-sidebar
   :bind
-  ("C-c s" . treemacs))
-
-
-;; (use-package dired-sidebar
-;;   :bind
-;;   ("C-c s" . dired-sidebar-toggle-sidebar)
-;;   :custom
-;;   ((dired-sidebar-theme 'nerd)
-;;    (dired-sidebar-use-term-integration t))
-;;   :config
-;;   (all-the-icons-dired-mode)
-;;   :commands (dired-sidebar-toggle-sidebar))
-
+  ("C-c s" . dired-sidebar-toggle-sidebar)
+  :custom
+  ((dired-sidebar-theme 'icons)
+   (dired-sidebar-use-term-integration t)
+   (dired-sidebar-window-fixed 0)
+   (dired-sidebar-use-custom-modeline 0)
+   (dired-sidebar-display-remote-icons 1))
+  :config
+  (all-the-icons-dired-mode 1))
 
 ;;; Change windows intuitively 
 
