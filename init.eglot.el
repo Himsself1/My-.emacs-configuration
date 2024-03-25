@@ -28,7 +28,13 @@
 ;;; Adds line numbers except in case of eshell
 
 (column-number-mode)
-(global-display-line-numbers-mode t)
+
+(use-package display-line-numbers
+  :custom
+  (display-line-numbers-update-width 0)
+  :config
+  (global-display-line-numbers-mode 1))
+
 (dolist (mode '(org-mode-hook
 		term-mode-hook
 		eshel-mode-hook))
@@ -177,6 +183,8 @@
   (consult-theme 'ef-autumn))
 
 (use-package ef-themes
+  :bind
+  ("C-R" . ef-themes-load-random)
   :config
   (consult-theme 'ef-autumn)
   ;; (counsel-load-theme-action "modus-operandi")
