@@ -305,6 +305,12 @@
 
 ;;; Programming Packages
 
+;;; Yasnippet
+
+(use-package yasnippet)
+
+(use-package consult-yasnippet)
+
 ;;; Tree-Sitter and Tree-Sitter-Auto
 
 (use-package tree-sitter
