@@ -144,8 +144,8 @@
   (corfu-min-width 40)
   (corfu-quit-no-match t)
   (corfu-echo-documentation t)
-  :init
-  (global-corfu-mode)
+  :config
+  (global-corfu-mode 1)
   )
 
 (use-package nerd-icons-corfu
