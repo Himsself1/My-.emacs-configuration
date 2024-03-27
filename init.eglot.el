@@ -233,7 +233,7 @@
   (highlight-indent-guides-mode . my-highlight-guides-faces)
   :config
   (setq highlight-indent-guides-auto-enables nil
-	highlight-indent-guides-method 'column-number-
+	highlight-indent-guides-method 'column
 	;; highlight-indent-guides-character ?\|
 	highlight-indent-guides-responsive 'top
 	highlight-indent-guides-delay 0
@@ -374,7 +374,9 @@
   :bind (:map python-mode-map
 	      ( "C-c C-c" . python-shell-send-paragraph-and-step ))
   :init (setq python-shell-interpreter "ipython3"
-	      python-shell-interpreter-args "--simple-prompt -i --pprint --colors=LightBG")
+	      python-shell-interpreter-args "--simple-prompt -i --pprint --colors=LightBG"
+	      ;; major-mode-remap-alist '((python-mode . python-ts-mode))
+	      )
   )
 
 ;;; Cperl
