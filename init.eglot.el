@@ -186,7 +186,7 @@
   :bind
   ("C-R" . ef-themes-load-random)
   :config
-  (consult-theme 'ef-autumn)
+  (consult-theme 'ef-bio)
   ;; (counsel-load-theme-action "modus-operandi")
   )
 
