@@ -313,13 +313,26 @@
 
 ;;; Tree-Sitter and Tree-Sitter-Auto
 
+(use-package eglot
+  :bind(
+	:map eglot-mode-map
+	("C-c d" . eldoc)
+	)
+  )
+
 (use-package tree-sitter
-  :after eglot
-  :config
-  (tree-sitter-hl-mode 1)
+  ;; :after eglot
+  :hook
+  (python-mode . tree-sitter-hl-mode)
+  ;; :custom
+  ;; ()
+  ;; :config
+  ;; (tree-sitter-hl-mode 1)
   ;; :custom
   ;; (treesit-font-lock-level 4)
   )
+
+(use-package tree-sitter-langs)
 
 (use-package treesit-auto
   :custom
@@ -347,8 +360,8 @@
   (;; (ess-r-backend 'lsp)
    (ess-style 'RStudio)
    (ess-auto-width 'window))
-  :hook
-  (ess-mode . 'eglot-ensure)
+  ;; :hook
+  ;; (ess-mode . 'eglot-ensure)
   :commands
   ( R )
   )
@@ -357,7 +370,7 @@
 
 (use-package python-mode
   :mode "\\.py\\'" 
-  :hook (python-mode . 'eglot-ensure)
+  ;; :hook (python-mode . 'eglot-ensure)
   :bind (:map python-mode-map
 	      ( "C-c C-c" . python-shell-send-paragraph-and-step ))
   :init (setq python-shell-interpreter "ipython3"
