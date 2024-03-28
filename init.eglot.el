@@ -4,22 +4,47 @@
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 
+;;; Use straight.el as the package manager
+
+;; Disable the default package.el
+(setq package-enable-at-startup nil)
+
+;; Bootstrap script from straight.el devs
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name
+        "straight/repos/straight.el/bootstrap.el"
+        (or (bound-and-true-p straight-base-dir)
+            user-emacs-directory)))
+      (bootstrap-version 7))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;; Every use-package call will be handled by straight.el
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")
 			 ("melpa" . "http://melpa.org/packages/")))
 
-(package-initialize)
+;; (package-initialize)
 
-(unless package-archive-contents
-  (package-refresh-contents))
+;; (unless package-archive-contents
+;;   (package-refresh-contents))
 
 ;;; Configuring use-package
 
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-(require 'use-package)
-(setq use-package-always-ensure t)
+;; (unless (package-installed-p 'use-package)
+;;   (package-install 'use-package))
+;; (require 'use-package)
+;; (setq use-package-always-ensure t)
 
 ;;; xterm-mouse-mode toggle
 
@@ -69,6 +94,9 @@
   :config
   (all-the-icons-completion-mode 1)
   )
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;;; Vertico, Marginalia, Consult, Embark
 
@@ -153,6 +181,38 @@
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
   )
 
+(use-package cape
+  :after (corfu-mode)
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  )
+
+;;; Company, for when corfu doesn't work
+
+;; (use-package company
+;;   :config
+;;   (setq company-idle-delay 0.05
+;; 	company-minimum-prefix-length 1)
+;;   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
+;;   ;; :hook
+;;   ;; (emacs-lisp-mode . (lambda()
+;;   ;; 		       (setq-local company-backends '(company-elisp))))
+;;   ;; (emacs-lisp-mode . company-mode)
+;;   ;; (lsp-mode . company-mode)
+;;   :bind(:map company-mode-map
+;; 	     ("<tab>" . company-indent-or-complete-common)
+;; 	     ("C-/" . company-search-filtering))
+;;   )
+
+;; Front end customizations for company-mode
+(use-package company-box
+  :hook
+  (company-mode . company-box-mode)
+  :init
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+
 ;;; Popup that lists all available shortcuts.
 
 (use-package which-key
@@ -160,6 +220,7 @@
   :diminish which-key-mode
   :config
   (setq which-key-idle-delay 0.5))
+
 
 ;;; Modus themes, Ef themes and Doom modeline
 
@@ -176,16 +237,13 @@
    modus-themes-completions '(selection .(rainbow background))
    modus-operandi-tinted-palette-overrides
    '((bg-main "#efe9e9")
-     (bg-dim "#c9c9c9")
-     )
-   )
-  :config
-  (consult-theme 'ef-autumn))
+     (bg-dim "#c9c9c9"))
+   ))
 
 (use-package ef-themes
   :bind
   ("C-R" . ef-themes-load-random)
-  :config
+  :init
   (consult-theme 'ef-bio)
   ;; (counsel-load-theme-action "modus-operandi")
   )
@@ -256,12 +314,18 @@
 
 ;; Headers for non-lisp languages are [comment-start + space + *]
 (use-package outli
-  :load-path "~/.emacs.d/outli"
-  :hook( ((prog-mode text-mode) . outli-mode)
-         ((prog-mode text-mode) . outline-minor-mode) )
-  :bind( ([M-down] . outline-next-heading)
-	 ([M-up] . outline-previous-heading)
-	 ))
+  :straight '(outli
+	      :type git
+	      :host github
+	      :repo "jdtsmith/outli")
+  ;; :load-path "~/.emacs.d/outli"
+  :hook(
+	((prog-mode tex-mode) . outli-mode)
+	(outli-mode . global-reveal-mode))
+  :bind(
+	([M-down] . outline-next-heading)
+	([M-up] . outline-previous-heading)
+	))
 
 (use-package imenu-list
   :bind
@@ -341,6 +405,19 @@
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 
+;;; Lsp-bridge
+
+(use-package lsp-bridge
+  :hook
+  (lsp-bridge-mode . (lambda ()
+		       (corfu-mode -1)
+		       (company-box-mode -1)
+		       (company-mode -1)))
+  :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
+			 :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
+			 :build (:not compile))
+  )
+
 ;;; ESS
 
 (use-package ess
@@ -365,6 +442,9 @@
   :commands
   ( R )
   )
+
+(use-package tree-sitter-ess-r
+  :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
 
 ;;; Python
 

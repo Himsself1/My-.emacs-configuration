@@ -46,7 +46,12 @@
 ;;; Adds line numbers except in case of eshell
 
 (column-number-mode)
-(global-display-line-numbers-mode t)
+(use-package display-line-numbers
+  :custom
+  (display-line-numbers-update-width 0)
+  :config
+  (global-display-line-numbers-mode 1))
+
 (dolist (mode '(org-mode-hook
 		term-mode-hook
 		eshel-mode-hook))
@@ -299,7 +304,6 @@
 
 (use-package tree-sitter-ess-r
   :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
-
 
 ;;; Change windows intuitively 
 
