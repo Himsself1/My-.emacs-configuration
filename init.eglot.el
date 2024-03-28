@@ -407,16 +407,16 @@
 
 ;;; Lsp-bridge
 
-(use-package lsp-bridge
-  :hook
-  (lsp-bridge-mode . (lambda ()
-		       (corfu-mode -1)
-		       (company-box-mode -1)
-		       (company-mode -1)))
-  :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
-			 :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
-			 :build (:not compile))
-  )
+;; (use-package lsp-bridge
+;;   :hook
+;;   (lsp-bridge-mode . (lambda ()
+;; 		       (corfu-mode -1)
+;; 		       (company-box-mode -1)
+;; 		       (company-mode -1)))
+;;   :straight '(lsp-bridge :type git :host github :repo "manateelazycat/lsp-bridge"
+;; 			 :files (:defaults "*.el" "*.py" "acm" "core" "langserver" "multiserver" "resources")
+;; 			 :build (:not compile))
+;;   )
 
 ;;; ESS
 
