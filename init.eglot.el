@@ -83,17 +83,14 @@
   (global-auto-revert-mode 1)
   )
 
-;;; Install fonts and all-the-icons
+;;; Inst'all fonts and all-the-icons
 
 (use-package nerd-icons)
 
 (use-package all-the-icons)
 ;; Also run M-x all-the-icons-install-fonts
 
-(use-package all-the-icons-completion
-  :config
-  (all-the-icons-completion-mode 1)
-  )
+(use-package all-the-icons-completion)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -105,13 +102,16 @@
   (vertico-count 10) ; Number of candidates to display
   (vertico-resize t)
   (vertico-cycle 1) ; Go from last to first candidate and first to last (cycle)?
-  :config
-  (vertico-mode))
+  :init
+  (vertico-mode)
+  (all-the-icons-completion-mode 1))
 
 (use-package marginalia
+  :hook
+  (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :custom
   (marginalia-align 'left)
-  :init
+  :config
   (marginalia-mode))
 
 (use-package consult
@@ -173,7 +173,7 @@
   (corfu-quit-no-match t)
   (corfu-echo-documentation t)
   :config
-  (global-corfu-mode 1)
+  (corfu-mode 1)
   )
 
 (use-package nerd-icons-corfu
@@ -207,11 +207,11 @@
 ;;   )
 
 ;; Front end customizations for company-mode
-(use-package company-box
-  :hook
-  (company-mode . company-box-mode)
-  :init
-  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+;; (use-package company-box
+;;   :hook
+;;   (company-mode . company-box-mode)
+;;   :init
+;;   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
 ;;; Popup that lists all available shortcuts.
 
@@ -346,9 +346,11 @@
    (dired-sidebar-use-term-integration t)
    (dired-sidebar-window-fixed 0)
    (dired-sidebar-use-custom-modeline 0)
-   (dired-sidebar-display-remote-icons 1))
-  :config
-  (all-the-icons-dired-mode 1))
+   ;; (dired-sidebar-display-remote-icons 1)
+   )
+  ;;  :config
+  ;; (all-the-icons-dired-mode 1)
+  )
 
 ;;; Change windows intuitively 
 
@@ -375,13 +377,25 @@
 
 (use-package consult-yasnippet)
 
-;;; Tree-Sitter and Tree-Sitter-Auto
+;;; Eglot  Tree-Sitter and Tree-Sitter-Auto
 
 (use-package eglot
   :bind(
 	:map eglot-mode-map
 	("C-c d" . eldoc)
 	)
+  )
+
+;; Try eglot-x
+(use-package eglot-x
+  :straight (eglot-x
+	     :type git
+	     :host github
+	     :repo "nemethf/eglot-x")
+  :after eglot
+  :custom
+  (eglot-x-enable-files 1)
+  (eglot-x-setup)
   )
 
 (use-package tree-sitter
@@ -463,5 +477,5 @@
 
 (use-package cperl-mode
   :mode "\\.(pl|perl)\\'"
-  :hook (cperl-mode . 'eglot-ensure)
+  ;; :hook (cperl-mode . 'eglot-ensure)
   )
