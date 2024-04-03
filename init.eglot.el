@@ -111,7 +111,7 @@
   (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :custom
   (marginalia-align 'left)
-  :init
+  :config
   (marginalia-mode))
 
 (use-package consult
