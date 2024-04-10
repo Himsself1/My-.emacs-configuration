@@ -235,7 +235,7 @@
   :bind
   ("C-R" . ef-themes-load-random)
   :init
-  (consult-theme 'ef-bio)
+  (consult-theme 'ef-duo-light)
   ;; (counsel-load-theme-action "modus-operandi")
   )
 
