@@ -74,7 +74,7 @@
   (global-auto-revert-mode 1)
   )
 
-;;; Inst'all fonts and all-the-icons
+;;; Install fonts and all-the-icons
 
 (use-package nerd-icons)
 
@@ -164,7 +164,7 @@
   (corfu-quit-no-match t)
   (corfu-echo-documentation t)
   :config
-  (corfu-mode 1)
+  (global-corfu-mode 1)
   )
 
 (use-package nerd-icons-corfu
@@ -239,8 +239,6 @@
   ;; (counsel-load-theme-action "modus-operandi")
   )
 
-;;; Following setting modifies the modeline
-
 ;; This took a good deal of tinkering to set up
 ;; Steps to reproduce:
 ;; 1) run nerd-icons-install-fonts in emacs. find the name of font with 'fc-list | grep .local'
@@ -261,6 +259,26 @@
   (setq doom-modeline-project-detection 'auto)
   (setq doom-modeline-highlight-modified-buffer-name t)
   (setq find-file-visit-truename t))
+
+(use-package spacious-padding
+  :bind
+  ("C-c C-v" . spacious-padding-mode)
+  :config
+  (setq spacious-padding-widths
+	'( :internal-border-width 20
+	   ;; :header-line-width 4
+	   ;; :mode-line-width 50
+	   :tab-width 4
+	   :right-divider-width 10
+	   ;; :scroll-bar-width 8
+	   :fringe-width 8
+	   ))
+  ;; (setq spacious-padding-subtle-mode-line
+  ;; 	`( :mode-line-active 'default
+  ;; 	   :mode-line-inactive vertical-border))
+  ;; :init
+  ;; (spacious-padding-mode 1)
+  )
 
 ;;; Magit
 
@@ -368,7 +386,7 @@
 
 (use-package consult-yasnippet)
 
-;;; Eglot  Tree-Sitter and Tree-Sitter-Auto
+;;; Eglot Tree-Sitter and Tree-Sitter-Auto
 
 (use-package eglot
   :bind(
