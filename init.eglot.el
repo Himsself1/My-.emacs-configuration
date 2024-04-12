@@ -407,9 +407,9 @@
   :after eglot
   :config	(eglot-booster-mode))
 
-## Still need to download the emacs-lsp-booster binary from:
-## https://github.com/blahgeek/emacs-lsp-booster/releases
-## and put emacs-lsp-booster into $gPATH
+;;  Still need to download the emacs-lsp-booster binary from:
+;; https://github.com/blahgeek/emacs-lsp-booster/releases
+;; and put emacs-lsp-booster into $PATH
 
 ;; Try eglot-x
 (use-package eglot-x
