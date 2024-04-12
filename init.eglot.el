@@ -39,6 +39,10 @@
 ;; (unless package-archive-contents
 ;;   (package-refresh-contents))
 
+;;; Raise Garbage collection limit
+
+(setq gc-cons-threshold 100000000)
+
 ;;; Configuring use-package
 
 ;; (unless (package-installed-p 'use-package)
@@ -394,6 +398,18 @@
 	("C-c d" . eldoc)
 	)
   )
+
+(use-package eglot-booster
+  :straight (eglot-booster
+	     :type git
+	     :host github
+	     :repo "jdtsmith/eglot-booster")
+  :after eglot
+  :config	(eglot-booster-mode))
+
+## Still need to download the emacs-lsp-booster binary from:
+## https://github.com/blahgeek/emacs-lsp-booster/releases
+## and put emacs-lsp-booster into $gPATH
 
 ;; Try eglot-x
 (use-package eglot-x
