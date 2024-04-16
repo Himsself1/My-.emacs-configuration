@@ -475,7 +475,8 @@
   :custom
   (;; (ess-r-backend 'lsp)
    (ess-style 'RStudio)
-   (ess-auto-width 'window))
+   (ess-auto-width 'window)
+   (ess-toggle_underscore nil))
   ;; :hook
   ;; (ess-mode . 'eglot-ensure)
   :commands
