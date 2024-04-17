@@ -291,24 +291,39 @@
 
 ;;; Highlight Indentation and other indentation utilities
 
-(defun my-highlight-guides-faces ()
-  ;; Custom functiuon that sets indent guides colors so that they match modis-vivendi
-  (set-face-background 'highlight-indent-guides-odd-face "darkslateblue")
-  (set-face-background 'highlight-indent-guides-even-face "darkslateblue")
-  (set-face-background 'highlight-indent-guides-top-odd-face "thistle4")
-  (set-face-background 'highlight-indent-guides-top-even-face "thistle4"))
+;; (defun my-highlight-guides-faces ()
+;;   ;; Custom functiuon that sets indent guides colors so that they match modis-vivendi
+;;   (set-face-background 'highlight-indent-guides-odd-face "darkslateblue")
+;;   (set-face-background 'highlight-indent-guides-even-face "darkslateblue")
+;;   (set-face-background 'highlight-indent-guides-top-odd-face "thistle4")
+;;   (set-face-background 'highlight-indent-guides-top-even-face "thistle4"))
 
-(use-package highlight-indent-guides
-  :hook
-  (prog-mode . highlight-indent-guides-mode)
-  (highlight-indent-guides-mode . my-highlight-guides-faces)
-  :config
-  (setq highlight-indent-guides-auto-enables nil
-	highlight-indent-guides-method 'column
-	;; highlight-indent-guides-character ?\|
-	highlight-indent-guides-responsive 'top
-	highlight-indent-guides-delay 0
-	)  
+;; (use-package highlight-indent-guides
+;;   :hook
+;;   (prog-mode . highlight-indent-guides-mode)
+;;   (highlight-indent-guides-mode . my-highlight-guides-faces)
+;;   :config
+;;   (setq highlight-indent-guides-auto-enables nil
+;; 	highlight-indent-guides-method 'column
+;; 	;; highlight-indent-guides-character ?\|
+;; 	highlight-indent-guides-responsive 'top
+;; 	highlight-indent-guides-delay 0
+;; 	)  
+;;   )
+
+
+(use-package indent-bars
+  :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
+  :hook (prog-mode . indent-bars-mode) ; or whichever modes you prefer
+  :custom(
+	  (indent-bars-treesit-support t)
+	  (indent-bars-treesit-ignore-blank-lines-types '("module"))
+	  (indent-bars-pattern ".")
+	  (indent-bars-width-frac 0.7)
+	  (indent-bars-pad-frac 0.25)
+	  ;; (indent-bars-color-by-depth nil)
+	  (indent-bars-highlight-current-depth '(:face default :blend 0.4))
+	  )
   )
 
 (use-package aggressive-indent
