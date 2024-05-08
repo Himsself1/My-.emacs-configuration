@@ -366,6 +366,9 @@
 
 ;;; Dired functionality 
 
+(use-package all-the-icons-dired
+  :after (dired-mode))
+
 (use-package dired-sidebar
   :bind
   ("C-c s" . dired-sidebar-toggle-sidebar)
@@ -374,10 +377,23 @@
    (dired-sidebar-use-term-integration t)
    (dired-sidebar-window-fixed 0)
    (dired-sidebar-use-custom-modeline 0)
-   ;; (dired-sidebar-display-remote-icons 1)
+   (dired-sidebar-display-remote-icons 0)
    )
-  ;;  :config
-  ;; (all-the-icons-dired-mode 1)
+  :config
+  (all-the-icons-dired-mode 1)
+  )
+
+(use-package casual-dired
+  :straight (casual-dired
+	     :type git
+	     :host github
+	     :repo "kickingvegas/casual-dired")
+  :bind (
+	 (:map dired-mode-map
+	       ("C-o" . 'casual-dired-tmenu))
+	 (:map dired-sidebar-mode-map
+	       ("C-o" . 'casual-dired-tmenu))
+	 )
   )
 
 ;;; Change windows intuitively 
