@@ -370,8 +370,11 @@
   :after (dired-mode))
 
 (use-package dired-sidebar
-  :bind
-  ("C-c s" . dired-sidebar-toggle-sidebar)
+  :bind(
+	("C-c s" . dired-sidebar-toggle-sidebar)
+	:map dired-sidebar-mode-map
+	("C-o" . 'casual-dired-tmenu)
+	)
   :custom
   ((dired-sidebar-theme 'icons)
    (dired-sidebar-use-term-integration t)
@@ -389,10 +392,8 @@
 	     :host github
 	     :repo "kickingvegas/casual-dired")
   :bind (
-	 (:map dired-mode-map
-	       ("C-o" . 'casual-dired-tmenu))
-	 (:map dired-sidebar-mode-map
-	       ("C-o" . 'casual-dired-tmenu))
+	 :map dired-mode-map
+	 ("C-o" . 'casual-dired-tmenu)
 	 )
   )
 
