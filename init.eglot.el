@@ -82,10 +82,15 @@
 
 (use-package nerd-icons)
 
-(use-package all-the-icons)
+(use-package all-the-icons
+  :if (display-graphic-p))
 ;; Also run M-x all-the-icons-install-fonts
 
-(use-package all-the-icons-completion)
+(use-package all-the-icons-completion
+  ;; :hook
+  ;; (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -99,7 +104,7 @@
   (vertico-cycle 1) ; Go from last to first candidate and first to last (cycle)?
   :init
   (vertico-mode)
-  (all-the-icons-completion-mode 1))
+  )
 
 (use-package marginalia
   :hook
@@ -171,10 +176,10 @@
   (global-corfu-mode 1)
   )
 
-(use-package nerd-icons-corfu
-  :config
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
-  )
+;; (use-package nerd-icons-corfu
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+;;   )
 
 (use-package cape
   :after (corfu-mode)
@@ -475,6 +480,26 @@
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
+
+(use-package lsp-mode
+  ;; :straight (lsp-mode :type git :host github :repo "emacs-lsp/lsp-mode")
+  :straight t
+  :config
+  (lsp-enable-which-key-integration t)
+  )
+
+(use-package lsp-ui
+  :straight (lsp-ui :type git :host github :repo "emacs-lsp/lsp-ui")
+  :diminish
+  :hook
+  (lsp-mode . lsp-ui-mode)
+  :bind
+  (:map lsp-ui-mode-map
+	([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+	([remap xref-find-references] . lsp-ui-peek-find-references))
+  :config
+  (lsp-ui-peak-enable)
+  )
 
 ;;; Lsp-bridge
 
