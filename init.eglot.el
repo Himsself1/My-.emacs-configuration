@@ -238,14 +238,23 @@
    modus-operandi-tinted-palette-overrides
    '((bg-main "#efe9e9")
      (bg-dim "#c9c9c9"))
-   ))
+   )
+  )
 
 (use-package ef-themes
   :bind
   ("C-R" . ef-themes-load-random)
-  :init
-  (consult-theme 'ef-duo-light)
+  ;; :init
+  ;; (consult-theme 'ef-duo-light)
   ;; (counsel-load-theme-action "modus-operandi")
+  )
+
+(use-package doom-themes
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  (consult-theme 'doom-dark+)
   )
 
 ;; This took a good deal of tinkering to set up
