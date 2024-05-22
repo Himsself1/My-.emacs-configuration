@@ -61,8 +61,10 @@
 (use-package display-line-numbers
   :custom
   (display-line-numbers-update-width 0)
+  (display-line-numbers-grow-only 1)
   :config
-  (global-display-line-numbers-mode 1))
+  (global-display-line-numbers-mode 1)
+  )
 
 (dolist (mode '(org-mode-hook
 		term-mode-hook
@@ -167,11 +169,11 @@
   :custom
   (corfu-auto 1)
   (corfu-auto-prefix 1)
+  (corfu-auto-delay 0.2)
   (corfu-cycle t)
   (corfu-echo-mode)
   (corfu-min-width 40)
   (corfu-quit-no-match t)
-  (corfu-echo-documentation t)
   :config
   (global-corfu-mode 1)
   )
@@ -443,6 +445,8 @@
 	:map eglot-mode-map
 	("C-c d" . eldoc)
 	)
+  :config
+  (eglot-events-buffer-size 0)
   )
 
 (use-package eglot-booster
@@ -451,7 +455,10 @@
 	     :host github
 	     :repo "jdtsmith/eglot-booster")
   :after eglot
-  :config	(eglot-booster-mode))
+  :config
+  (eglot-booster-no-remote-boost 1)
+  (eglot-booster-mode)
+  )
 
 ;;  Still need to download the emacs-lsp-booster binary from:
 ;; https://github.com/blahgeek/emacs-lsp-booster/releases
@@ -470,13 +477,13 @@
   )
 
 (use-package tree-sitter
-  ;; :after eglot
-  :hook
-  (python-mode . tree-sitter-hl-mode)
+  :after eglot
+  ;; :hook
+  ;; (python-mode . tree-sitter-hl-mode)
   ;; :custom
   ;; ()
-  ;; :config
-  ;; (tree-sitter-hl-mode 1)
+  :config
+  (tree-sitter-hl-mode 1)
   ;; :custom
   ;; (treesit-font-lock-level 4)
   )
@@ -503,7 +510,7 @@
   :hook
   (lsp-mode . lsp-ui-mode)
   :bind
-  (:map lsp-ui-mode-map
+  (:map lsp-mode-map
 	([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
 	([remap xref-find-references] . lsp-ui-peek-find-references))
   :config
