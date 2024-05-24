@@ -85,17 +85,20 @@
 (use-package nerd-icons)
 
 (use-package all-the-icons
-  :if (display-graphic-p))
+  :if (display-graphic-p)
+  )
 ;; Also run M-x all-the-icons-install-fonts
 
 (use-package all-the-icons-completion
   ;; :hook
   ;; (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :init
-  (all-the-icons-completion-mode))
+  (all-the-icons-completion-mode)
+  )
 
 (use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook (prog-mode . rainbow-delimiters-mode)
+  )
 
 ;;; Vertico, Marginalia, Consult, Embark
 
@@ -113,8 +116,9 @@
   (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :custom
   (marginalia-align 'left)
-  :config
-  (marginalia-mode))
+  :init
+  (marginalia-mode)
+  )
 
 (use-package consult
   :bind (;; A recursive grep
@@ -127,11 +131,13 @@
 	 ("C-s" . consult-line)
          ;; Switch to another buffer, or bookmarked file, or recently
          ;; opened file.
-         ("C-x b" . consult-buffer)))
+         ("C-x b" . consult-buffer))
+  )
 
 (use-package orderless
   :config
-  (setq completion-styles '(orderless basic)))
+  (setq completion-styles '(orderless basic))
+  )
 
 ;; (use-package swiper
 ;;   :bind ( "C-s" . swiper ))
@@ -140,7 +146,8 @@
   :bind (("C-." . embark-act)
          :map minibuffer-local-map
          ("C-c C-c" . embark-collect)
-         ("C-c C-e" . embark-export)))
+         ("C-c C-e" . embark-export))
+  )
 
 ;; The `embark-consult' package is glue code to tie together `embark'
 ;; and `consult'.
@@ -278,7 +285,8 @@
   (setq doom-modeline-major-mode-color-icon t)
   (setq doom-modeline-project-detection 'auto)
   (setq doom-modeline-highlight-modified-buffer-name t)
-  (setq find-file-visit-truename t))
+  (setq find-file-visit-truename t)
+  )
 
 (use-package spacious-padding
   :bind
@@ -303,7 +311,8 @@
 ;;; Magit
 
 (use-package magit
-  :bind("C-c C-m" . magit-status) )
+  :bind("C-c C-m" . magit-status)
+  )
 
 ;;; Highlight Indentation and other indentation utilities
 
@@ -365,11 +374,13 @@
   ;; :load-path "~/.emacs.d/outli"
   :hook(
 	((prog-mode tex-mode) . outli-mode)
-	(outli-mode . global-reveal-mode))
+	(outli-mode . global-reveal-mode)
+	)
   :bind(
 	([M-down] . outline-next-heading)
 	([M-up] . outline-previous-heading)
-	))
+	)
+  )
 
 (use-package imenu-list
   :bind
@@ -378,12 +389,14 @@
   (setq imenu-list-focus-after-activation t
         imenu-list-auto-resize nil
 	imenu-list-size 0.25
-	imenu-list-position 'left))
+	imenu-list-position 'left)
+  )
 
 ;;; Dired functionality 
 
 (use-package all-the-icons-dired
-  :after (dired-mode))
+  :after (dired-mode)
+  )
 
 (use-package dired-sidebar
   :bind(
@@ -495,7 +508,8 @@
   (treesit-auto-install 'prompt)
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
+  (global-treesit-auto-mode)
+  )
 
 (use-package lsp-mode
   ;; :straight (lsp-mode :type git :host github :repo "emacs-lsp/lsp-mode")
