@@ -84,14 +84,12 @@
 
 (use-package nerd-icons)
 
-(use-package all-the-icons
-  :if (display-graphic-p)
-  )
+(use-package all-the-icons)
 ;; Also run M-x all-the-icons-install-fonts
 
 (use-package all-the-icons-completion
-  ;; :hook
-  ;; (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :hook
+  (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :init
   (all-the-icons-completion-mode)
   )
@@ -176,19 +174,18 @@
   :custom
   (corfu-auto 1)
   (corfu-auto-prefix 1)
-  (corfu-auto-delay 0.2)
+  (corfu-auto-delay 0.02)
   (corfu-cycle t)
-  (corfu-echo-mode)
-  (corfu-min-width 40)
+  (corfu-min-width 80)
   (corfu-quit-no-match t)
   :config
   (global-corfu-mode 1)
   )
 
-;; (use-package nerd-icons-corfu
-;;   :config
-;;   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
-;;   )
+(use-package nerd-icons-corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+  )
 
 (use-package cape
   :after (corfu-mode)
@@ -507,8 +504,8 @@
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode)
+  (treesit-auto-add-to-auto-mode-alist 'all)
   )
 
 (use-package lsp-mode
@@ -589,6 +586,7 @@
 ;;; Cperl
 
 (use-package cperl-mode
-  :mode "\\.(pl|perl)\\'"
+  :mode "\\\\.\\(p\\([lm]\\)\\)\\'"
+  ;; :custom (major-mode-remap-alist)
   ;; :hook (cperl-mode . 'eglot-ensure)
   )
