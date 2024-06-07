@@ -32,7 +32,8 @@
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 			 ("marmalade" . "http://marmalade-repo.org/packages/")
-			 ("melpa" . "http://melpa.org/packages/")))
+			 ("melpa" . "http://melpa.org/packages/"))
+      )
 
 ;; (package-initialize)
 
@@ -161,7 +162,8 @@
   :bind ( :map grep-mode-map
           ("e" . wgrep-change-to-wgrep-mode)
           ("C-x C-q" . wgrep-change-to-wgrep-mode)
-          ("C-c C-c" . wgrep-finish-edit)))
+          ("C-c C-c" . wgrep-finish-edit))
+  )
 
 ;;; Corfu and add-ons
 
@@ -183,8 +185,15 @@
   )
 
 (use-package nerd-icons-corfu
-  :config
+  :custom
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+  )
+
+(use-package nerd-icons-completion
+  :config
+  (nerd-icons-completion-mode)
+  :hook
+  (marginalia-mode . nerd-icons-completion-marginalia-setup)
   )
 
 (use-package cape
@@ -225,7 +234,8 @@
   :init (which-key-mode)
   :diminish which-key-mode
   :config
-  (setq which-key-idle-delay 0.5))
+  (setq which-key-idle-delay 0.5)
+  )
 
 
 ;;; Modus themes, Ef themes and Doom modeline
@@ -391,9 +401,13 @@
 
 ;;; Dired functionality 
 
-(use-package all-the-icons-dired
-  :after (dired-mode)
-  )
+;; (use-package all-the-icons-dired
+;;   :after (dired-mode)
+;;   )
+
+(use-package nerd-icons-dired
+  :hook
+  (dired-mode . nerd-icons-dired-mode))
 
 (use-package dired-sidebar
   :bind(
@@ -402,14 +416,14 @@
 	("C-o" . 'casual-dired-tmenu)
 	)
   :custom
-  ((dired-sidebar-theme 'icons)
+  ((dired-sidebar-theme 'none)
    (dired-sidebar-use-term-integration t)
    (dired-sidebar-window-fixed 0)
    (dired-sidebar-use-custom-modeline 0)
    (dired-sidebar-display-remote-icons 0)
    )
-  :config
-  (all-the-icons-dired-mode 1)
+  ;; :config
+  ;; (all-the-icons-dired-mode 1)
   )
 
 (use-package casual-dired
