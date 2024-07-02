@@ -88,12 +88,12 @@
 (use-package all-the-icons)
 ;; Also run M-x all-the-icons-install-fonts
 
-(use-package all-the-icons-completion
-  :hook
-  (marginalia-mode . all-the-icons-completion-marginalia-setup)
-  :init
-  (all-the-icons-completion-mode)
-  )
+;; (use-package all-the-icons-completion
+;;   :hook
+;;   (marginalia-mode . all-the-icons-completion-marginalia-setup)
+;;   :init
+;;   (all-the-icons-completion-mode)
+;;   )
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode)
@@ -135,7 +135,7 @@
 
 (use-package orderless
   :config
-  (setq completion-styles '(orderless basic))
+  (setq completion-styles '(basic orderless))
   )
 
 ;; (use-package swiper
@@ -167,27 +167,27 @@
 
 ;;; Corfu and add-ons
 
-(use-package corfu
-  :bind
-  (:map corfu-map
-	("<escape>" . corfu-quit)
-	("<return>" . corfu-insert)
-	("C-d" . corfu-show-documentation))
-  :custom
-  (corfu-auto 1)
-  (corfu-auto-prefix 1)
-  (corfu-auto-delay 0.02)
-  (corfu-cycle t)
-  (corfu-min-width 80)
-  (corfu-quit-no-match t)
-  :config
-  (global-corfu-mode 1)
-  )
+;; (use-package corfu
+;;   :bind
+;;   (:map corfu-map
+;; 	("<escape>" . corfu-quit)
+;; 	("<return>" . corfu-insert)
+;; 	("C-d" . corfu-show-documentation))
+;;   :custom
+;;   (corfu-auto 1)
+;;   (corfu-auto-prefix 1)
+;;   (corfu-auto-delay 0.02)
+;;   (corfu-cycle t)
+;;   (corfu-min-width 80)
+;;   (corfu-quit-no-match t)
+;;   :config
+;;   (global-corfu-mode 1)
+;;   )
 
-(use-package nerd-icons-corfu
-  :custom
-  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
-  )
+;; (use-package nerd-icons-corfu
+;;   :custom
+;;   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
+;;   )
 
 (use-package nerd-icons-completion
   :config
@@ -206,27 +206,34 @@
 
 ;;; Company, for when corfu doesn't work
 
-;; (use-package company
-;;   :config
-;;   (setq company-idle-delay 0.05
-;; 	company-minimum-prefix-length 1)
-;;   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
-;;   ;; :hook
-;;   ;; (emacs-lisp-mode . (lambda()
-;;   ;; 		       (setq-local company-backends '(company-elisp))))
-;;   ;; (emacs-lisp-mode . company-mode)
-;;   ;; (lsp-mode . company-mode)
-;;   :bind(:map company-mode-map
-;; 	     ("<tab>" . company-indent-or-complete-common)
-;; 	     ("C-/" . company-search-filtering))
-;;   )
+(use-package company
+  :init
+  (global-company-mode 1)
+  :config
+  (setq company-idle-delay 0.05
+	company-minimum-prefix-length 1)
+  (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
+  ;; :hook
+  ;; (emacs-lisp-mode . (lambda()
+  ;; 		       (setq-local company-backends '(company-elisp))))
+  ;; (emacs-lisp-mode . company-mode)
+  ;; (lsp-mode . company-mode)
+  :bind(
+	:map company-mode-map
+	("<tab>" . company-indent-or-complete-common)
+	("C-/" . company-search-filtering)
+	:map company-active-map
+	("RET" . company-complete-selection)
+	)
+  )
 
 ;; Front end customizations for company-mode
-;; (use-package company-box
-;;   :hook
-;;   (company-mode . company-box-mode)
-;;   :init
-;;   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+(use-package company-box
+  :hook
+  (company-mode . company-box-mode)
+  :config
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+  )
 
 ;;; Popup that lists all available shortcuts.
 
@@ -532,6 +539,7 @@
 (use-package lsp-ui
   :straight (lsp-ui :type git :host github :repo "emacs-lsp/lsp-ui")
   :diminish
+  :after lsp-mode
   :hook
   (lsp-mode . lsp-ui-mode)
   :bind
