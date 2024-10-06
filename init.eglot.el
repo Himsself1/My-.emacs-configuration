@@ -111,8 +111,8 @@
   )
 
 (use-package marginalia
-  :hook
-  (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  ;; :hook
+  ;; (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :custom
   (marginalia-align 'left)
   :init
@@ -508,7 +508,7 @@
   )
 
 (use-package tree-sitter
-  :after eglot
+  ;; :after eglot
   ;; :hook
   ;; (python-mode . tree-sitter-hl-mode)
   ;; :custom
@@ -518,6 +518,11 @@
   ;; :custom
   ;; (treesit-font-lock-level 4)
   )
+
+(use-package treesit-fold
+  :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold"))
+
+(treesit-fold-indicators-mode 1)
 
 (use-package tree-sitter-langs)
 
