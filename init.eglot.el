@@ -509,20 +509,23 @@
 
 (use-package tree-sitter
   ;; :after eglot
-  ;; :hook
-  ;; (python-mode . tree-sitter-hl-mode)
+  :hook
+  (prog-mode . tree-sitter-hl-mode)
   ;; :custom
   ;; ()
-  :config
-  (tree-sitter-hl-mode 1)
-  ;; :custom
-  ;; (treesit-font-lock-level 4)
+  ;; :config
+  ;; (tree-sitter-hl-mode 1)
+  :custom
+  (treesit-font-lock-level 4)
   )
 
 (use-package treesit-fold
-  :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold"))
-
-(treesit-fold-indicators-mode 1)
+  :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
+  :after
+  (tree-sitter-mode)
+  :config
+  (treesit-fold-indicators-mode 1)
+  )
 
 (use-package tree-sitter-langs)
 
@@ -544,7 +547,7 @@
 (use-package lsp-ui
   :straight (lsp-ui :type git :host github :repo "emacs-lsp/lsp-ui")
   :diminish
-  :after lsp-mode
+  ;; :after lsp-mode
   :hook
   (lsp-mode . lsp-ui-mode)
   :bind
@@ -600,7 +603,10 @@
 ;;; Python
 
 (use-package python-mode
-  :mode "\\.py\\'" 
+  :mode (
+	 ("\\.py\\'" . python-mode)
+	 ("\\.python\\'" . python-mode)
+	 )
   ;; :hook (python-mode . 'eglot-ensure)
   :bind (:map python-mode-map
 	      ( "C-c C-c" . python-shell-send-paragraph-and-step ))
