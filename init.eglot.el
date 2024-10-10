@@ -603,10 +603,10 @@
 ;;; Python
 
 (use-package python-mode
-  :mode (
-	 ("\\.py\\'" . python-mode)
-	 ("\\.python\\'" . python-mode)
-	 )
+  ;; :mode (
+  ;; 	 ("\\.py\\'" . python-mode)
+  ;; 	 ("\\.python\\'" . python-mode)
+  ;; 	 )
   ;; :hook (python-mode . 'eglot-ensure)
   :bind (:map python-mode-map
 	      ( "C-c C-c" . python-shell-send-paragraph-and-step ))
