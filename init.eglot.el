@@ -519,13 +519,13 @@
   (treesit-font-lock-level 4)
   )
 
-(use-package treesit-fold
-  :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
-  :after
-  (tree-sitter-mode)
-  :config
-  (treesit-fold-indicators-mode 1)
-  )
+;; (use-package treesit-fold
+;;   :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
+;;   :after
+;;   (tree-sitter-mode)
+;;   :config
+;;   (treesit-fold-indicators-mode 1)
+;;   )
 
 (use-package tree-sitter-langs)
 
