@@ -207,12 +207,12 @@
 ;;; Company, for when corfu doesn't work
 
 (use-package company
-  :init
-  (global-company-mode 1)
   :config
   (setq company-idle-delay 0.05
 	company-minimum-prefix-length 1)
   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
+  :hook
+  (prog-mode . company-mode)
   ;; :hook
   ;; (emacs-lisp-mode . (lambda()
   ;; 		       (setq-local company-backends '(company-elisp))))
@@ -326,6 +326,13 @@
 
 (use-package magit
   :bind("C-c C-m" . magit-status)
+  ;; :hook
+  ;; (magit-status-mode . (lambda()
+  ;; 			 (setq-local company-mode 0
+  ;; 				     global-company-mode 0)
+  ;; 			 )
+  ;; 		     )
+  ;; :config
   )
 
 ;;; Highlight Indentation and other indentation utilities
@@ -422,15 +429,16 @@
 	:map dired-sidebar-mode-map
 	("C-o" . 'casual-dired-tmenu)
 	)
-  :custom
-  ((dired-sidebar-theme 'none)
-   (dired-sidebar-use-term-integration t)
-   (dired-sidebar-window-fixed 0)
-   (dired-sidebar-use-custom-modeline 0)
-   (dired-sidebar-display-remote-icons 0)
-   )
+  :custom(
+	  (dired-sidebar-theme 'none)
+	  (dired-sidebar-use-term-integration t)
+	  (dired-sidebar-window-fixed 0)
+	  (dired-sidebar-use-custom-modeline 0)
+	  (dired-sidebar-display-remote-icons 0)
+	  )
   ;; :config
-  ;; (all-the-icons-dired-mode 1)
+  ;; (setq-local company-mode 0
+  ;; 	      global-company-mode 0)
   )
 
 (use-package casual-dired
@@ -441,6 +449,7 @@
   :bind (
 	 :map dired-mode-map
 	 ("C-o" . 'casual-dired-tmenu)
+	 ("C-<tab>" . dired-subtree-toggle)
 	 )
   )
 
