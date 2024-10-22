@@ -262,6 +262,7 @@
    '((bg-main "#efe9e9")
      (bg-dim "#c9c9c9"))
    )
+  (consult-theme 'modus-vivendi-tritanopia)
   )
 
 (use-package ef-themes
@@ -277,7 +278,7 @@
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
         doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  (consult-theme 'doom-dark+)
+  ;; (consult-theme 'doom-dark+)
   )
 
 ;; This took a good deal of tinkering to set up
