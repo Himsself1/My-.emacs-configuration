@@ -622,3 +622,7 @@
   ;; :custom (major-mode-remap-alist)
   ;; :hook (cperl-mode . 'eglot-ensure)
   )
+
+;;; GPTELL
+
+(use-package gptel)
