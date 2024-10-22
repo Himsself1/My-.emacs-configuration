@@ -220,7 +220,7 @@
   ;; (lsp-mode . company-mode)
   :bind(
 	:map company-mode-map
-	("<tab>" . company-indent-or-complete-common)
+	;; ("<tab>" . company-indent-or-complete-common)
 	("C-/" . company-search-filtering)
 	:map company-active-map
 	("RET" . company-complete-selection)
