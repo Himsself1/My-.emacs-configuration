@@ -625,4 +625,30 @@
 
 ;;; GPTELL
 
-(use-package gptel)
+;; In order not to save the gemini api key on the config file
+;; I need to tell emacs to read the key from a different file
+
+(defun your-read-lines (file n)
+  "Return first N lines of FILE."
+  (with-temp-buffer
+    (insert-file-contents-literally file)
+    (cl-loop repeat n
+             unless (eobp)
+             collect (prog1 (buffer-substring-no-properties
+                             (line-beginning-position)
+                             (line-end-position))
+                       (forward-line 1))))
+  )
+
+(use-package gptel
+  :config
+  (setq gptel-model 'gemini)
+  (setq gptel-backend (gptel-make-gemini "Gemini"
+			:key (nth 0 (your-read-lines "~/my-emacs-config/gemini.api.txt" 1))
+			:stream t))
+  :bind(
+	:map gptel-mode-map
+	("C-c C-c" . gptel-send)
+	)
+  )
+
