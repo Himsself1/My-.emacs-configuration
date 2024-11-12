@@ -422,7 +422,8 @@
 
 (use-package nerd-icons-dired
   :hook
-  (dired-mode . nerd-icons-dired-mode))
+  (dired-mode . nerd-icons-dired-mode)
+  (dired-sidebar-mode . nerd-icons-dired-mode))
 
 (use-package dired-sidebar
   :bind(
@@ -437,7 +438,11 @@
 	  (dired-sidebar-use-custom-modeline 0)
 	  (dired-sidebar-display-remote-icons 0)
 	  )
+  :hook
+  (dired-sidebar-mode . (lambda()
+			  (setq doom-modeline-mode 1)))
   ;; :config
+  ;; (setq-local doom-modeline-mode 1)
   ;; (setq-local company-mode 0
   ;; 	      global-company-mode 0)
   )
