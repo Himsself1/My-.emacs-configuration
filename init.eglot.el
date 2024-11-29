@@ -40,9 +40,40 @@
 ;; (unless package-archive-contents
 ;;   (package-refresh-contents))
 
+(setq custom-file (locate-user-emacs-file "custom.el"))
+(load custom-file :no-error-if-file-is-missing)
+
 ;;; Raise Garbage collection limit
 
 (setq gc-cons-threshold 100000000)
+
+;;; Better C-g from Prot's config
+
+(defun prot/keyboard-quit-dwim ()
+  "Do-What-I-Mean behaviour for a general `keyboard-quit'.
+
+The generic `keyboard-quit' does not do the expected thing when
+the minibuffer is open.  Whereas we want it to close the
+minibuffer, even without explicitly focusing it.
+
+The DWIM behaviour of this command is as follows:
+
+- When the region is active, disable it.
+- When a minibuffer is open, but not focused, close the minibuffer.
+- When the Completions buffer is selected, close it.
+- In every other case use the regular `keyboard-quit'."
+  (interactive)
+  (cond
+   ((region-active-p)
+    (keyboard-quit))
+   ((derived-mode-p 'completion-list-mode)
+    (delete-completion-window))
+   ((> (minibuffer-depth) 0)
+    (abort-recursive-edit))
+   (t
+    (keyboard-quit))))
+
+(define-key global-map (kbd "C-g") #'prot/keyboard-quit-dwim)
 
 ;;; Configuring use-package
 
@@ -54,6 +85,12 @@
 ;;; xterm-mouse-mode toggle
 
 (global-set-key [f4] 'xterm-mouse-mode)
+
+;;; Deletes selected text upon insertion
+
+(use-package delsel
+  :ensure nil ; no need to install it as it is built-in
+  :hook (after-init . delete-selection-mode))
 
 ;;; Adds line numbers except in case of eshell
 
@@ -85,7 +122,7 @@
 
 (use-package nerd-icons)
 
-(use-package all-the-icons)
+;; (use-package all-the-icons)
 ;; Also run M-x all-the-icons-install-fonts
 
 ;; (use-package all-the-icons-completion
@@ -111,8 +148,8 @@
   )
 
 (use-package marginalia
-  :hook
-  (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  ;; :hook
+  ;; (marginalia-mode . all-the-icons-completion-marginalia-setup)
   :custom
   (marginalia-align 'left)
   :init
@@ -167,27 +204,27 @@
 
 ;;; Corfu and add-ons
 
-;; (use-package corfu
-;;   :bind
-;;   (:map corfu-map
-;; 	("<escape>" . corfu-quit)
-;; 	("<return>" . corfu-insert)
-;; 	("C-d" . corfu-show-documentation))
-;;   :custom
-;;   (corfu-auto 1)
-;;   (corfu-auto-prefix 1)
-;;   (corfu-auto-delay 0.02)
-;;   (corfu-cycle t)
-;;   (corfu-min-width 80)
-;;   (corfu-quit-no-match t)
-;;   :config
-;;   (global-corfu-mode 1)
-;;   )
+(use-package corfu
+  :ensure t
+  :hook (after-init . global-corfu-mode)
+  :bind (
+	 :map corfu-map
+	 ("<tab>" . corfu-complete)
+	 ("<return>" . corfu-insert)
+	 )
+  :config
+  (setq tab-always-indent 'complete)
+  (setq corfu-preview-current nil)
+  (setq corfu-min-width 20)
+  (setq corfu-popupinfo-delay '(1.25 . 0.5))
+  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+  )
 
-;; (use-package nerd-icons-corfu
-;;   :custom
-;;   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter)
-;;   )
+(use-package nerd-icons-corfu
+  :ensure t
+  :after corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package nerd-icons-completion
   :config
@@ -211,8 +248,8 @@
   (setq company-idle-delay 0.05
 	company-minimum-prefix-length 1)
   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
-  :hook
-  (prog-mode . company-mode)
+  ;; :hook
+  ;; (prog-mode . company-mode)
   ;; :hook
   ;; (emacs-lisp-mode . (lambda()
   ;; 		       (setq-local company-backends '(company-elisp))))
@@ -420,6 +457,18 @@
 ;;   :after (dired-mode)
 ;;   )
 
+(use-package dired-subtree
+  :ensure t
+  :after dired
+  :bind
+  ( :map dired-mode-map
+    ("<tab>" . dired-subtree-toggle)
+    ("TAB" . dired-subtree-toggle)
+    ("<backtab>" . dired-subtree-remove)
+    ("S-TAB" . dired-subtree-remove))
+  :config
+  (setq dired-subtree-use-backgrounds nil))
+
 (use-package nerd-icons-dired
   :hook
   (dired-mode . nerd-icons-dired-mode)
@@ -438,13 +487,6 @@
 	  (dired-sidebar-use-custom-modeline 0)
 	  (dired-sidebar-display-remote-icons 0)
 	  )
-  :hook
-  (dired-sidebar-mode . (lambda()
-			  (setq doom-modeline-mode 1)))
-  ;; :config
-  ;; (setq-local doom-modeline-mode 1)
-  ;; (setq-local company-mode 0
-  ;; 	      global-company-mode 0)
   )
 
 (use-package casual-dired
@@ -642,7 +684,7 @@
              collect (prog1 (buffer-substring-no-properties
                              (line-beginning-position)
                              (line-end-position))
-                       (forward-line 1))))
+		       (forward-line 1))))
   )
 
 (use-package gptel
