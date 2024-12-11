@@ -28,6 +28,9 @@
 
 ;; Every use-package call will be handled by straight.el
 (straight-use-package 'use-package)
+(straight-use-package '(project :type built-in))
+(straight-use-package '(xref :type built-in))
+
 (setq straight-use-package-by-default t)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
@@ -90,7 +93,9 @@ The DWIM behaviour of this command is as follows:
 
 (use-package delsel
   :ensure nil ; no need to install it as it is built-in
-  :hook (after-init . delete-selection-mode))
+  :config
+  (delete-selection-mode)
+  )
 
 ;;; Adds line numbers except in case of eshell
 
@@ -206,17 +211,20 @@ The DWIM behaviour of this command is as follows:
 
 (use-package corfu
   :ensure t
-  :hook (after-init . global-corfu-mode)
   :bind (
 	 :map corfu-map
 	 ("<tab>" . corfu-complete)
 	 ("<return>" . corfu-insert)
 	 )
   :config
+  (setq corfu-auto t)
+  (setq corfu-auto-delay 0.3)
+  (setq corfu-auto-prefix 2)
   (setq tab-always-indent 'complete)
   (setq corfu-preview-current nil)
   (setq corfu-min-width 20)
   (setq corfu-popupinfo-delay '(1.25 . 0.5))
+  (global-corfu-mode)
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
   )
 
@@ -403,8 +411,8 @@ The DWIM behaviour of this command is as follows:
 	  (indent-bars-treesit-support t)
 	  (indent-bars-treesit-ignore-blank-lines-types '("module"))
 	  (indent-bars-pattern ".")
-	  (indent-bars-width-frac 0.7)
-	  (indent-bars-pad-frac 0.25)
+	  (indent-bars-width-frac 0.5)
+	  (indent-bars-pad-frac 0.01)
 	  ;; (indent-bars-color-by-depth nil)
 	  (indent-bars-highlight-current-depth '(:face default :blend 0.4))
 	  )
@@ -477,8 +485,8 @@ The DWIM behaviour of this command is as follows:
 (use-package dired-sidebar
   :bind(
 	("C-c s" . dired-sidebar-toggle-sidebar)
-	:map dired-sidebar-mode-map
-	("C-o" . 'casual-dired-tmenu)
+	;; :map dired-sidebar-mode-map
+	;; ("C-o" . 'casual-dired-tmenu)
 	)
   :custom(
 	  (dired-sidebar-theme 'none)
@@ -489,17 +497,17 @@ The DWIM behaviour of this command is as follows:
 	  )
   )
 
-(use-package casual-dired
-  :straight (casual-dired
-	     :type git
-	     :host github
-	     :repo "kickingvegas/casual-dired")
-  :bind (
-	 :map dired-mode-map
-	 ("C-o" . 'casual-dired-tmenu)
-	 ("C-<tab>" . dired-subtree-toggle)
-	 )
-  )
+;; (use-package casual-dired
+;;   :straight (casual-dired
+;; 	     :type git
+;; 	     :host github
+;; 	     :repo "kickingvegas/casual-dired")
+;;   :bind (
+;; 	 :map dired-mode-map
+;; 	 ("C-o" . 'casual-dired-tmenu)
+;; 	 ("C-<tab>" . dired-subtree-toggle)
+;; 	 )
+;;   )
 
 ;;; Change windows intuitively 
 
@@ -533,47 +541,53 @@ The DWIM behaviour of this command is as follows:
 	:map eglot-mode-map
 	("C-c d" . eldoc)
 	)
-  :config
-  (eglot-events-buffer-size 0)
+  :config(
+	  (eglot-events-buffer-size 0)
+	  (fset #'jsonrpc--log-event #'ignore)
+	  (eglot-extend-to-xref 1)
+	  (eglot-sync-connect 0)
+	  (eldoc-echo-area-use-multiline-p nil)
+	  (eglot-connect-timeout nil)
+	  )
   )
 
-(use-package eglot-booster
-  :straight (eglot-booster
-	     :type git
-	     :host github
-	     :repo "jdtsmith/eglot-booster")
-  :after eglot
-  :config
-  (eglot-booster-no-remote-boost 1)
-  (eglot-booster-mode)
-  )
+;; (use-package eglot-booster
+;;   :straight (eglot-booster
+;; 	     :type git
+;; 	     :host github
+;; 	     :repo "jdtsmith/eglot-booster")
+;;   :after eglot
+;;   :config
+;;   (eglot-booster-no-remote-boost 1)
+;;   (eglot-booster-mode)
+;;   )
 
 ;;  Still need to download the emacs-lsp-booster binary from:
 ;; https://github.com/blahgeek/emacs-lsp-booster/releases
 ;; and put emacs-lsp-booster into $PATH
 
 ;; Try eglot-x
-(use-package eglot-x
-  :straight (eglot-x
-	     :type git
-	     :host github
-	     :repo "nemethf/eglot-x")
-  :after eglot
-  :custom
-  (eglot-x-enable-files 1)
-  (eglot-x-setup)
-  )
+;; (use-package eglot-x
+;;   :straight (eglot-x
+;; 	     :type git
+;; 	     :host github
+;; 	     :repo "nemethf/eglot-x")
+;;   :after eglot
+;;   :custom
+;;   (eglot-x-enable-files 1)
+;;   (eglot-x-setup)
+;;   )
 
 (use-package tree-sitter
-  :after eglot
+  ;; :after eglot
   ;; :hook
   ;; (python-mode . tree-sitter-hl-mode)
   ;; :custom
   ;; ()
   :config
   (tree-sitter-hl-mode 1)
-  ;; :custom
-  ;; (treesit-font-lock-level 4)
+  :custom
+  (treesit-font-lock-level 4)
   )
 
 (use-package tree-sitter-langs)
@@ -624,6 +638,7 @@ The DWIM behaviour of this command is as follows:
 
 (use-package ess
   ;; :load-path "/usr/share/emacs/site-lisp/elpa/ess-18.10.3snapshot"
+  :ensure t
   :mode(
         ("/R/.*\\.q\\'"       . R-mode)
         ("\\.[rR]\\'"         . R-mode)
@@ -635,19 +650,22 @@ The DWIM behaviour of this command is as follows:
         )
   :bind
   ("M--" . " <- ")
-  :custom
-  (;; (ess-r-backend 'lsp)
-   (ess-style 'RStudio)
-   (ess-auto-width 'window)
-   (ess-toggle_underscore nil))
-  ;; :hook
+  :custom(
+	  (ess-r-backend 'lsp)
+	  (ess-style 'RStudio)
+	  (ess-auto-width 'window)
+	  (ess-toggle_underscore nil)
+	  )
+  :hook
+  (ess-mode . tree-sitter-ess-r-using-r-faces)
   ;; (ess-mode . 'eglot-ensure)
   :commands
   ( R )
   )
 
-(use-package tree-sitter-ess-r
-  :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
+;; (use-package tree-sitter-ess-r
+;;   :after (ess)
+;;   :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
 
 ;;; Python
 
