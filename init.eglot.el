@@ -242,12 +242,28 @@ The DWIM behaviour of this command is as follows:
   )
 
 (use-package cape
-  :after (corfu-mode)
   :init
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   )
+
+
+(use-package corfu-terminal
+  :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
+  :unless
+  (display-graphic-p)
+  :config
+  (corfu-terminal-mode)
+  )
+
+;; (straight-use-package
+;;  '(corfu-terminal
+;;    :type git
+;;    :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
+;;  )
+
+
 
 ;;; Company, for when corfu doesn't work
 
