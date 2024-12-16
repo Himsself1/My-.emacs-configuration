@@ -672,16 +672,16 @@ The DWIM behaviour of this command is as follows:
 	  (ess-auto-width 'window)
 	  (ess-toggle_underscore nil)
 	  )
-  :hook
-  (ess-mode . tree-sitter-ess-r-using-r-faces)
+  ;; :hook
+  ;; (ess-mode . tree-sitter-ess-r-using-r-faces)
   ;; (ess-mode . 'eglot-ensure)
   :commands
   ( R )
   )
 
-;; (use-package tree-sitter-ess-r
-;;   :after (ess)
-;;   :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
+(use-package tree-sitter-ess-r
+  :after (ess)
+  :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
 
 ;;; Python
 
