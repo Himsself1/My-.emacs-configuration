@@ -425,7 +425,7 @@ The DWIM behaviour of this command is as follows:
   :hook (prog-mode . indent-bars-mode) ; or whichever modes you prefer
   :custom(
 	  (indent-bars-treesit-support t)
-	  (indent-bars-treesit-ignore-blank-lines-types '("module"))
+	  (indent-bars-display-on-blank-lines nil)
 	  (indent-bars-pattern ".")
 	  (indent-bars-width-frac 0.5)
 	  (indent-bars-pad-frac 0.01)
