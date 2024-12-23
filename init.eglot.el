@@ -100,6 +100,7 @@ The DWIM behaviour of this command is as follows:
 ;;; Adds line numbers except in case of eshell
 
 (column-number-mode)
+(window-divider-mode)
 
 (use-package display-line-numbers
   :custom
@@ -224,8 +225,9 @@ The DWIM behaviour of this command is as follows:
   (setq corfu-preview-current nil)
   (setq corfu-min-width 20)
   (setq corfu-popupinfo-delay '(1.25 . 0.5))
-  (global-corfu-mode)
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+  :init
+  (global-corfu-mode)
   )
 
 (use-package nerd-icons-corfu
@@ -323,7 +325,6 @@ The DWIM behaviour of this command is as follows:
    '((bg-main "#efe9e9")
      (bg-dim "#c9c9c9"))
    )
-  (consult-theme 'modus-vivendi-tritanopia)
   )
 
 (use-package ef-themes
@@ -331,7 +332,11 @@ The DWIM behaviour of this command is as follows:
   ("C-R" . ef-themes-load-random)
   ;; :init
   ;; (consult-theme 'ef-duo-light)
-  ;; (counsel-load-theme-action "modus-operandi")
+  :init
+  (consult-theme 'ef-dream)
+  (set-face-attribute 'line-number nil
+		      :background "#000010"
+		      :foreground "#c0b24f")
   )
 
 (use-package doom-themes
@@ -383,6 +388,7 @@ The DWIM behaviour of this command is as follows:
   ;; :init
   ;; (spacious-padding-mode 1)
   )
+
 
 ;;; Magit
 
