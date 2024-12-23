@@ -335,8 +335,9 @@ The DWIM behaviour of this command is as follows:
   :init
   (consult-theme 'ef-dream)
   (set-face-attribute 'line-number nil
-		      :background "#000010"
-		      :foreground "#c0b24f")
+		      :background (ef-themes-get-color-value 'bg-term-black)
+		      :foreground (ef-themes-get-color-value 'yellow)
+		      )
   )
 
 (use-package doom-themes
