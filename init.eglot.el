@@ -259,13 +259,6 @@ The DWIM behaviour of this command is as follows:
   (corfu-terminal-mode)
   )
 
-;; (straight-use-package
-;;  '(corfu-terminal
-;;    :type git
-;;    :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
-;;  )
-
-
 
 ;;; Company, for when corfu doesn't work
 
@@ -607,8 +600,8 @@ The DWIM behaviour of this command is as follows:
   ;; (python-mode . tree-sitter-hl-mode)
   ;; :custom
   ;; ()
-  :config
-  (tree-sitter-hl-mode 1)
+  :hook
+  (prog-mode . tree-sitter-hl-mode)
   :custom
   (treesit-font-lock-level 4)
   )
