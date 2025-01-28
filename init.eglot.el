@@ -128,6 +128,9 @@ The DWIM behaviour of this command is as follows:
 
 (use-package nerd-icons)
 
+(add-to-list 'default-frame-alist
+             '(font . "Iosevka-13"))
+
 ;; (use-package all-the-icons)
 ;; Also run M-x all-the-icons-install-fonts
 
@@ -449,6 +452,17 @@ The DWIM behaviour of this command is as follows:
 ;;; Use outli for headers
 
 ;; Headers for non-lisp languages are [comment-start + space + *]
+
+;; (use-package outline-indent
+;;   :ensure t
+;;   :bind
+;;   ("C-<tab>" . outline-indent-toggle-fold)
+;;   :custom
+;;   (outline-indent-ellipsis " ▼ ")
+;;   (outline-blank-line t)
+;;   :init
+;;   (outline-indent-minor-mode))
+
 (use-package outli
   :straight '(outli
 	      :type git
