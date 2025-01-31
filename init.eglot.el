@@ -253,7 +253,6 @@ The DWIM behaviour of this command is as follows:
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
   )
 
-
 (use-package corfu-terminal
   :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
   :unless
@@ -469,10 +468,12 @@ The DWIM behaviour of this command is as follows:
 	      :host github
 	      :repo "jdtsmith/outli")
   ;; :load-path "~/.emacs.d/outli"
-  :config(
-	  (outli-mode)
-	  (global-reveal-mode)
-	  )
+  :hook
+  (prog-mode . outli-mode)
+  ;; :init
+  ;; (outli-mode)
+  :config
+  (global-reveal-mode)
   :bind(
 	([M-down] . outline-next-heading)
 	([M-up] . outline-previous-heading)
@@ -567,11 +568,10 @@ The DWIM behaviour of this command is as follows:
 ;;; Eglot Tree-Sitter and Tree-Sitter-Auto
 
 (use-package eglot
-  :bind(
-	:map eglot-mode-map
-	("C-c d" . eldoc)
-	)
-  :config(
+  :bind
+  (:map eglot-mode-map
+	("C-c d" . eldoc))
+  :custom(
 	  (eglot-events-buffer-size 0)
 	  (fset #'jsonrpc--log-event #'ignore)
 	  (eglot-extend-to-xref 1)
@@ -609,7 +609,7 @@ The DWIM behaviour of this command is as follows:
 ;;   )
 
 (use-package tree-sitter
-  ;; :after eglot
+  :after eglot
   ;; :hook
   ;; (python-mode . tree-sitter-hl-mode)
   ;; :custom
