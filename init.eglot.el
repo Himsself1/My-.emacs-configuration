@@ -469,10 +469,10 @@ The DWIM behaviour of this command is as follows:
 	      :host github
 	      :repo "jdtsmith/outli")
   ;; :load-path "~/.emacs.d/outli"
-  :hook(
-	((prog-mode tex-mode) . outli-mode)
-	(outli-mode . global-reveal-mode)
-	)
+  :config(
+	  (outli-mode)
+	  (global-reveal-mode)
+	  )
   :bind(
 	([M-down] . outline-next-heading)
 	([M-up] . outline-previous-heading)
