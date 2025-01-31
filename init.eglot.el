@@ -247,7 +247,10 @@ The DWIM behaviour of this command is as follows:
   )
 
 (use-package cape
-  :init
+  ;; :hook
+  ;; (corfu-mode . add-cape-completions)
+  ;; (corfu-terminal-mode . add-cape-completions)
+  :config
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file)
   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
@@ -327,12 +330,19 @@ The DWIM behaviour of this command is as follows:
   ("C-R" . ef-themes-load-random)
   ;; :init
   ;; (consult-theme 'ef-duo-light)
-  :init
-  (consult-theme 'ef-dream)
-  (set-face-attribute 'line-number nil
-		      :background (ef-themes-get-color-value 'bg-term-black)
-		      :foreground (ef-themes-get-color-value 'yellow)
-		      )
+  :config
+  (consult-theme 'ef-deuteranopia-dark)
+  :hook
+  (ef-themes-post-load . (lambda()
+			   (set-face-attribute 'line-number nil
+					       :background (ef-themes-get-color-value 'bg-term-black)
+					       :foreground (ef-themes-get-color-value 'yellow)
+					       )))
+  ;; :config
+  ;; (set-face-attribute 'line-number nil
+  ;; 		      :background (ef-themes-get-color-value 'bg-term-black)
+  ;; 		      :foreground (ef-themes-get-color-value 'yellow)
+  ;; 		      )
   )
 
 (use-package doom-themes
@@ -418,7 +428,7 @@ The DWIM behaviour of this command is as follows:
 ;; 	;; highlight-indent-guides-character ?\|
 ;; 	highlight-indent-guides-responsive 'top
 ;; 	highlight-indent-guides-delay 0
-;; 	)  
+;; 	)
 ;;   )
 
 
@@ -490,7 +500,7 @@ The DWIM behaviour of this command is as follows:
 	imenu-list-position 'left)
   )
 
-;;; Dired functionality 
+;;; Dired functionality
 
 ;; (use-package all-the-icons-dired
 ;;   :after (dired-mode)
@@ -700,7 +710,7 @@ The DWIM behaviour of this command is as follows:
 ;;; Python
 
 (use-package python-mode
-  :mode "\\.py\\'" 
+  :mode "\\.py\\'"
   ;; :hook (python-mode . 'eglot-ensure)
   :bind (:map python-mode-map
 	      ( "C-c C-c" . python-shell-send-paragraph-and-step ))
