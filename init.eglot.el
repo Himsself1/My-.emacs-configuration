@@ -330,14 +330,14 @@ The DWIM behaviour of this command is as follows:
   ("C-R" . ef-themes-load-random)
   ;; :init
   ;; (consult-theme 'ef-duo-light)
-  :config
-  (consult-theme 'ef-deuteranopia-dark)
-  :hook
-  (ef-themes-post-load . (lambda()
-			   (set-face-attribute 'line-number nil
-					       :background (ef-themes-get-color-value 'bg-term-black)
-					       :foreground (ef-themes-get-color-value 'yellow)
-					       )))
+  :init
+  (add-hook 'ef-themes-post-load-hook (lambda()
+					(set-face-attribute 'line-number nil
+							    :background (ef-themes-get-color-value 'bg-added)
+							    :foreground (ef-themes-get-color-value 'cursor)
+							    )))
+  (ef-themes-select 'ef-deuteranopia-dark)
+  ;; :hook
   ;; :config
   ;; (set-face-attribute 'line-number nil
   ;; 		      :background (ef-themes-get-color-value 'bg-term-black)
