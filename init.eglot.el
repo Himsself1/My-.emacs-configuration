@@ -327,22 +327,38 @@ The DWIM behaviour of this command is as follows:
 
 (use-package ef-themes
   :bind
-  ("C-R" . ef-themes-load-random)
+  ("C-M-l" . toggle-ef-themes-light)
+  ("C-M-;" . toggle-ef-themes-dark)
   ;; :init
   ;; (consult-theme 'ef-duo-light)
   :init
+  (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio ef-eagle))
+  (setq ef-themes-to-toggle-dark '(ef-deuteranopia-dark ef-dream ef-duo-dark))
+  (defun toggle-ef-themes-dark ()
+    (interactive)
+    (mapc #'disable-theme custom-enabled-themes)
+    (let* ((current-theme (car ef-themes-to-toggle-dark))
+           (rotated-themes (append (cdr ef-themes-to-toggle-dark) (list current-theme))))
+      (setq ef-themes-to-toggle-dark rotated-themes)
+      (ef-themes-select current-theme)))
+  (defun toggle-ef-themes-light ()
+    (interactive)
+    (mapc #'disable-theme custom-enabled-themes)
+    (let* ((current-theme (car ef-themes-to-toggle-light))
+           (rotated-themes (append (cdr ef-themes-to-toggle-light) (list current-theme))))
+      (setq ef-themes-to-toggle-light rotated-themes)
+      (ef-themes-select current-theme)))
+  ;; (defun toggle-ef-themes-light ()
+  ;;   (interactive)
+  ;;   (mapc #'disable-theme custom-enabled-themes)
+  ;;   (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio ef-eagle))
+  ;;   (ef-themes-select (seq-random-elt ef-themes-to-toggle-light)))
   (add-hook 'ef-themes-post-load-hook (lambda()
 					(set-face-attribute 'line-number nil
 							    :background (ef-themes-get-color-value 'bg-added)
 							    :foreground (ef-themes-get-color-value 'cursor)
 							    )))
   (ef-themes-select 'ef-deuteranopia-dark)
-  ;; :hook
-  ;; :config
-  ;; (set-face-attribute 'line-number nil
-  ;; 		      :background (ef-themes-get-color-value 'bg-term-black)
-  ;; 		      :foreground (ef-themes-get-color-value 'yellow)
-  ;; 		      )
   )
 
 (use-package doom-themes
