@@ -327,8 +327,8 @@ The DWIM behaviour of this command is as follows:
 
 (use-package ef-themes
   :bind
-  ("C-M-l" . toggle-ef-themes-light)
-  ("C-M-;" . toggle-ef-themes-dark)
+  ([f6] . toggle-ef-themes-light)
+  ([f7] . toggle-ef-themes-dark)
   ;; :init
   ;; (consult-theme 'ef-duo-light)
   :init
@@ -635,7 +635,7 @@ The DWIM behaviour of this command is as follows:
 ;;   )
 
 (use-package tree-sitter
-  :after eglot
+  ;; :after eglot
   ;; :hook
   ;; (python-mode . tree-sitter-hl-mode)
   ;; :custom
