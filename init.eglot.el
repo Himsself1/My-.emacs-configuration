@@ -104,7 +104,7 @@ The DWIM behaviour of this command is as follows:
 
 (use-package display-line-numbers
   :custom
-  (display-line-numbers-update-width 0)
+  (display-line-numbers-width 4)
   (display-line-numbers-grow-only 1)
   :config
   (global-display-line-numbers-mode 1)
@@ -325,6 +325,28 @@ The DWIM behaviour of this command is as follows:
    )
   )
 
+(use-package doom-themes
+  :config
+  ;; Global settings (defaults)
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+        doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  ;; (consult-theme 'doom-dark+)
+  )
+
+;; Prot's functions for agnostic theme loading
+(defvar after-enable-theme-hook nil)
+
+(defun run-after-enable-theme-hook (&rest _args)
+  "Run `after-enable-theme-hook'."
+  (run-hooks 'after-enable-theme-hook))
+
+(advice-add 'enable-theme :after #'run-after-enable-theme-hook)
+
+(add-hook 'after-enable-theme-hook (lambda () (set-face-attribute 'line-number nil
+								  :background (face-background 'tab-bar)
+								  :foreground (face-foreground 'warning)
+								  )))
+
 (use-package ef-themes
   :bind
   ([f6] . toggle-ef-themes-light)
@@ -332,41 +354,24 @@ The DWIM behaviour of this command is as follows:
   ;; :init
   ;; (consult-theme 'ef-duo-light)
   :init
-  (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio ef-eagle))
-  (setq ef-themes-to-toggle-dark '(ef-deuteranopia-dark ef-dream ef-duo-dark))
+  (setq custom-safe-themes t) 
+  (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio ef-eagle doom-nord-light))
+  (setq ef-themes-to-toggle-dark '(ef-deuteranopia-dark ef-dream ef-duo-dark doom-nord-aurora))
   (defun toggle-ef-themes-dark ()
     (interactive)
     (mapc #'disable-theme custom-enabled-themes)
     (let* ((current-theme (car ef-themes-to-toggle-dark))
            (rotated-themes (append (cdr ef-themes-to-toggle-dark) (list current-theme))))
       (setq ef-themes-to-toggle-dark rotated-themes)
-      (ef-themes-select current-theme)))
+      (load-theme current-theme)))
   (defun toggle-ef-themes-light ()
     (interactive)
     (mapc #'disable-theme custom-enabled-themes)
     (let* ((current-theme (car ef-themes-to-toggle-light))
            (rotated-themes (append (cdr ef-themes-to-toggle-light) (list current-theme))))
       (setq ef-themes-to-toggle-light rotated-themes)
-      (ef-themes-select current-theme)))
-  ;; (defun toggle-ef-themes-light ()
-  ;;   (interactive)
-  ;;   (mapc #'disable-theme custom-enabled-themes)
-  ;;   (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio ef-eagle))
-  ;;   (ef-themes-select (seq-random-elt ef-themes-to-toggle-light)))
-  (add-hook 'ef-themes-post-load-hook (lambda()
-					(set-face-attribute 'line-number nil
-							    :background (ef-themes-get-color-value 'bg-added)
-							    :foreground (ef-themes-get-color-value 'cursor)
-							    )))
-  (ef-themes-select 'ef-deuteranopia-dark)
-  )
-
-(use-package doom-themes
-  :config
-  ;; Global settings (defaults)
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-        doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  ;; (consult-theme 'doom-dark+)
+      (load-theme current-theme)))
+  (load-theme 'doom-nord-aurora)
   )
 
 ;; This took a good deal of tinkering to set up
