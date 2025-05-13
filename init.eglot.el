@@ -639,17 +639,17 @@ The DWIM behaviour of this command is as follows:
 ;;   (eglot-x-setup)
 ;;   )
 
-(use-package tree-sitter
-  ;; :after eglot
-  ;; :hook
-  ;; (python-mode . tree-sitter-hl-mode)
-  ;; :custom
-  ;; ()
-  :hook
-  (prog-mode . tree-sitter-hl-mode)
-  :custom
-  (treesit-font-lock-level 4)
-  )
+;; (use-package tree-sitter
+;; :after eglot
+;; :hook
+;; (python-mode . tree-sitter-hl-mode)
+;; :custom
+;; ()
+;; :hook
+;; (prog-mode . tree-sitter-hl-mode)
+;; :custom
+;; (treesit-font-lock-level 4)
+;;  )
 
 (use-package tree-sitter-langs)
 
