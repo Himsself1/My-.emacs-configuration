@@ -347,6 +347,10 @@ The DWIM behaviour of this command is as follows:
 								  :foreground (face-foreground 'warning)
 								  )))
 
+(use-package doric-themes
+  :straight (doric-themes :type git :host github :repo "protesilaos/doric-themes")
+  )
+
 (use-package ef-themes
   :bind
   ([f6] . toggle-ef-themes-light)
@@ -355,8 +359,8 @@ The DWIM behaviour of this command is as follows:
   ;; (consult-theme 'ef-duo-light)
   :init
   (setq custom-safe-themes t) 
-  (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio ef-eagle doom-nord-light))
-  (setq ef-themes-to-toggle-dark '(ef-deuteranopia-dark ef-dream ef-duo-dark doom-nord-aurora))
+  (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio doric-earth doric-wind))
+  (setq ef-themes-to-toggle-dark '(doric-dark ef-dream doric-obsidian doom-nord-aurora))
   (defun toggle-ef-themes-dark ()
     (interactive)
     (mapc #'disable-theme custom-enabled-themes)
@@ -371,7 +375,7 @@ The DWIM behaviour of this command is as follows:
            (rotated-themes (append (cdr ef-themes-to-toggle-light) (list current-theme))))
       (setq ef-themes-to-toggle-light rotated-themes)
       (load-theme current-theme)))
-  (load-theme 'doom-nord-aurora)
+  (load-theme 'doric-water)
   )
 
 ;; This took a good deal of tinkering to set up
