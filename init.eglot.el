@@ -782,3 +782,32 @@ The DWIM behaviour of this command is as follows:
 	)
   )
 
+;;; Using org-present for casual presentations + configurations.
+
+(use-package visual-fill-column
+  :config
+  (setq visual-fill-column-center-text 1)
+  )
+
+(defun my/org-present-start ()
+  ;; Center presentation and wrap lines on org-present start
+  (visual-fill-column-mode 1)
+  (setq visual-fill-column-center-text 1)
+  (visual-line-mode 1)
+  )
+
+(defun my/org-present-end ()
+  ;; Center presentation and wrap lines on org-present start
+  (visual-fill-column-mode 0)
+  (visual-line-mode 0)
+  )
+
+(use-package org-present
+  :straight '(org-present
+	      :type git
+	      :host github
+	      :repo "rlister/org-present")
+  :config
+  (add-hook 'org-present-mode-hook 'my/org-present-start)
+  (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
+  )
