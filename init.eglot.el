@@ -9,6 +9,9 @@
 ;; Disable the default package.el
 (setq package-enable-at-startup nil)
 
+(setenv "PATH" (concat ":/usr/local/texlive/2025/bin/x86_64-linux:" (getenv "PATH")))
+(add-to-list 'exec-path "/usr/local/texlive/2025/bin/x86_64-linux")
+
 ;; Bootstrap script from straight.el devs
 (defvar bootstrap-version)
 (let ((bootstrap-file
