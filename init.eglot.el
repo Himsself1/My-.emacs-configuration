@@ -403,6 +403,18 @@ The DWIM behaviour of this command is as follows:
   (setq find-file-visit-truename t)
   )
 
+;; (use-package punch-line
+;;   :straight (punch-line :type git :host github :repo "konrad1977/punch-line")
+;;   :config
+;;   (setq
+;;    punch-line-left-separator "  "
+;;    punch-line-right-separator "  "
+;;    punch-line-show-weather-info nil
+;;    punch-line-show-column-info t
+;;    )
+;;   (punch-line-mode)
+;;   )
+
 (use-package spacious-padding
   :bind
   ("C-c C-v" . spacious-padding-mode)
@@ -813,4 +825,15 @@ The DWIM behaviour of this command is as follows:
   :config
   (add-hook 'org-present-mode-hook 'my/org-present-start)
   (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
+  )
+
+(use-package org-bullets
+  :after org)
+
+(use-package org
+  ;; :straight t
+  :ensure f
+  :init
+  (visual-line-mode 1)
+  (org-bullets-mode 1)
   )
