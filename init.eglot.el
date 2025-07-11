@@ -435,6 +435,8 @@ The DWIM behaviour of this command is as follows:
   ;; (spacious-padding-mode 1)
   )
 
+;; (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
+;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
 ;;; Magit
 
@@ -801,7 +803,8 @@ The DWIM behaviour of this command is as follows:
 
 (use-package visual-fill-column
   :config
-  (setq visual-fill-column-center-text 1)
+  (setq visual-fill-column-center-text 1
+	fill-column 85)
   )
 
 (defun my/org-present-start ()
@@ -836,4 +839,14 @@ The DWIM behaviour of this command is as follows:
   :init
   (visual-line-mode 1)
   (org-bullets-mode 1)
+  :hook
+  (org-mode . org-bullets-mode)
+  :bind(
+	:map org-mode-map
+	([f5] . org-present)
+	)
+  :custom-face
+  (org-level-1 ((t (:inherit outline-1 :height 1.5))))
+  (org-level-2 ((t (:inherit outline-2 :height 1.3))))
+  (org-level-3 ((t (:inherit outline-3 :height 1.1))))
   )
