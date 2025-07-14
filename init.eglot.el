@@ -803,8 +803,7 @@ The DWIM behaviour of this command is as follows:
 
 (use-package visual-fill-column
   :config
-  (setq visual-fill-column-center-text 1
-	fill-column 85)
+  (setq visual-fill-column-center-text 1)
   )
 
 (defun my/org-present-start ()
@@ -812,6 +811,7 @@ The DWIM behaviour of this command is as follows:
   (visual-fill-column-mode 1)
   (setq visual-fill-column-center-text 1)
   (visual-line-mode 1)
+  (setq fill-column 85)
   )
 
 (defun my/org-present-end ()
