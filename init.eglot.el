@@ -216,25 +216,25 @@ The DWIM behaviour of this command is as follows:
 
 ;;; Corfu and add-ons
 
-(use-package corfu
-  :ensure t
-  :bind (
-	 :map corfu-map
-	 ("<tab>" . corfu-complete)
-	 ("<return>" . corfu-insert)
-	 )
-  :config
-  (setq corfu-auto t)
-  (setq corfu-auto-delay 0.3)
-  (setq corfu-auto-prefix 2)
-  (setq tab-always-indent 'complete)
-  (setq corfu-preview-current nil)
-  (setq corfu-min-width 20)
-  (setq corfu-popupinfo-delay '(1.25 . 0.5))
-  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
-  :init
-  (global-corfu-mode)
-  )
+;; (use-package corfu
+;;   :ensure t
+;;   :bind (
+;; 	 :map corfu-map
+;; 	 ("<tab>" . corfu-complete)
+;; 	 ("<return>" . corfu-insert)
+;; 	 )
+;;   :config
+;;   (setq corfu-auto t)
+;;   (setq corfu-auto-delay 0.3)
+;;   (setq corfu-auto-prefix 2)
+;;   (setq tab-always-indent 'complete)
+;;   (setq corfu-preview-current nil)
+;;   (setq corfu-min-width 20)
+;;   (setq corfu-popupinfo-delay '(1.25 . 0.5))
+;;   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+;;   :init
+;;   (global-corfu-mode)
+;;   )
 
 (use-package nerd-icons-corfu
   :ensure t
@@ -249,23 +249,23 @@ The DWIM behaviour of this command is as follows:
   (marginalia-mode . nerd-icons-completion-marginalia-setup)
   )
 
-(use-package cape
-  ;; :hook
-  ;; (corfu-mode . add-cape-completions)
-  ;; (corfu-terminal-mode . add-cape-completions)
-  :config
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  )
+;; (use-package cape
+;;   ;; :hook
+;;   ;; (corfu-mode . add-cape-completions)
+;;   ;; (corfu-terminal-mode . add-cape-completions)
+;;   :config
+;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+;;   (add-to-list 'completion-at-point-functions #'cape-file)
+;;   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+;;   )
 
-(use-package corfu-terminal
-  :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
-  :unless
-  (display-graphic-p)
-  :config
-  (corfu-terminal-mode)
-  )
+;; (use-package corfu-terminal
+;;   :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
+;;   :unless
+;;   (display-graphic-p)
+;;   :config
+;;   (corfu-terminal-mode)
+;;   )
 
 
 ;;; Company, for when corfu doesn't work
@@ -275,6 +275,7 @@ The DWIM behaviour of this command is as follows:
   (setq company-idle-delay 0.05
 	company-minimum-prefix-length 1)
   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
+  (global-company-mode 1)
   ;; :hook
   ;; (prog-mode . company-mode)
   ;; :hook
@@ -283,23 +284,23 @@ The DWIM behaviour of this command is as follows:
   ;; (emacs-lisp-mode . company-mode)
   ;; (lsp-mode . company-mode)
   :bind(
-	:map company-mode-map
-	;; ("<tab>" . company-indent-or-complete-common)
-	("C-/" . company-search-filtering)
-	:map company-active-map
-	("RET" . company-complete-selection)
+	(:map company-active-map
+	      ("RET" . company-complete-selection))
+	(:map company-mode-map
+	      ("<tab>" . company-complete-common-or-show-delayed-tooltip))
 	)
   )
 
 ;; Front end customizations for company-mode
+
 (use-package company-box
   :hook
   (company-mode . company-box-mode)
-  :config
-  (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+  ;; :config
+  ;; (setq company-box-icons-alist 'company-box-icons-all-the-icons)
   )
 
-;;; Popup that lists all available shortcuts.
+;;; popup that lists all available shortcuts.
 
 (use-package which-key
   :init (which-key-mode)
@@ -321,10 +322,10 @@ The DWIM behaviour of this command is as follows:
 			   (2 . (rainbow semibold 1.2))
 			   (3 . (rainbow 1.1)))
    modus-themes-scale-headings t
-   modus-themes-completions '(selection .(rainbow background))
-   modus-operandi-tinted-palette-overrides
-   '((bg-main "#efe9e9")
-     (bg-dim "#c9c9c9"))
+   ;; modus-themes-completions '(selection .(rainbow background))
+   ;; modus-operandi-tinted-palette-overrides
+   ;; '((bg-main "#efe9e9")
+   ;;   (bg-dim "#c9c9c9"))
    )
   )
 
@@ -378,7 +379,7 @@ The DWIM behaviour of this command is as follows:
            (rotated-themes (append (cdr ef-themes-to-toggle-light) (list current-theme))))
       (setq ef-themes-to-toggle-light rotated-themes)
       (load-theme current-theme)))
-  (load-theme 'doric-water)
+  (load-theme 'ef-duo-dark)
   )
 
 ;; This took a good deal of tinkering to set up
@@ -403,18 +404,6 @@ The DWIM behaviour of this command is as follows:
   (setq find-file-visit-truename t)
   )
 
-;; (use-package punch-line
-;;   :straight (punch-line :type git :host github :repo "konrad1977/punch-line")
-;;   :config
-;;   (setq
-;;    punch-line-left-separator "  "
-;;    punch-line-right-separator "  "
-;;    punch-line-show-weather-info nil
-;;    punch-line-show-column-info t
-;;    )
-;;   (punch-line-mode)
-;;   )
-
 (use-package spacious-padding
   :bind
   ("C-c C-v" . spacious-padding-mode)
@@ -437,6 +426,10 @@ The DWIM behaviour of this command is as follows:
 
 ;; (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
 ;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+
+(use-package golden-ratio
+  :config (golden-ratio-mode 1)
+  )
 
 ;;; Magit
 
@@ -472,7 +465,6 @@ The DWIM behaviour of this command is as follows:
 ;; 	highlight-indent-guides-delay 0
 ;; 	)
 ;;   )
-
 
 (use-package indent-bars
   :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
@@ -609,6 +601,14 @@ The DWIM behaviour of this command is as follows:
    ("M-/" . 'winum-select-window-by-number))
   )
 
+;;;; Make winum play nice with golden-ratio-mode
+
+(defadvice winum-select-window-by-number
+    (after golden-ratio-resize-window)
+  (golden-ratio) nil)
+
+(if golden-ratio-mode (progn (ad-activate 'winum-select-window-by-number)))
+
 ;;; Programming Packages
 
 ;;; Yasnippet
@@ -722,14 +722,14 @@ The DWIM behaviour of this command is as follows:
   ;; :load-path "/usr/share/emacs/site-lisp/elpa/ess-18.10.3snapshot"
   :ensure t
   :mode(
-        ("/R/.*\\.q\\'"       . R-mode)
-        ("\\.[rR]\\'"         . R-mode)
-        ("\\.[rR]profile\\'"  . R-mode)
-        ("NAMESPACE\\'"       . R-mode)
-        ("CITATION\\'"        . R-mode)
-        ("\\.[Rr]out"         . R-transcript-mode)
-        ("\\.Rd\\'"           . Rd-mode)
-        )
+	("/R/.*\\.q\\'"       . R-mode)
+	("\\.[rR]\\'"         . R-mode)
+	("\\.[rR]profile\\'"  . R-mode)
+	("NAMESPACE\\'"       . R-mode)
+	("CITATION\\'"        . R-mode)
+	("\\.[Rr]out"         . R-transcript-mode)
+	("\\.Rd\\'"           . Rd-mode)
+	)
   :bind
   ("M--" . " <- ")
   :custom(
@@ -780,10 +780,10 @@ The DWIM behaviour of this command is as follows:
   (with-temp-buffer
     (insert-file-contents-literally file)
     (cl-loop repeat n
-             unless (eobp)
-             collect (prog1 (buffer-substring-no-properties
-                             (line-beginning-position)
-                             (line-end-position))
+	     unless (eobp)
+	     collect (prog1 (buffer-substring-no-properties
+			     (line-beginning-position)
+			     (line-end-position))
 		       (forward-line 1))))
   )
 
