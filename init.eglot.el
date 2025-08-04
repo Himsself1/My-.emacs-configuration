@@ -272,8 +272,9 @@ The DWIM behaviour of this command is as follows:
 
 (use-package company
   :config
-  (setq company-idle-delay 0.05
-	company-minimum-prefix-length 1)
+  (setq company-idle-delay 0.1
+	company-minimum-prefix-length 2
+	tab-always-indent 'complete)
   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
   (global-company-mode 1)
   ;; :hook
@@ -286,8 +287,8 @@ The DWIM behaviour of this command is as follows:
   :bind(
 	(:map company-active-map
 	      ("RET" . company-complete-selection))
-	(:map company-mode-map
-	      ("<tab>" . company-complete-common-or-show-delayed-tooltip))
+	;; (:map company-mode-map
+	;;       ("TAB" . company-complete-common-or-show-delayed-tooltip))
 	)
   )
 
