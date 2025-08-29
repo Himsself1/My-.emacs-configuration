@@ -37,8 +37,8 @@
 (setq straight-use-package-by-default t)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-			 ("marmalade" . "http://marmalade-repo.org/packages/")
-			 ("melpa" . "http://melpa.org/packages/"))
+						 ("marmalade" . "http://marmalade-repo.org/packages/")
+						 ("melpa" . "http://melpa.org/packages/"))
       )
 
 ;; (package-initialize)
@@ -46,8 +46,8 @@
 ;; (unless package-archive-contents
 ;;   (package-refresh-contents))
 
-(setq custom-file (locate-user-emacs-file "custom.el"))
-(load custom-file :no-error-if-file-is-missing)
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 ;;; Raise Garbage collection limit
 
@@ -81,31 +81,55 @@ The DWIM behaviour of this command is as follows:
 
 (define-key global-map (kbd "C-g") #'prot/keyboard-quit-dwim)
 
-;;; Configuring use-package
+;;; Initial Emacs setup
 
-;; (unless (package-installed-p 'use-package)
-;;   (package-install 'use-package))
-;; (require 'use-package)
-;; (setq use-package-always-ensure t)
+;; Taken from emacs-kick github
 
+(use-package emacs
+  :straight nil
+  :custom                                         ;; Set custom variables to configure Emacs behavior.
+  (column-number-mode t)                          ;; Display the column number in the mode line.
+  (delete-selection-mode 1)                       ;; Enable replacing selected text with typed text.
+  (global-auto-revert-non-file-buffers t)         ;; Automatically refresh non-file buffers.
+  (history-length 25)                             ;; Set the length of the command history.
+  (ispell-dictionary "en_US")                     ;; Set the default dictionary for spell checking.
+  (pixel-scroll-precision-mode t)                 ;; Enable precise pixel scrolling.
+  (pixel-scroll-precision-use-momentum nil)       ;; Disable momentum scrolling for pixel precision.
+  (ring-bell-function 'ignore)                    ;; Disable the audible bell.
+  (split-width-threshold 300)                     ;; Prevent automatic window splitting if the window width exceeds 300 pixels.
+  (switch-to-buffer-obey-display-actions t)       ;; Make buffer switching respect display actions.
+  (tab-always-indent 'complete)                   ;; Make the TAB key complete text instead of just indenting.
+  (tab-width 4)                                   ;; Set the tab width to 4 spaces.
+  (treesit-font-lock-level 4)                     ;; Use advanced font locking for Treesit mode.
+  (truncate-lines t)                              ;; Enable line truncation to avoid wrapping long lines.
+  (use-short-answers t)                           ;; Use short answers in prompts for quicker responses (y instead of yes)
+
+  :config
+  (setq custom-file (locate-user-emacs-file "custom.el"))
+  (load custom-file :no-error-if-file-is-missing)
+  
+  :init                        ;; Initialization settings that apply before the package is loaded.
+  (tool-bar-mode -1)           ;; Disable the tool bar for a cleaner interface.
+  (menu-bar-mode -1)           ;; Disable the menu bar for a more streamlined look.
+  (when scroll-bar-mode
+    (scroll-bar-mode -1))      ;; Disable the scroll bar if it is active.
+  (global-hl-line-mode -1)     ;; Disable highlight of the current line
+  (global-auto-revert-mode 1)  ;; Enable global auto-revert mode to keep buffers up to date with their corresponding files.
+  (indent-tabs-mode -1)        ;; Disable the use of tabs for indentation (use spaces instead).
+  (xterm-mouse-mode 1)         ;; Enable mouse support in terminal mode.
+  (window-divider-mode t)
+  ;; Set the default coding system for files to UTF-8.
+  (modify-coding-system-alist 'file "" 'utf-8)
+  
+  )
 ;;; xterm-mouse-mode toggle
 
 (global-set-key [f4] 'xterm-mouse-mode)
 
-;;; Deletes selected text upon insertion
-
-(use-package delsel
-  :ensure nil ; no need to install it as it is built-in
-  :config
-  (delete-selection-mode)
-  )
-
 ;;; Adds line numbers except in case of eshell
 
-(column-number-mode)
-(window-divider-mode)
-
 (use-package display-line-numbers
+  :straight nil
   :custom
   (display-line-numbers-width 4)
   (display-line-numbers-grow-only 1)
@@ -114,8 +138,8 @@ The DWIM behaviour of this command is as follows:
   )
 
 (dolist (mode '(org-mode-hook
-		term-mode-hook
-		eshel-mode-hook))
+				term-mode-hook
+				eshel-mode-hook))
   (add-hook mode (lambda() (display-line-numbers-mode -1))))
 (global-hl-line-mode 1)
 
@@ -176,7 +200,7 @@ The DWIM behaviour of this command is as follows:
          ;; Search through the outline (headings) of the file
          ("M-s M-o" . consult-outline)
          ;; Search the current buffer
-	 ("C-s" . consult-line)
+		 ("C-s" . consult-line)
          ;; Switch to another buffer, or bookmarked file, or recently
          ;; opened file.
          ("C-x b" . consult-buffer))
@@ -216,35 +240,38 @@ The DWIM behaviour of this command is as follows:
 
 ;;; Corfu and add-ons
 
-;; (use-package corfu
-;;   :ensure t
-;;   :bind (
-;; 	 :map corfu-map
-;; 	 ("<tab>" . corfu-complete)
-;; 	 ("<return>" . corfu-insert)
-;; 	 )
-;;   :config
-;;   (setq corfu-auto t)
-;;   (setq corfu-auto-delay 0.3)
-;;   (setq corfu-auto-prefix 2)
-;;   (setq tab-always-indent 'complete)
-;;   (setq corfu-preview-current nil)
-;;   (setq corfu-min-width 20)
-;;   (setq corfu-popupinfo-delay '(1.25 . 0.5))
-;;   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
-;;   :init
-;;   (global-corfu-mode)
-;;   )
+(use-package corfu
+  :straight t
+  :unless
+  (display-graphic-p)
+  :bind (
+		 :map corfu-map
+		 ("<tab>" . corfu-complete)
+		 ("<return>" . corfu-insert)
+		 )
+  :custom
+  (corfu-auto nil)
+  ;; (corfu-auto-delay 0.3)
+  (corfu-auto-prefix 2)
+  (corfu-quit-no-match t)
+  (corfu-preview-current nil)
+  (corfu-min-width 20)
+  (corfu-popupinfo-delay '(1.25 . 0.5))
+  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+  :init
+  (global-corfu-mode)
+  )
 
 (use-package nerd-icons-corfu
-  :ensure t
+  :straight t
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package nerd-icons-completion
-  :config
-  (nerd-icons-completion-mode)
+  :straight t
+  :init
+  (nerd-icons-completion-mode t)
   :hook
   (marginalia-mode . nerd-icons-completion-marginalia-setup)
   )
@@ -259,24 +286,25 @@ The DWIM behaviour of this command is as follows:
 ;;   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
 ;;   )
 
-;; (use-package corfu-terminal
-;;   :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
-;;   :unless
-;;   (display-graphic-p)
-;;   :config
-;;   (corfu-terminal-mode)
-;;   )
+(use-package corfu-terminal
+  :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
+  :unless
+  (display-graphic-p)
+  :config
+  (corfu-terminal-mode)
+  )
 
 
 ;;; Company, for when corfu doesn't work
 
 (use-package company
-  :config
-  (setq company-idle-delay 0.1
-	company-minimum-prefix-length 2
-	tab-always-indent 'complete)
+  :straight t
+  :if (display-graphic-p)
+  :custom
+  (company-idle-delay 0.1)
+  (company-minimum-prefix-length 2)
+  (tab-always-indent 'complete)
   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
-  (global-company-mode 1)
   ;; :hook
   ;; (prog-mode . company-mode)
   ;; :hook
@@ -285,13 +313,15 @@ The DWIM behaviour of this command is as follows:
   ;; (emacs-lisp-mode . company-mode)
   ;; (lsp-mode . company-mode)
   :bind(
-	(:map company-active-map
-	      ("RET" . company-complete-selection))
-	;; (:map company-mode-map
-	;;       ("TAB" . company-complete-common-or-show-delayed-tooltip))
-	)
+		(:map company-active-map
+			  ("RET" . company-complete-selection))
+		;; (:map company-mode-map
+		;;       ("TAB" . company-complete-common-or-show-delayed-tooltip))
+		)
+  :init
+  (global-company-mode 1)
+  (set-face-attribute 'company-tooltip-common nil :inherit nil)
   )
-
 ;; Front end customizations for company-mode
 
 (use-package company-box
@@ -320,8 +350,8 @@ The DWIM behaviour of this command is as follows:
    modus-themes-paren-match '(bold intense)
    modus-themes-syntax '(yellow-comments)
    modus-themes-headings '((1 . (rainbow extrabold 1.3))
-			   (2 . (rainbow semibold 1.2))
-			   (3 . (rainbow 1.1)))
+						   (2 . (rainbow semibold 1.2))
+						   (3 . (rainbow 1.1)))
    modus-themes-scale-headings t
    ;; modus-themes-completions '(selection .(rainbow background))
    ;; modus-operandi-tinted-palette-overrides
@@ -348,9 +378,9 @@ The DWIM behaviour of this command is as follows:
 (advice-add 'enable-theme :after #'run-after-enable-theme-hook)
 
 (add-hook 'after-enable-theme-hook (lambda () (set-face-attribute 'line-number nil
-								  :background (face-background 'tab-bar)
-								  :foreground (face-foreground 'warning)
-								  )))
+																  :background (face-background 'tab-bar)
+																  :foreground (face-foreground 'warning)
+																  )))
 
 (use-package doric-themes
   :straight (doric-themes :type git :host github :repo "protesilaos/doric-themes")
@@ -365,7 +395,7 @@ The DWIM behaviour of this command is as follows:
   :init
   (setq custom-safe-themes t) 
   (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio doric-earth doric-wind))
-  (setq ef-themes-to-toggle-dark '(doric-dark ef-dream doric-obsidian doom-nord-aurora))
+  (setq ef-themes-to-toggle-dark '(doric-dark ef-dream doric-obsidian catppuccin))
   (defun toggle-ef-themes-dark ()
     (interactive)
     (mapc #'disable-theme custom-enabled-themes)
@@ -410,14 +440,14 @@ The DWIM behaviour of this command is as follows:
   ("C-c C-v" . spacious-padding-mode)
   :config
   (setq spacious-padding-widths
-	'( :internal-border-width 20
-	   ;; :header-line-width 4
-	   ;; :mode-line-width 50
-	   :tab-width 4
-	   :right-divider-width 10
-	   ;; :scroll-bar-width 8
-	   :fringe-width 8
-	   ))
+		'( :internal-border-width 20
+		   ;; :header-line-width 4
+		   ;; :mode-line-width 50
+		   :tab-width 4
+		   :right-divider-width 10
+		   ;; :scroll-bar-width 8
+		   :fringe-width 8
+		   ))
   ;; (setq spacious-padding-subtle-mode-line
   ;; 	`( :mode-line-active 'default
   ;; 	   :mode-line-inactive vertical-border))
@@ -427,6 +457,25 @@ The DWIM behaviour of this command is as follows:
 
 ;; (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
 ;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
+
+(use-package catppuccin-theme
+  :straight t
+  :config
+  (custom-set-faces
+   ;; Set the color for changes in the diff highlighting to blue.
+   `(diff-hl-change ((t (:background unspecified :foreground ,(catppuccin-get-color 'blue))))))
+
+  (custom-set-faces
+   ;; Set the color for deletions in the diff highlighting to red.
+   `(diff-hl-delete ((t (:background unspecified :foreground ,(catppuccin-get-color 'red))))))
+
+  (custom-set-faces
+   ;; Set the color for insertions in the diff highlighting to green.
+   `(diff-hl-insert ((t (:background unspecified :foreground ,(catppuccin-get-color 'green))))))
+
+  ;; Load the Catppuccin theme without prompting for confirmation.
+  (load-theme 'catppuccin :no-confirm)
+  )
 
 (use-package golden-ratio
   :config (golden-ratio-mode 1)
@@ -471,14 +520,14 @@ The DWIM behaviour of this command is as follows:
   :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
   :hook (prog-mode . indent-bars-mode) ; or whichever modes you prefer
   :custom(
-	  (indent-bars-treesit-support t)
-	  (indent-bars-display-on-blank-lines nil)
-	  (indent-bars-pattern ".")
-	  (indent-bars-width-frac 0.5)
-	  (indent-bars-pad-frac 0.01)
-	  ;; (indent-bars-color-by-depth nil)
-	  (indent-bars-highlight-current-depth '(:face default :blend 0.4))
-	  )
+		  (indent-bars-treesit-support t)
+		  (indent-bars-display-on-blank-lines nil)
+		  (indent-bars-pattern ".")
+		  (indent-bars-width-frac 0.5)
+		  (indent-bars-pad-frac 0.01)
+		  ;; (indent-bars-color-by-depth nil)
+		  (indent-bars-highlight-current-depth '(:face default :blend 0.4))
+		  )
   )
 
 (use-package aggressive-indent
@@ -493,12 +542,33 @@ The DWIM behaviour of this command is as follows:
   (apheleia-global-mode 1)
   )
 
+(use-package undo-tree
+  :defer t
+  :straight t
+  :straight t
+  :hook
+  (after-init . global-undo-tree-mode)
+  :init
+  (setq undo-tree-visualizer-timestamps t
+        undo-tree-visualizer-diff t
+        ;; Increase undo limits to avoid losing history due to Emacs' garbage collection.
+        ;; These values can be adjusted based on your needs.
+        ;; 10X bump of the undo limits to avoid issues with premature
+        ;; Emacs GC which truncates the undo history very aggressively.
+        undo-limit 800000                     ;; Limit for undo entries.
+        undo-strong-limit 12000000            ;; Strong limit for undo entries.
+        undo-outer-limit 120000000)           ;; Outer limit for undo entries.
+  :config
+  ;; Set the directory where `undo-tree' will save its history files.
+  ;; This keeps undo history across sessions, stored in a cache directory.
+  (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/.cache/undo"))))
+
 ;;; Use outli for headers
 
 ;; Headers for non-lisp languages are [comment-start + space + *]
 
 ;; (use-package outline-indent
-;;   :ensure t
+;;   :straight t
 ;;   :bind
 ;;   ("C-<tab>" . outline-indent-toggle-fold)
 ;;   :custom
@@ -509,9 +579,9 @@ The DWIM behaviour of this command is as follows:
 
 (use-package outli
   :straight '(outli
-	      :type git
-	      :host github
-	      :repo "jdtsmith/outli")
+			  :type git
+			  :host github
+			  :repo "jdtsmith/outli")
   ;; :load-path "~/.emacs.d/outli"
   :hook
   (prog-mode . outli-mode)
@@ -520,9 +590,9 @@ The DWIM behaviour of this command is as follows:
   :config
   (global-reveal-mode)
   :bind(
-	([M-down] . outline-next-heading)
-	([M-up] . outline-previous-heading)
-	)
+		([M-down] . outline-next-heading)
+		([M-up] . outline-previous-heading)
+		)
   )
 
 (use-package imenu-list
@@ -531,8 +601,8 @@ The DWIM behaviour of this command is as follows:
   :config
   (setq imenu-list-focus-after-activation t
         imenu-list-auto-resize nil
-	imenu-list-size 0.25
-	imenu-list-position 'left)
+		imenu-list-size 0.25
+		imenu-list-position 'left)
   )
 
 ;;; Dired functionality
@@ -541,8 +611,15 @@ The DWIM behaviour of this command is as follows:
 ;;   :after (dired-mode)
 ;;   )
 
+(use-package dired
+  :straight nil                                                ;; This is built-in, no need to fetch it.
+  :custom
+  (dired-listing-switches "-lah --group-directories-first")  ;; Display files in a human-readable format and group directories first.
+  (dired-kill-when-opening-new-dired-buffer t)               ;; Close the previous buffer when opening a new `dired' instance.
+  )
+
 (use-package dired-subtree
-  :ensure t
+  :straight t
   :after dired
   :bind
   ( :map dired-mode-map
@@ -560,17 +637,17 @@ The DWIM behaviour of this command is as follows:
 
 (use-package dired-sidebar
   :bind(
-	("C-c s" . dired-sidebar-toggle-sidebar)
-	;; :map dired-sidebar-mode-map
-	;; ("C-o" . 'casual-dired-tmenu)
-	)
+		("C-c s" . dired-sidebar-toggle-sidebar)
+		;; :map dired-sidebar-mode-map
+		;; ("C-o" . 'casual-dired-tmenu)
+		)
   :custom(
-	  (dired-sidebar-theme 'none)
-	  (dired-sidebar-use-term-integration t)
-	  (dired-sidebar-window-fixed 0)
-	  (dired-sidebar-use-custom-modeline 0)
-	  (dired-sidebar-display-remote-icons 0)
-	  )
+		  (dired-sidebar-theme 'none)
+		  (dired-sidebar-use-term-integration t)
+		  (dired-sidebar-window-fixed 0)
+		  (dired-sidebar-use-custom-modeline 0)
+		  (dired-sidebar-display-remote-icons 0)
+		  )
   )
 
 ;; (use-package casual-dired
@@ -612,6 +689,33 @@ The DWIM behaviour of this command is as follows:
 
 ;;; Programming Packages
 
+(use-package eldoc
+  :straight nil                                ;; This is built-in, no need to fetch it.
+  :config
+  (setq eldoc-idle-delay 0)                  ;; Automatically fetch doc help
+  (setq eldoc-echo-area-use-multiline-p nil) ;; We use the "K" floating help instead
+  ;; set to t if you want docs on the echo area
+  (setq eldoc-echo-area-display-truncation-message nil)
+  :init
+  (global-eldoc-mode)
+  )
+
+(use-package eldoc-box
+  :straight t
+  :if (display-graphic-p)
+  :straight t
+  :defer t)
+
+(use-package flymake
+  :straight nil          ;; This is built-in, no need to fetch it.
+  :defer t
+  :hook (prog-mode . flymake-mode)
+  :custom
+  (flymake-margin-indicators-string
+   '((error "!»" compilation-error) (warning "»" compilation-warning)
+     (note "»" compilation-info)))
+  )
+
 ;;; Yasnippet
 
 (use-package yasnippet)
@@ -623,15 +727,15 @@ The DWIM behaviour of this command is as follows:
 (use-package eglot
   :bind
   (:map eglot-mode-map
-	("C-c d" . eldoc))
+		("C-c d" . eldoc))
   :custom(
-	  (eglot-events-buffer-size 0)
-	  (fset #'jsonrpc--log-event #'ignore)
-	  (eglot-extend-to-xref 1)
-	  (eglot-sync-connect 0)
-	  (eldoc-echo-area-use-multiline-p nil)
-	  (eglot-connect-timeout nil)
-	  )
+		  (eglot-events-buffer-size 0)
+		  (fset #'jsonrpc--log-event #'ignore)
+		  (eglot-extend-to-xref 1)
+		  (eglot-sync-connect 0)
+		  (eldoc-echo-area-use-multiline-p nil)
+		  (eglot-connect-timeout nil)
+		  )
   )
 
 ;; (use-package eglot-booster
@@ -686,8 +790,37 @@ The DWIM behaviour of this command is as follows:
 (use-package lsp-mode
   ;; :straight (lsp-mode :type git :host github :repo "emacs-lsp/lsp-mode")
   :straight t
-  :config
+  :custom
   (lsp-enable-which-key-integration t)
+  (lsp-inlay-hint-enable nil)                           ;; Usage of inlay hints.
+  (lsp-completion-provider :none)                       ;; Disable the default completion provider.
+  (lsp-session-file (locate-user-emacs-file ".lsp-session")) ;; Specify session file location.
+  (lsp-log-io nil)                                      ;; Disable IO logging for speed.
+  (lsp-idle-delay 0.5)                                  ;; Set the delay for LSP to 0 (debouncing).
+  (lsp-keep-workspace-alive nil)                        ;; Disable keeping the workspace alive.
+  (lsp-enable-xref t)                                   ;; Enable cross-references.
+  (lsp-auto-configure t)                                ;; Automatically configure LSP.
+  (lsp-enable-links nil)                                ;; Disable links.
+  (lsp-eldoc-enable-hover t)                            ;; Enable ElDoc hover.
+  (lsp-enable-file-watchers nil)                        ;; Disable file watchers.
+  (lsp-enable-folding nil)                              ;; Disable folding.
+  (lsp-enable-imenu t)                                  ;; Enable Imenu support.
+  (lsp-enable-indentation nil)                          ;; Disable indentation.
+  (lsp-enable-on-type-formatting nil)                   ;; Disable on-type formatting.
+  (lsp-enable-suggest-server-download t)                ;; Enable server download suggestion.
+  (lsp-enable-symbol-highlighting t)                    ;; Enable symbol highlighting.
+  (lsp-enable-text-document-color t)                    ;; Enable text document color.
+  (lsp-modeline-diagnostics-enable nil)                 ;; Use `flymake' instead.
+  (lsp-modeline-workspace-status-enable t)              ;; Display "LSP" in the modeline when enabled.
+  (lsp-eldoc-render-all t)                              ;; Render all ElDoc messages.
+  (lsp-headerline-breadcrumb-enable nil)                ;; Disable breadcrumb
+  ;; Completion settings
+  (lsp-completion-enable t)                             ;; Enable completion.
+  (lsp-completion-enable-additional-text-edit t)        ;; Enable additional text edits for completions.
+  (lsp-enable-snippet nil)                              ;; Disable snippets
+  (lsp-completion-show-kind t)                          ;; Show kind in completions.
+  ;; Lens settings
+  (lsp-lens-enable t)                                   ;; Enable lens support.
   )
 
 (use-package lsp-ui
@@ -698,8 +831,8 @@ The DWIM behaviour of this command is as follows:
   (lsp-mode . lsp-ui-mode)
   :bind
   (:map lsp-mode-map
-	([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-	([remap xref-find-references] . lsp-ui-peek-find-references))
+		([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+		([remap xref-find-references] . lsp-ui-peek-find-references))
   :config
   (lsp-ui-peak-enable)
   )
@@ -721,24 +854,24 @@ The DWIM behaviour of this command is as follows:
 
 (use-package ess
   ;; :load-path "/usr/share/emacs/site-lisp/elpa/ess-18.10.3snapshot"
-  :ensure t
+  :straight t
   :mode(
-	("/R/.*\\.q\\'"       . R-mode)
-	("\\.[rR]\\'"         . R-mode)
-	("\\.[rR]profile\\'"  . R-mode)
-	("NAMESPACE\\'"       . R-mode)
-	("CITATION\\'"        . R-mode)
-	("\\.[Rr]out"         . R-transcript-mode)
-	("\\.Rd\\'"           . Rd-mode)
-	)
+		("/R/.*\\.q\\'"       . R-mode)
+		("\\.[rR]\\'"         . R-mode)
+		("\\.[rR]profile\\'"  . R-mode)
+		("NAMESPACE\\'"       . R-mode)
+		("CITATION\\'"        . R-mode)
+		("\\.[Rr]out"         . R-transcript-mode)
+		("\\.Rd\\'"           . Rd-mode)
+		)
   :bind
   ("M--" . " <- ")
   :custom(
-	  (ess-r-backend 'lsp)
-	  (ess-style 'RStudio)
-	  (ess-auto-width 'window)
-	  (ess-toggle_underscore nil)
-	  )
+		  (ess-r-backend 'lsp)
+		  (ess-style 'RStudio)
+		  (ess-auto-width 'window)
+		  (ess-toggle_underscore nil)
+		  )
   ;; :hook
   ;; (ess-mode . tree-sitter-ess-r-using-r-faces)
   ;; (ess-mode . 'eglot-ensure)
@@ -756,11 +889,11 @@ The DWIM behaviour of this command is as follows:
   :mode "\\.py\\'"
   ;; :hook (python-mode . 'eglot-ensure)
   :bind (:map python-mode-map
-	      ( "C-c C-c" . python-shell-send-paragraph-and-step ))
+			  ( "C-c C-c" . python-shell-send-paragraph-and-step ))
   :init (setq python-shell-interpreter "ipython3"
-	      python-shell-interpreter-args "--simple-prompt -i --pprint --colors=LightBG"
-	      ;; major-mode-remap-alist '((python-mode . python-ts-mode))
-	      )
+			  python-shell-interpreter-args "--simple-prompt -i --pprint --colors=LightBG"
+			  ;; major-mode-remap-alist '((python-mode . python-ts-mode))
+			  )
   )
 
 ;;; Cperl
@@ -781,23 +914,23 @@ The DWIM behaviour of this command is as follows:
   (with-temp-buffer
     (insert-file-contents-literally file)
     (cl-loop repeat n
-	     unless (eobp)
-	     collect (prog1 (buffer-substring-no-properties
-			     (line-beginning-position)
-			     (line-end-position))
-		       (forward-line 1))))
+			 unless (eobp)
+			 collect (prog1 (buffer-substring-no-properties
+							 (line-beginning-position)
+							 (line-end-position))
+					   (forward-line 1))))
   )
 
 (use-package gptel
   :config
   (setq gptel-model 'gemini)
   (setq gptel-backend (gptel-make-gemini "Gemini"
-			:key (nth 0 (your-read-lines "~/my-emacs-config/gemini.api.txt" 1))
-			:stream t))
+						:key (nth 0 (your-read-lines "~/my-emacs-config/gemini.api.txt" 1))
+						:stream t))
   :bind(
-	:map gptel-mode-map
-	("C-c C-c" . gptel-send)
-	)
+		:map gptel-mode-map
+		("C-c C-c" . gptel-send)
+		)
   )
 
 ;;; Using org-present for casual presentations + configurations.
@@ -823,9 +956,9 @@ The DWIM behaviour of this command is as follows:
 
 (use-package org-present
   :straight '(org-present
-	      :type git
-	      :host github
-	      :repo "rlister/org-present")
+			  :type git
+			  :host github
+			  :repo "rlister/org-present")
   :config
   (add-hook 'org-present-mode-hook 'my/org-present-start)
   (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
@@ -835,19 +968,19 @@ The DWIM behaviour of this command is as follows:
   :after org)
 
 (use-package org
-  ;; :straight t
-  :ensure f
+  :straight nil
   :init
   (visual-line-mode 1)
   (org-bullets-mode 1)
   :hook
   (org-mode . org-bullets-mode)
   :bind(
-	:map org-mode-map
-	([f5] . org-present)
-	)
+		:map org-mode-map
+		([f5] . org-present)
+		)
   :custom-face
   (org-level-1 ((t (:inherit outline-1 :height 1.5))))
   (org-level-2 ((t (:inherit outline-2 :height 1.3))))
   (org-level-3 ((t (:inherit outline-3 :height 1.1))))
   )
+
