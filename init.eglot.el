@@ -85,6 +85,51 @@ The DWIM behaviour of this command is as follows:
 
 ;; Taken from emacs-kick github
 
+;;;; Functions for caching info that TRAMP calls constantly. 
+(defun memoize-remote (key cache orig-fn &rest args)
+  "Memoize a value if the key is a remote path."
+  (if (and key
+           (file-remote-p key))
+      (if-let ((current (assoc key (symbol-value cache))))
+          (cdr current)
+        (let ((current (apply orig-fn args)))
+          (set cache (cons (cons key current) (symbol-value cache)))
+          current))
+    (apply orig-fn args)))
+
+;; Memoize current project
+(defvar project-current-cache nil)
+(defun memoize-project-current (orig &optional prompt directory)
+  (memoize-remote (or directory
+                      project-current-directory-override
+                      default-directory)
+                  'project-current-cache orig prompt directory))
+
+(advice-add 'project-current :around #'memoize-project-current)
+
+;; Memoize magit top level
+(defvar magit-toplevel-cache nil)
+(defun memoize-magit-toplevel (orig &optional directory)
+  (memoize-remote (or directory default-directory)
+                  'magit-toplevel-cache orig directory))
+(advice-add 'magit-toplevel :around #'memoize-magit-toplevel)
+
+;; memoize vc-git-root
+(defvar vc-git-root-cache nil)
+(defun memoize-vc-git-root (orig file)
+  (let ((value (memoize-remote (file-name-directory file) 'vc-git-root-cache orig file)))
+    ;; sometimes vc-git-root returns nil even when there is a root there
+    (when (null (cdr (car vc-git-root-cache)))
+      (setq vc-git-root-cache (cdr vc-git-root-cache)))
+    value))
+(advice-add 'vc-git-root :around #'memoize-vc-git-root)
+
+;; memoize all git candidates in the current project
+(defvar $counsel-git-cands-cache nil)
+(defun $memoize-counsel-git-cands (orig dir)
+  ($memoize-remote (magit-toplevel dir) '$counsel-git-cands-cache orig dir))
+(advice-add 'counsel-git-cands :around #'$memoize-counsel-git-cands)
+
 (use-package emacs
   :straight nil
   :custom                                         ;; Set custom variables to configure Emacs behavior.
@@ -103,25 +148,182 @@ The DWIM behaviour of this command is as follows:
   (treesit-font-lock-level 4)                     ;; Use advanced font locking for Treesit mode.
   (truncate-lines t)                              ;; Enable line truncation to avoid wrapping long lines.
   (use-short-answers t)                           ;; Use short answers in prompts for quicker responses (y instead of yes)
-
+  
   :config
   (setq custom-file (locate-user-emacs-file "custom.el"))
   (load custom-file :no-error-if-file-is-missing)
+  ;; Set up TRAMP configuration.
+  ;; Taken from https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./#fix-remote-compile
+  (setq remote-file-name-inhibit-locks t
+		tramp-use-scp-direct-remote-copying t
+		remote-file-name-inhibit-auto-save-visited t)
+  (setq tramp-copy-size-limit (* 1024 1024) ;; 1MB
+		tramp-verbose 2)
+  (connection-local-set-profile-variables
+   'remote-direct-async-process
+   '((tramp-direct-async-process . t)))
+  (connection-local-set-profiles
+   '(:application tramp :protocol "scp")
+   'remote-direct-async-process)
+  (setq magit-tramp-pipe-stty-settings 'pty)
+  ;; Remove hooks that cause delays over TRAMP
+  (remove-hook 'find-file-hook #'doom-modeline-update-buffer-file-name)
+  (remove-hook 'find-file-hook 'forge-bug-reference-setup)
   
   :init                        ;; Initialization settings that apply before the package is loaded.
   (tool-bar-mode -1)           ;; Disable the tool bar for a cleaner interface.
   (menu-bar-mode -1)           ;; Disable the menu bar for a more streamlined look.
   (when scroll-bar-mode
     (scroll-bar-mode -1))      ;; Disable the scroll bar if it is active.
-  (global-hl-line-mode -1)     ;; Disable highlight of the current line
+  (global-hl-line-mode 1)      ;; Disable highlight of the current line
   (global-auto-revert-mode 1)  ;; Enable global auto-revert mode to keep buffers up to date with their corresponding files.
   (indent-tabs-mode -1)        ;; Disable the use of tabs for indentation (use spaces instead).
   (xterm-mouse-mode 1)         ;; Enable mouse support in terminal mode.
   (window-divider-mode t)
   ;; Set the default coding system for files to UTF-8.
   (modify-coding-system-alist 'file "" 'utf-8)
-  
   )
+
+;;;; Configure tab-line
+
+(defun my/set-tab-theme ()
+  (let ((bg (face-attribute 'mode-line :background))
+        (fg (face-attribute 'default :foreground))
+		(hg (face-attribute 'default :background))
+        (base (face-attribute 'mode-line :background))
+        (box-width (/ (line-pixel-height) 4)))
+    (set-face-attribute 'tab-line nil
+						:background base
+						:foreground fg
+						:height 0.8
+						:inherit nil
+						:box (list :line-width -1 :color base)
+						)
+    (set-face-attribute 'tab-line-tab nil
+						:foreground fg
+						:background bg
+						:weight 'normal
+						:inherit nil
+						:box (list :line-width box-width :color bg))
+    (set-face-attribute 'tab-line-tab-inactive nil
+						:foreground fg
+						:background base
+						:weight 'normal
+						:inherit nil
+						:box (list :line-width box-width :color base))
+    (set-face-attribute 'tab-line-highlight nil
+						:foreground fg
+						:background hg
+						:weight 'normal
+						:inherit nil
+						:box (list :line-width box-width :color hg))
+    (set-face-attribute 'tab-line-tab-current nil
+						:foreground fg
+						:background hg
+						:weight 'normal
+						:inherit nil
+						:box (list :line-width box-width :color hg))))
+
+(defun my/tab-line-name-buffer (buffer &rest _buffers)
+  "Create name for tab with padding and truncation.
+If buffer name is shorter than `tab-line-tab-max-width' it gets centered
+with spaces, otherwise it is truncated, to preserve equal width for all
+tabs.  This function also tries to fit as many tabs in window as
+possible, so if there are no room for tabs with maximum width, it
+calculates new width for each tab and truncates text if needed.  Minimal
+width can be set with `tab-line-tab-min-width' variable."
+  (with-current-buffer buffer
+    (let* ((window-width (window-width (get-buffer-window)))
+           (tab-amount (length (tab-line-tabs-window-buffers)))
+           (window-max-tab-width (if (>= (* (+ tab-line-tab-max-width 3) tab-amount) window-width)
+                                     (/ window-width tab-amount)
+                                   tab-line-tab-max-width))
+           (tab-width (- (cond ((> window-max-tab-width tab-line-tab-max-width)
+                                tab-line-tab-max-width)
+                               ((< window-max-tab-width tab-line-tab-min-width)
+                                tab-line-tab-min-width)
+                               (t window-max-tab-width))
+                         3)) ;; compensation for ' x ' button
+           (buffer-name (string-trim (buffer-name)))
+           (name-width (length buffer-name)))
+      (if (>= name-width tab-width)
+          (concat  " " (truncate-string-to-width buffer-name (- tab-width 2)) "…")
+        (let* ((padding (make-string (+ (/ (- tab-width name-width) 2) 1) ?\s))
+               (buffer-name (concat padding buffer-name)))
+          (concat buffer-name (make-string (- tab-width (length buffer-name)) ?\s)))))))
+
+(defun tab-line-close-tab (&optional e)
+  "Close the selected tab.
+If tab is presented in another window, close the tab by using
+`bury-buffer` function.  If tab is unique to all existing windows, kill
+the buffer with `kill-buffer` function.  Lastly, if no tabs left in the
+window, it is deleted with `delete-window` function."
+  (interactive "e")
+  (let* ((posnp (event-start e))
+         (window (posn-window posnp))
+         (buffer (get-pos-property 1 'tab (car (posn-string posnp)))))
+    (with-selected-window window
+      (let ((tab-list (tab-line-tabs-window-buffers))
+            (buffer-list (flatten-list
+                          (seq-reduce (lambda (list window)
+                                        (select-window window t)
+                                        (cons (tab-line-tabs-window-buffers) list))
+                                      (window-list) nil))))
+        (select-window window)
+        (if (> (seq-count (lambda (b) (eq b buffer)) buffer-list) 1)
+            (progn
+              (if (eq buffer (current-buffer))
+                  (bury-buffer)
+                (set-window-prev-buffers window (assq-delete-all buffer (window-prev-buffers)))
+                (set-window-next-buffers window (delq buffer (window-next-buffers))))
+              (unless (cdr tab-list)
+                (ignore-errors (delete-window window))))
+          (and (kill-buffer buffer)
+               (unless (cdr tab-list)
+                 (ignore-errors (delete-window window)))))))))
+
+(unless (version< emacs-version "27")
+  (use-package tab-line
+    :ensure nil
+    :hook (after-init . global-tab-line-mode)
+    :config
+
+    (defcustom tab-line-tab-min-width 10
+      "Minimum width of a tab in characters."
+      :type 'integer
+      :group 'tab-line)
+
+    (defcustom tab-line-tab-max-width 30
+      "Maximum width of a tab in characters."
+      :type 'integer
+      :group 'tab-line)
+
+    (setq tab-line-close-button-show t
+          tab-line-new-button-show nil
+          tab-line-separator ""
+          tab-line-tab-name-function #'my/tab-line-name-buffer
+          tab-line-right-button (propertize (if (char-displayable-p ?▶) " ▶ " " > ")
+                                            'keymap tab-line-right-map
+                                            'mouse-face 'tab-line-highlight
+                                            'help-echo "Click to scroll right")
+          tab-line-left-button (propertize (if (char-displayable-p ?◀) " ◀ " " < ")
+                                           'keymap tab-line-left-map
+                                           'mouse-face 'tab-line-highlight
+                                           'help-echo "Click to scroll left")
+          tab-line-close-button (propertize (if (char-displayable-p ?×) " × " " x ")
+                                            'keymap tab-line-tab-close-map
+                                            'mouse-face 'tab-line-close-highlight
+                                            'help-echo "Click to close tab"))
+
+    (my/set-tab-theme)
+
+    ;;(dolist (mode '(ediff-mode process-menu-mode term-mode vterm-mode))
+    ;;(add-to-list 'tab-line-exclude-modes mode))
+    (dolist (mode '(ediff-mode process-menu-mode))
+      (add-to-list 'tab-line-exclude-modes mode))
+    ))
+
+
 ;;; xterm-mouse-mode toggle
 
 (global-set-key [f4] 'xterm-mouse-mode)
@@ -141,7 +343,6 @@ The DWIM behaviour of this command is as follows:
 				term-mode-hook
 				eshel-mode-hook))
   (add-hook mode (lambda() (display-line-numbers-mode -1))))
-(global-hl-line-mode 1)
 
 
 ;;; Automatically update file that was modified elsewhere
@@ -477,9 +678,9 @@ The DWIM behaviour of this command is as follows:
   (load-theme 'catppuccin :no-confirm)
   )
 
-(use-package golden-ratio
-  :config (golden-ratio-mode 1)
-  )
+;; (use-package golden-ratio
+;;   :config (golden-ratio-mode 1)
+;;   )
 
 ;;; Magit
 
@@ -536,11 +737,11 @@ The DWIM behaviour of this command is as follows:
   (aggressive-indent-mode 1)
   )
 
-(use-package apheleia
-  ;; code reformating on save
-  :config
-  (apheleia-global-mode 1)
-  )
+;; (use-package apheleia
+;;   ;; code reformating on save
+;;   :config
+;;   (apheleia-global-mode 1)
+;;   )
 
 (use-package undo-tree
   :defer t
@@ -690,7 +891,7 @@ The DWIM behaviour of this command is as follows:
 ;;; Programming Packages
 
 (use-package eldoc
-  :straight nil                                ;; This is built-in, no need to fetch it.
+  :straight nil                              ;; This is built-in, no need to fetch it.
   :config
   (setq eldoc-idle-delay 0)                  ;; Automatically fetch doc help
   (setq eldoc-echo-area-use-multiline-p nil) ;; We use the "K" floating help instead
@@ -703,18 +904,8 @@ The DWIM behaviour of this command is as follows:
 (use-package eldoc-box
   :straight t
   :if (display-graphic-p)
-  :straight t
   :defer t)
 
-(use-package flymake
-  :straight nil          ;; This is built-in, no need to fetch it.
-  :defer t
-  :hook (prog-mode . flymake-mode)
-  :custom
-  (flymake-margin-indicators-string
-   '((error "!»" compilation-error) (warning "»" compilation-warning)
-     (note "»" compilation-info)))
-  )
 
 ;;; Yasnippet
 
