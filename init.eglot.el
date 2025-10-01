@@ -282,46 +282,38 @@ window, it is deleted with `delete-window` function."
                (unless (cdr tab-list)
                  (ignore-errors (delete-window window)))))))))
 
-(unless (version< emacs-version "27")
-  (use-package tab-line
-    :ensure nil
-    :hook (after-init . global-tab-line-mode)
-    :config
-
-    (defcustom tab-line-tab-min-width 10
-      "Minimum width of a tab in characters."
-      :type 'integer
-      :group 'tab-line)
-
-    (defcustom tab-line-tab-max-width 30
-      "Maximum width of a tab in characters."
-      :type 'integer
-      :group 'tab-line)
-
-    (setq tab-line-close-button-show t
-          tab-line-new-button-show nil
-          tab-line-separator ""
-          tab-line-tab-name-function #'my/tab-line-name-buffer
-          tab-line-right-button (propertize (if (char-displayable-p ?▶) " ▶ " " > ")
-                                            'keymap tab-line-right-map
-                                            'mouse-face 'tab-line-highlight
-                                            'help-echo "Click to scroll right")
-          tab-line-left-button (propertize (if (char-displayable-p ?◀) " ◀ " " < ")
-                                           'keymap tab-line-left-map
-                                           'mouse-face 'tab-line-highlight
-                                           'help-echo "Click to scroll left")
-          tab-line-close-button (propertize (if (char-displayable-p ?×) " × " " x ")
-                                            'keymap tab-line-tab-close-map
-                                            'mouse-face 'tab-line-close-highlight
-                                            'help-echo "Click to close tab"))
-
-    (my/set-tab-theme)
-
-    ;;(dolist (mode '(ediff-mode process-menu-mode term-mode vterm-mode))
-    ;;(add-to-list 'tab-line-exclude-modes mode))
-    (dolist (mode '(ediff-mode process-menu-mode))
-      (add-to-list 'tab-line-exclude-modes mode))
-    ))
+(use-package tab-line
+  :ensure nil
+  :init (global-tab-line-mode 1)
+  :config
+  (defcustom tab-line-tab-min-width 10
+    "Minimum width of a tab in characters."
+    :type 'integer
+    :group 'tab-line)
+  (defcustom tab-line-tab-max-width 30
+    "Maximum width of a tab in characters."
+    :type 'integer
+    :group 'tab-line)
+  (setq tab-line-close-button-show t
+        tab-line-new-button-show nil
+        tab-line-separator ""
+        tab-line-tab-name-function #'my/tab-line-name-buffer
+        tab-line-right-button (propertize (if (char-displayable-p ?▶) " ▶ " " > ")
+                                          'keymap tab-line-right-map
+                                          'mouse-face 'tab-line-highlight
+                                          'help-echo "Click to scroll right")
+        tab-line-left-button (propertize (if (char-displayable-p ?◀) " ◀ " " < ")
+                                         'keymap tab-line-left-map
+                                         'mouse-face 'tab-line-highlight
+                                         'help-echo "Click to scroll left")
+        tab-line-close-button (propertize (if (char-displayable-p ?×) " × " " x ")
+                                          'keymap tab-line-tab-close-map
+                                          'mouse-face 'tab-line-close-highlight
+                                          'help-echo "Click to close tab"))
+  (my/set-tab-theme)
+  (dolist (mode '(ediff-mode process-menu-mode))
+    (add-to-list 'tab-line-exclude-modes mode))
+  )
 
 
 ;;; xterm-mouse-mode toggle
@@ -405,6 +397,12 @@ window, it is deleted with `delete-window` function."
          ;; Switch to another buffer, or bookmarked file, or recently
          ;; opened file.
          ("C-x b" . consult-buffer))
+  :custom
+  (register-preview-delay 0.5)
+  (register-preview-function #'consult-register-format)
+  (xref-search-program 'ripgrep)
+  (xref-show-xrefs-function #'consult-xref)
+  (xref-show-definitions-function #'consult-xref)
   )
 
 (use-package orderless
@@ -477,15 +475,18 @@ window, it is deleted with `delete-window` function."
   (marginalia-mode . nerd-icons-completion-marginalia-setup)
   )
 
-;; (use-package cape
-;;   ;; :hook
-;;   ;; (corfu-mode . add-cape-completions)
-;;   ;; (corfu-terminal-mode . add-cape-completions)
-;;   :config
-;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-;;   (add-to-list 'completion-at-point-functions #'cape-file)
-;;   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-;;   )
+(use-package cape
+  :unless
+  (display-graphic-p)
+  :hook
+  (corfu-mode . add-cape-completions)
+  (corfu-terminal-mode . add-cape-completions)
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  )
 
 (use-package corfu-terminal
   :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
@@ -678,9 +679,9 @@ window, it is deleted with `delete-window` function."
   (load-theme 'catppuccin :no-confirm)
   )
 
-;; (use-package golden-ratio
-;;   :config (golden-ratio-mode 1)
-;;   )
+(use-package golden-ratio
+  :defer t
+  )
 
 ;;; Magit
 
