@@ -1,3 +1,4 @@
+;;; ...  -*- lexical-binding: t -*-
 ;;; Disable menu bar scroll bar and tool bar
 
 (tool-bar-mode -1)
@@ -678,9 +679,9 @@ window, it is deleted with `delete-window` function."
   (load-theme 'catppuccin :no-confirm)
   )
 
-;; (use-package golden-ratio
-;;   :config (golden-ratio-mode 1)
-;;   )
+(use-package golden-ratio
+  :defer t
+  )
 
 ;;; Magit
 
