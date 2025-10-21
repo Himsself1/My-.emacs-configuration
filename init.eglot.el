@@ -723,7 +723,9 @@ window, it is deleted with `delete-window` function."
   :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
   :hook (prog-mode . indent-bars-mode) ; or whichever modes you prefer
   :custom(
-		  (indent-bars-treesit-support t)
+		  (indent-bars-no-descend-lists t)
+		  (indent-bars-no-descend-string t)
+		  ;; (indent-bars-treesit-support t)
 		  (indent-bars-display-on-blank-lines nil)
 		  (indent-bars-pattern ".")
 		  (indent-bars-width-frac 0.5)
