@@ -1167,6 +1167,8 @@ window, it is deleted with `delete-window` function."
   :init
   (visual-line-mode 1)
   (org-bullets-mode 1)
+  :config
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   :hook
   (org-mode . org-bullets-mode)
   :bind(
@@ -1178,4 +1180,3 @@ window, it is deleted with `delete-window` function."
   (org-level-2 ((t (:inherit outline-2 :height 1.3))))
   (org-level-3 ((t (:inherit outline-3 :height 1.1))))
   )
-
