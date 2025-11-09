@@ -142,7 +142,7 @@ The DWIM behaviour of this command is as follows:
   (pixel-scroll-precision-mode t)                 ;; Enable precise pixel scrolling.
   (pixel-scroll-precision-use-momentum nil)       ;; Disable momentum scrolling for pixel precision.
   (ring-bell-function 'ignore)                    ;; Disable the audible bell.
-  (split-width-threshold 80)                      ;; Prevent automatic window splitting if the window width exceeds 300 pixels.
+  ;; (split-width-threshold 80)                      ;; Prevent automatic window splitting if the window width exceeds 300 pixels.
   (switch-to-buffer-obey-display-actions t)       ;; Make buffer switching respect display actions.
   (tab-always-indent 'complete)                   ;; Make the TAB key complete text instead of just indenting.
   (tab-width 4)                                   ;; Set the tab width to 4 spaces.
