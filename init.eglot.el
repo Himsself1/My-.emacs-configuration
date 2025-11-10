@@ -476,18 +476,18 @@ window, it is deleted with `delete-window` function."
   (marginalia-mode . nerd-icons-completion-marginalia-setup)
   )
 
-(use-package cape
-  :unless
-  (display-graphic-p)
-  :hook
-  (corfu-mode . add-cape-completions)
-  (corfu-terminal-mode . add-cape-completions)
-  :init
-  (add-to-list 'completion-at-point-functions #'cape-elisp-block)
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  )
+;; (use-package cape
+;;   :unless
+;;   (display-graphic-p)
+;;   :hook
+;;   (corfu-mode . add-cape-completions)
+;;   (corfu-terminal-mode . add-cape-completions)
+;;   :init
+;;   (add-to-list 'completion-at-point-functions #'cape-elisp-block)
+;;   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+;;   (add-to-list 'completion-at-point-functions #'cape-file)
+;;   (add-to-list 'completion-at-point-functions #'cape-keyword)
+;;   )
 
 (use-package corfu-terminal
   :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
