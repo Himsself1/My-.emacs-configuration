@@ -402,8 +402,8 @@ window, it is deleted with `delete-window` function."
   (register-preview-delay 0.5)
   (register-preview-function #'consult-register-format)
   (xref-search-program 'ripgrep)
-  (xref-show-xrefs-function #'consult-xref)
-  (xref-show-definitions-function #'consult-xref)
+  ;; (xref-show-xrefs-function #'consult-xref)
+  ;; (xref-show-definitions-function #'consult-xref)
   )
 
 (use-package orderless
@@ -750,10 +750,8 @@ window, it is deleted with `delete-window` function."
 (use-package undo-tree
   :defer t
   :straight t
-  :straight t
-  :hook
-  (after-init . global-undo-tree-mode)
   :init
+  (global-undo-tree-mode)
   (setq undo-tree-visualizer-timestamps t
         undo-tree-visualizer-diff t
         ;; Increase undo limits to avoid losing history due to Emacs' garbage collection.
@@ -1097,6 +1095,13 @@ window, it is deleted with `delete-window` function."
   :mode "\\\\.\\(p\\([lm]\\)\\)\\'"
   ;; :custom (major-mode-remap-alist)
   ;; :hook (cperl-mode . 'eglot-ensure)
+  )
+
+;;; Dumb-Jump
+
+(use-package dumb-jump
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)a
   )
 
 ;;; GPTELL
