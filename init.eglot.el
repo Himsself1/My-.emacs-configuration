@@ -598,7 +598,7 @@ window, it is deleted with `delete-window` function."
   :init
   (setq custom-safe-themes t) 
   (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio doric-earth doric-wind))
-  (setq ef-themes-to-toggle-dark '(doric-dark ef-dream doric-obsidian catppuccin))
+  (setq ef-themes-to-toggle-dark '(doom-monokai-pro ef-dream doric-obsidian catppuccin))
   (defun toggle-ef-themes-dark ()
     (interactive)
     (mapc #'disable-theme custom-enabled-themes)
@@ -613,7 +613,7 @@ window, it is deleted with `delete-window` function."
            (rotated-themes (append (cdr ef-themes-to-toggle-light) (list current-theme))))
       (setq ef-themes-to-toggle-light rotated-themes)
       (load-theme current-theme)))
-  (load-theme 'ef-duo-dark)
+  ;; (load-theme 'ef-duo-dark)
   )
 
 ;; This took a good deal of tinkering to set up
