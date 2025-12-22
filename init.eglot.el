@@ -1101,7 +1101,7 @@ window, it is deleted with `delete-window` function."
 
 (use-package dumb-jump
   :config
-  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)a
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   )
 
 ;;; GPTELL
