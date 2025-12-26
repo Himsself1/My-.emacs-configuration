@@ -362,9 +362,9 @@ window, it is deleted with `delete-window` function."
 ;;   (all-the-icons-completion-mode)
 ;;   )
 
-(use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode)
-  )
+;; (use-package rainbow-delimiters
+;;   :hook (prog-mode . rainbow-delimiters-mode)
+;;   )
 
 ;;; Vertico, Marginalia, Consult, Embark
 
