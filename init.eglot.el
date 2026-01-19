@@ -1185,3 +1185,6 @@ window, it is deleted with `delete-window` function."
   (org-level-2 ((t (:inherit outline-2 :height 1.3))))
   (org-level-3 ((t (:inherit outline-3 :height 1.1))))
   )
+
+(use-package org-appear
+  :hook (org-mode . org-appear-mode))
