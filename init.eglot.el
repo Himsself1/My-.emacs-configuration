@@ -442,8 +442,8 @@ window, it is deleted with `delete-window` function."
 
 (use-package corfu
   :straight t
-  :unless
-  (display-graphic-p)
+  ;; :unless
+  ;; (display-graphic-p)
   :bind (
 		 :map corfu-map
 		 ("<tab>" . corfu-complete)
@@ -458,7 +458,7 @@ window, it is deleted with `delete-window` function."
   (corfu-min-width 20)
   (corfu-popupinfo-delay '(1.25 . 0.5))
   (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
-  :init
+  :config
   (global-corfu-mode)
   )
 
@@ -502,12 +502,14 @@ window, it is deleted with `delete-window` function."
 
 (use-package company
   :straight t
-  :if (display-graphic-p)
+  ;; :if (display-graphic-p)
+  :defer t
   :custom
   (company-idle-delay 0.1)
   (company-minimum-prefix-length 2)
   (tab-always-indent 'complete)
   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
+  (set-face-attribute 'company-tooltip-common nil :inherit nil)
   ;; :hook
   ;; (prog-mode . company-mode)
   ;; :hook
@@ -521,9 +523,6 @@ window, it is deleted with `delete-window` function."
 		;; (:map company-mode-map
 		;;       ("TAB" . company-complete-common-or-show-delayed-tooltip))
 		)
-  :init
-  (global-company-mode 1)
-  (set-face-attribute 'company-tooltip-common nil :inherit nil)
   )
 ;; Front end customizations for company-mode
 
@@ -624,11 +623,11 @@ window, it is deleted with `delete-window` function."
 ;; 4) change terminal profile, then change back
 
 (use-package doom-modeline
-  :init (doom-modeline-mode 1)
+  ;; :init 
   :config
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
   (setq doom-modeline-bar-width 4)
-  (setq doom-modeline-height 20)
+  (setq doom-modeline-height 30)
   (setq doom-line-numbers-style 'relative)
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-buffer-state-icon t)
@@ -636,6 +635,7 @@ window, it is deleted with `delete-window` function."
   (setq doom-modeline-project-detection 'auto)
   (setq doom-modeline-highlight-modified-buffer-name t)
   (setq find-file-visit-truename t)
+  (doom-modeline-mode 1)
   )
 
 ;; I get errors with maple modeline
