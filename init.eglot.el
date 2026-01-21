@@ -628,7 +628,7 @@ window, it is deleted with `delete-window` function."
   :config
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
   (setq doom-modeline-bar-width 4)
-  (setq doom-modeline-height 40)
+  (setq doom-modeline-height 20)
   (setq doom-line-numbers-style 'relative)
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-buffer-state-icon t)
@@ -637,6 +637,22 @@ window, it is deleted with `delete-window` function."
   (setq doom-modeline-highlight-modified-buffer-name t)
   (setq find-file-visit-truename t)
   )
+
+;; I get errors with maple modeline
+
+;; (use-package maple-modeline
+;;   ;; :quelpa (:fetcher github :repo "honmaple/emacs-maple-modeline")
+;;   :straight (emacs-maple-modeline :type git :repo "https://github.com/honmaple/emacs-maple-modeline")
+;;   ;; :init (maple-modeline-mode 1)
+;;   :hook (after-init . maple-modeline-mode)
+;;   ;; :custom-face
+;;   ;; (mode-line ((t (:box nil))))
+;;   ;; (mode-line-inactive ((t (:box nil))))
+;;   ;; :custom
+;;   ;; (setq maple-modeline-height 15)
+;;   :custom
+;;   (maple-modeline-mode)
+;;   )
 
 (use-package spacious-padding
   :bind
