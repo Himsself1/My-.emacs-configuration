@@ -185,6 +185,14 @@ The DWIM behaviour of this command is as follows:
   (modify-coding-system-alist 'file "" 'utf-8)
   )
 
+;;; Tramp alternative
+
+(use-package tramp-rpc
+  :straight (tramp-rpc :type git :host github :repo "ArthurHeymans/emacs-tramp-rpc")
+  :ensure t
+  )
+
+
 ;;;; Configure tab-line
 
 (defun my/set-tab-theme ()
