@@ -1212,3 +1212,17 @@ window, it is deleted with `delete-window` function."
 
 (use-package org-appear
   :hook (org-mode . org-appear-mode))
+
+;;; Newick Tree Visualization
+
+(use-package yggdrasil
+  :straight '(yggdrasil
+			  :type git
+			  :host github
+			  :repo "geokousis/yggdrasil")
+  :custom
+  (yggdrasil-auto-close t)
+  (yggdrasil-display-method 'window)
+  :bind( "C-c y v" . yggdrasil-visualize)
+  :commands yggdrasil-visualize
+  )
