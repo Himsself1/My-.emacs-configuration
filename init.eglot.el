@@ -200,7 +200,7 @@ The DWIM behaviour of this command is as follows:
         (fg (face-attribute 'default :foreground))
 		(hg (face-attribute 'default :background))
         (base (face-attribute 'mode-line :background))
-        (box-width (/ (line-pixel-height) 4)))
+        (box-width (+ (/ (line-pixel-height) 4) 1)))
     (set-face-attribute 'tab-line nil
 						:background base
 						:foreground fg
@@ -213,25 +213,31 @@ The DWIM behaviour of this command is as follows:
 						:background bg
 						:weight 'normal
 						:inherit nil
-						:box (list :line-width box-width :color bg))
+						:box (list :line-width box-width :color bg)
+						)
     (set-face-attribute 'tab-line-tab-inactive nil
 						:foreground fg
 						:background base
 						:weight 'normal
 						:inherit nil
-						:box (list :line-width box-width :color base))
+						:box (list :line-width box-width :color base)
+						)
     (set-face-attribute 'tab-line-highlight nil
 						:foreground fg
 						:background hg
 						:weight 'normal
 						:inherit nil
-						:box (list :line-width box-width :color hg))
+						:box (list :line-width box-width :color hg)
+						)
     (set-face-attribute 'tab-line-tab-current nil
 						:foreground fg
 						:background hg
 						:weight 'normal
 						:inherit nil
-						:box (list :line-width box-width :color hg))))
+						:box (list :line-width box-width :color hg)
+						)
+	)
+  )
 
 (defun my/tab-line-name-buffer (buffer &rest _buffers)
   "Create name for tab with padding and truncation.
