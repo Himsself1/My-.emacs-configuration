@@ -1204,11 +1204,15 @@ window, it is deleted with `delete-window` function."
   (org-bullets-mode 1)
   :config
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  (keymap-unset org-mode-map "M-<up>")
+  (keymap-unset org-mode-map "M-<down>")
   :hook
   (org-mode . org-bullets-mode)
   :bind(
 		:map org-mode-map
-		([f5] . org-present)
+			 ([f5] . org-present)
+			 ("M-<up>" . org-previous-visible-heading)
+			 ("M-<down>" . org-next-visible-heading)
 		)
   :custom-face
   (org-level-1 ((t (:inherit outline-1 :height 1.5))))
