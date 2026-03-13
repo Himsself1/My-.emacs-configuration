@@ -1233,6 +1233,12 @@ window, it is deleted with `delete-window` function."
   :custom
   (yggdrasil-auto-close t)
   (yggdrasil-display-method 'window)
-  :bind( "C-c y v" . yggdrasil-visualize)
+  :bind(
+		("C-c y v" . yggdrasil-visualize)
+		:map yggdrasil-mode-map
+		("C-c y g" . yggdrasil-visit-source)
+		:map yggdrasil-active-mode-map
+		("C-c y g" . yggdrasil-focus-display-mode)
+		)
   :commands yggdrasil-visualize
   )
