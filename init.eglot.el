@@ -8,44 +8,44 @@
 ;;; Use straight.el as the package manager
 
 ;; Disable the default package.el
-(setq package-enable-at-startup nil)
+;; (setq package-enable-at-startup nil)
 
-(setenv "PATH" (concat ":/usr/local/texlive/2025/bin/x86_64-linux:" (getenv "PATH")))
-(add-to-list 'exec-path "/usr/local/texlive/2025/bin/x86_64-linux")
+;; (setenv "PATH" (concat ":/usr/local/texlive/2025/bin/x86_64-linux:" (getenv "PATH")))
+;; (add-to-list 'exec-path "/usr/local/texlive/2025/bin/x86_64-linux")
 
 ;; Bootstrap script from straight.el devs
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name
-        "straight/repos/straight.el/bootstrap.el"
-        (or (bound-and-true-p straight-base-dir)
-            user-emacs-directory)))
-      (bootstrap-version 7))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
+;; (defvar bootstrap-version)
+;; (let ((bootstrap-file
+;;        (expand-file-name
+;;         "straight/repos/straight.el/bootstrap.el"
+;;         (or (bound-and-true-p straight-base-dir)
+;;             user-emacs-directory)))
+;;       (bootstrap-version 7))
+;;   (unless (file-exists-p bootstrap-file)
+;;     (with-current-buffer
+;;         (url-retrieve-synchronously
+;;          "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
+;;          'silent 'inhibit-cookies)
+;;       (goto-char (point-max))
+;;       (eval-print-last-sexp)))
+;;   (load bootstrap-file nil 'nomessage))
 
 ;; Every use-package call will be handled by straight.el
-(straight-use-package 'use-package)
-(straight-use-package '(project :type built-in))
-(straight-use-package '(xref :type built-in))
+;; (straight-use-package 'use-package)
+;; (straight-use-package '(project :type built-in))
+;; (straight-use-package '(xref :type built-in))
 
-(setq straight-use-package-by-default t)
+;; (setq straight-use-package-by-default t)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
 						 ("marmalade" . "http://marmalade-repo.org/packages/")
 						 ("melpa" . "http://melpa.org/packages/"))
       )
 
-;; (package-initialize)
+(package-initialize)
 
-;; (unless package-archive-contents
-;;   (package-refresh-contents))
+(unless package-archive-contents
+  (package-refresh-contents))
 
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -132,7 +132,7 @@ The DWIM behaviour of this command is as follows:
 (advice-add 'counsel-git-cands :around #'$memoize-counsel-git-cands)
 
 (use-package emacs
-  :straight nil
+  ;; :straight nil
   :custom                                         ;; Set custom variables to configure Emacs behavior.
   (column-number-mode t)                          ;; Display the column number in the mode line.
   (delete-selection-mode 1)                       ;; Enable replacing selected text with typed text.
@@ -188,8 +188,10 @@ The DWIM behaviour of this command is as follows:
 ;;; Tramp alternative
 
 (use-package tramp-rpc
-  :straight (tramp-rpc :type git :host github :repo "ArthurHeymans/emacs-tramp-rpc")
+  ;; :straight (tramp-rpc :type git :host github :repo "ArthurHeymans/emacs-tramp-rpc")
   :ensure t
+  :vc (:url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git"
+			:rev :newest)
   )
 
 
@@ -338,7 +340,8 @@ window, it is deleted with `delete-window` function."
 ;;; Adds line numbers except in case of eshell
 
 (use-package display-line-numbers
-  :straight nil
+  ;; :straight nil
+  :ensure nil
   :custom
   (display-line-numbers-width 4)
   (display-line-numbers-grow-only 1)
@@ -383,6 +386,7 @@ window, it is deleted with `delete-window` function."
 ;;; Vertico, Marginalia, Consult, Embark
 
 (use-package vertico
+  :ensure t
   :custom
   (vertico-count 10) ; Number of candidates to display
   (vertico-resize t)
@@ -394,6 +398,7 @@ window, it is deleted with `delete-window` function."
 (use-package marginalia
   ;; :hook
   ;; (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :ensure t
   :custom
   (marginalia-align 'left)
   :init
@@ -401,6 +406,7 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package consult
+  :ensure t
   :bind (;; A recursive grep
          ("M-s M-g" . consult-grep)
          ;; Search for files names recursively
@@ -421,6 +427,7 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package orderless
+  :ensure t
   :config
   (setq completion-styles '(basic orderless))
   )
@@ -429,6 +436,7 @@ window, it is deleted with `delete-window` function."
 ;;   :bind ( "C-s" . swiper ))
 
 (use-package embark
+  :ensure t
   :bind (("C-." . embark-act)
          :map minibuffer-local-map
          ("C-c C-c" . embark-collect)
@@ -437,7 +445,8 @@ window, it is deleted with `delete-window` function."
 
 ;; The `embark-consult' package is glue code to tie together `embark'
 ;; and `consult'.
-(use-package embark-consult)
+(use-package embark-consult
+  :ensure t)
 
 ;; The `wgrep' packages lets us edit the results of a grep search
 ;; while inside a `grep-mode' buffer.  All we need is to toggle the
@@ -446,6 +455,7 @@ window, it is deleted with `delete-window` function."
 ;;
 ;; Further reading: https://protesilaos.com/emacs/dotemacs#h:9a3581df-ab18-4266-815e-2edd7f7e4852
 (use-package wgrep
+  :ensure t
   :bind ( :map grep-mode-map
           ("e" . wgrep-change-to-wgrep-mode)
           ("C-x C-q" . wgrep-change-to-wgrep-mode)
@@ -455,7 +465,8 @@ window, it is deleted with `delete-window` function."
 ;;; Corfu and add-ons
 
 (use-package corfu
-  :straight t
+  ;; :straight t
+  :ensure t
   ;; :unless
   ;; (display-graphic-p)
   :bind (
@@ -477,13 +488,16 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package nerd-icons-corfu
-  :straight t
+  ;; :straight t
+  :ensure t
   :after corfu
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
 (use-package nerd-icons-completion
-  :straight t
+  ;; :straight t
+  :ensure t
+  :after corfu
   :init
   (nerd-icons-completion-mode t)
   :hook
@@ -504,7 +518,10 @@ window, it is deleted with `delete-window` function."
 ;;   )
 
 (use-package corfu-terminal
-  :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
+  ;; :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
+  :ensure t
+  :vc (:url "https://codeberg.org/akib/emacs-corfu-terminal.git"
+			:rev :newest)
   :unless
   (display-graphic-p)
   :config
@@ -515,8 +532,9 @@ window, it is deleted with `delete-window` function."
 ;;; Company, for when corfu doesn't work
 
 (use-package company
-  :straight t
+  ;; :straight t
   ;; :if (display-graphic-p)
+  :ensure t
   :defer t
   :custom
   (company-idle-delay 0.1)
@@ -560,6 +578,7 @@ window, it is deleted with `delete-window` function."
 ;;; Modus themes, Ef themes and Doom modeline
 
 (use-package modus-themes
+  :ensure t
   :init
   (setq ;; modus-themes-mode-line '(accented borderless)
    modus-themes-region '(accented bg-only)
@@ -577,6 +596,7 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package doom-themes
+  :ensure t
   :config
   ;; Global settings (defaults)
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
@@ -594,12 +614,14 @@ window, it is deleted with `delete-window` function."
 (advice-add 'enable-theme :after #'run-after-enable-theme-hook)
 
 (add-hook 'after-enable-theme-hook (lambda () (set-face-attribute 'line-number nil
-																  :background (face-background 'tab-bar)
-																  :foreground (face-foreground 'warning)
+																  ;; :background (face-background 'tab-bar)
+																  :foreground (face-foreground 'error)
+																  :weight 'light
 																  )))
 
 (use-package doric-themes
-  :straight (doric-themes :type git :host github :repo "protesilaos/doric-themes")
+  ;; :straight (doric-themes :type git :host github :repo "protesilaos/doric-themes")
+  ;; :vc (
   )
 
 (use-package ef-themes
@@ -668,55 +690,35 @@ window, it is deleted with `delete-window` function."
 ;;   (maple-modeline-mode)
 ;;   )
 
-(use-package spacious-padding
-  :bind
-  ("C-c C-v" . spacious-padding-mode)
-  :config
-  (setq spacious-padding-widths
-		'( :internal-border-width 20
-		   ;; :header-line-width 4
-		   ;; :mode-line-width 50
-		   :tab-width 4
-		   :right-divider-width 10
-		   ;; :scroll-bar-width 8
-		   :fringe-width 8
-		   ))
-  ;; (setq spacious-padding-subtle-mode-line
-  ;; 	`( :mode-line-active 'default
-  ;; 	   :mode-line-inactive vertical-border))
-  ;; :init
-  ;; (spacious-padding-mode 1)
-  )
-
 ;; (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
 ;; (add-to-list 'default-frame-alist '(alpha . (90 . 90)))
 
 (use-package catppuccin-theme
-  :straight t
+  ;; :straight t
+  :ensure t
   :config
   (custom-set-faces
    ;; Set the color for changes in the diff highlighting to blue.
    `(diff-hl-change ((t (:background unspecified :foreground ,(catppuccin-get-color 'blue))))))
-
   (custom-set-faces
    ;; Set the color for deletions in the diff highlighting to red.
    `(diff-hl-delete ((t (:background unspecified :foreground ,(catppuccin-get-color 'red))))))
-
   (custom-set-faces
    ;; Set the color for insertions in the diff highlighting to green.
    `(diff-hl-insert ((t (:background unspecified :foreground ,(catppuccin-get-color 'green))))))
-
   ;; Load the Catppuccin theme without prompting for confirmation.
   (load-theme 'catppuccin :no-confirm)
   )
 
 (use-package golden-ratio
+  :ensure t
   :defer t
   )
 
 ;;; Magit
 
 (use-package magit
+  :ensure t
   :bind("C-c C-m" . magit-status)
   ;; :hook
   ;; (magit-status-mode . (lambda()
@@ -750,7 +752,10 @@ window, it is deleted with `delete-window` function."
 ;;   )
 
 (use-package indent-bars
-  :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
+  ;; :straight (indent-bars :type git :host github :repo "jdtsmith/indent-bars")
+  :ensure t
+  :vc (:url "https://github.com/jdtsmith/indent-bars.git"
+			:rev :newest)
   :hook (prog-mode . indent-bars-mode) ; or whichever modes you prefer
   :custom(
 		  (indent-bars-no-descend-lists t)
@@ -767,6 +772,7 @@ window, it is deleted with `delete-window` function."
 
 (use-package aggressive-indent
   ;; Doesn't allow you to escape indentation
+  :ensure t
   :config
   (aggressive-indent-mode 1)
   )
@@ -779,7 +785,8 @@ window, it is deleted with `delete-window` function."
 
 (use-package undo-tree
   :defer t
-  :straight t
+  ;; :straight t
+  :ensure t
   :init
   (global-undo-tree-mode)
   (setq undo-tree-visualizer-timestamps t
@@ -811,10 +818,9 @@ window, it is deleted with `delete-window` function."
 ;;   (outline-indent-minor-mode))
 
 (use-package outli
-  :straight '(outli
-			  :type git
-			  :host github
-			  :repo "jdtsmith/outli")
+  ;; :straight '(outli :type git :host github :repo "jdtsmith/outli")
+  :vc( :url "https://github.com/jdtsmith/outli.git"
+	   :rev :newest)
   ;; :load-path "~/.emacs.d/outli"
   :hook
   (prog-mode . outli-mode)
@@ -829,6 +835,7 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package imenu-list
+  :ensure t
   :bind
   (("C-c l" . imenu-list-smart-toggle))
   :config
@@ -845,14 +852,15 @@ window, it is deleted with `delete-window` function."
 ;;   )
 
 (use-package dired
-  :straight nil                                                ;; This is built-in, no need to fetch it.
+  ;; :straight nil                                                ;; This is built-in, no need to fetch it.
   :custom
   (dired-listing-switches "-lah --group-directories-first")  ;; Display files in a human-readable format and group directories first.
   (dired-kill-when-opening-new-dired-buffer t)               ;; Close the previous buffer when opening a new `dired' instance.
   )
 
 (use-package dired-subtree
-  :straight t
+  ;; :straight t
+  :ensure t
   :after dired
   :bind
   ( :map dired-mode-map
@@ -864,11 +872,13 @@ window, it is deleted with `delete-window` function."
   (setq dired-subtree-use-backgrounds nil))
 
 (use-package nerd-icons-dired
+  :ensure t
   :hook
   (dired-mode . nerd-icons-dired-mode)
   (dired-sidebar-mode . nerd-icons-dired-mode))
 
 (use-package dired-sidebar
+  :ensure t
   :bind(
 		("C-c s" . dired-sidebar-toggle-sidebar)
 		;; :map dired-sidebar-mode-map
@@ -898,6 +908,7 @@ window, it is deleted with `delete-window` function."
 ;;; Change windows intuitively 
 
 (use-package winum
+  :ensure t
   :config
   (winum-mode)
   :bind
@@ -923,7 +934,7 @@ window, it is deleted with `delete-window` function."
 ;;; Programming Packages
 
 (use-package eldoc
-  :straight nil                              ;; This is built-in, no need to fetch it.
+  ;; :straight nil                              ;; This is built-in, no need to fetch it.
   :config
   (setq eldoc-idle-delay 0)                  ;; Automatically fetch doc help
   (setq eldoc-echo-area-use-multiline-p nil) ;; We use the "K" floating help instead
@@ -934,16 +945,24 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package eldoc-box
-  :straight t
+  ;; :straight t
+  :ensure t
   :if (display-graphic-p)
   :defer t)
 
 
 ;;; Yasnippet
 
-(use-package yasnippet)
+(use-package yasnippet
+  :ensure t
+  :config (yas-global-mode)
+  )
 
-(use-package consult-yasnippet)
+(use-package yasnippet-snippets
+  :ensure t)
+
+(use-package consult-yasnippet
+  :ensure t)
 
 ;;; Eglot Tree-Sitter and Tree-Sitter-Auto
 
@@ -1000,9 +1019,11 @@ window, it is deleted with `delete-window` function."
 ;; (treesit-font-lock-level 4)
 ;;  )
 
-(use-package tree-sitter-langs)
+(use-package tree-sitter-langs
+  :ensure t)
 
 (use-package treesit-auto
+  :ensure t
   :custom
   (treesit-auto-install 'prompt)
   :config
@@ -1012,7 +1033,8 @@ window, it is deleted with `delete-window` function."
 
 (use-package lsp-mode
   ;; :straight (lsp-mode :type git :host github :repo "emacs-lsp/lsp-mode")
-  :straight t
+  ;; :straight t
+  :ensure t
   :custom
   (lsp-enable-which-key-integration t)
   (lsp-inlay-hint-enable nil)                           ;; Usage of inlay hints.
@@ -1047,8 +1069,9 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package lsp-ui
-  :straight (lsp-ui :type git :host github :repo "emacs-lsp/lsp-ui")
+  ;; :straight (lsp-ui :type git :host github :repo "emacs-lsp/lsp-ui")
   :diminish
+  :ensure t
   :after lsp-mode
   :hook
   (lsp-mode . lsp-ui-mode)
@@ -1077,7 +1100,8 @@ window, it is deleted with `delete-window` function."
 
 (use-package ess
   ;; :load-path "/usr/share/emacs/site-lisp/elpa/ess-18.10.3snapshot"
-  :straight t
+  ;; :straight t
+  :ensure t
   :mode(
 		("/R/.*\\.q\\'"       . R-mode)
 		("\\.[rR]\\'"         . R-mode)
@@ -1102,9 +1126,9 @@ window, it is deleted with `delete-window` function."
   ( R )
   )
 
-(use-package tree-sitter-ess-r
-  :after (ess)
-  :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
+;; (use-package tree-sitter-ess-r
+;;   :after (ess)
+;;   :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
 
 ;;; Python
 
@@ -1130,6 +1154,7 @@ window, it is deleted with `delete-window` function."
 ;;; Dumb-Jump
 
 (use-package dumb-jump
+  :ensure t
   :config
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   )
@@ -1152,11 +1177,12 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package gptel
+  :ensure t
   :config
   (setq gptel-model 'gemini)
   (setq gptel-backend (gptel-make-gemini "Gemini"
-						:key (nth 0 (your-read-lines "~/my-emacs-config/gemini.api.txt" 1))
-						:stream t))
+										 :key (nth 0 (your-read-lines "~/my-emacs-config/gemini.api.txt" 1))
+										 :stream t))
   :bind(
 		:map gptel-mode-map
 		("C-c C-c" . gptel-send)
@@ -1166,6 +1192,7 @@ window, it is deleted with `delete-window` function."
 ;;; Using org-present for casual presentations + configurations.
 
 (use-package visual-fill-column
+  :ensure t
   :config
   (setq visual-fill-column-center-text 1)
   )
@@ -1185,20 +1212,22 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package org-present
-  :straight '(org-present
-			  :type git
-			  :host github
-			  :repo "rlister/org-present")
+  :ensure t
+  ;; :straight '(org-present
+  ;; 			  :type git
+  ;; 			  :host github
+  ;; 			  :repo "rlister/org-present")
   :config
   (add-hook 'org-present-mode-hook 'my/org-present-start)
   (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
   )
 
 (use-package org-bullets
+  :ensure t
   :after org)
 
 (use-package org
-  :straight nil
+  ;; :straight nil
   :init
   (visual-line-mode 1)
   (org-bullets-mode 1)
@@ -1221,15 +1250,16 @@ window, it is deleted with `delete-window` function."
   )
 
 (use-package org-appear
+  :ensure t
   :hook (org-mode . org-appear-mode))
 
 ;;; Newick Tree Visualization
 
 (use-package yggdrasil
-  :straight '(yggdrasil
-			  :type git
-			  :host github
-			  :repo "geokousis/yggdrasil")
+  ;; :straight (yggdrasil :type git :host github :repo "geokousis/yggdrasil")
+  :ensure t
+  :vc( :url "https://github.com/geokousis/yggdrasil.git"
+	   :rev :newest )
   :custom
   (yggdrasil-auto-close t)
   (yggdrasil-display-method 'window)
