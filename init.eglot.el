@@ -5,13 +5,15 @@
 (scroll-bar-mode -1)
 (menu-bar-mode -1)
 
+;;; Set path to latex
+
+(setenv "PATH" (concat ":/usr/local/texlive/2025/bin/x86_64-linux:" (getenv "PATH")))
+(add-to-list 'exec-path "/usr/local/texlive/2025/bin/x86_64-linux")
+
 ;;; Use straight.el as the package manager
 
 ;; Disable the default package.el
 ;; (setq package-enable-at-startup nil)
-
-;; (setenv "PATH" (concat ":/usr/local/texlive/2025/bin/x86_64-linux:" (getenv "PATH")))
-;; (add-to-list 'exec-path "/usr/local/texlive/2025/bin/x86_64-linux")
 
 ;; Bootstrap script from straight.el devs
 ;; (defvar bootstrap-version)
@@ -149,7 +151,7 @@ The DWIM behaviour of this command is as follows:
   (treesit-font-lock-level 4)                     ;; Use advanced font locking for Treesit mode.
   (truncate-lines t)                              ;; Enable line truncation to avoid wrapping long lines.
   (use-short-answers t)                           ;; Use short answers in prompts for quicker responses (y instead of yes)
-  
+  (inhibit-startup-screen t)
   :config
   (setq custom-file (locate-user-emacs-file "custom.el"))
   (load custom-file :no-error-if-file-is-missing)
