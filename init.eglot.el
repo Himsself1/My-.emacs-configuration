@@ -634,8 +634,8 @@ window, it is deleted with `delete-window` function."
   ;; (consult-theme 'ef-duo-light)
   :init
   (setq custom-safe-themes t) 
-  (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio doric-earth doric-wind))
-  (setq ef-themes-to-toggle-dark '(doom-monokai-pro ef-dream doric-obsidian catppuccin))
+  (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio ember-light doric-wind))
+  (setq ef-themes-to-toggle-dark '(doom-monokai-pro ef-dream ember catppuccin))
   (defun toggle-ef-themes-dark ()
     (interactive)
     (mapc #'disable-theme custom-enabled-themes)
@@ -711,6 +711,13 @@ window, it is deleted with `delete-window` function."
   ;; Load the Catppuccin theme without prompting for confirmation.
   (load-theme 'catppuccin :no-confirm)
   )
+
+(use-package ember-theme
+  :vc (:url "https://github.com/ember-theme/emacs")
+  :config
+  (add-to-list 'custom-theme-load-path
+               (file-name-directory (locate-library "ember-theme")))
+)
 
 (use-package golden-ratio
   :ensure t
