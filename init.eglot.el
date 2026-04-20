@@ -40,8 +40,9 @@
 ;; (setq straight-use-package-by-default t)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
+						 ("melpa" . "http://melpa.org/packages/")
 						 ("marmalade" . "http://marmalade-repo.org/packages/")
-						 ("melpa" . "http://melpa.org/packages/"))
+						 ("nongnu" . "https://elpa.nongnu.org/nongnu/"))
       )
 
 (package-initialize)
@@ -189,12 +190,12 @@ The DWIM behaviour of this command is as follows:
 
 ;;; Tramp alternative
 
-(use-package tramp-rpc
-  ;; :straight (tramp-rpc :type git :host github :repo "ArthurHeymans/emacs-tramp-rpc")
-  :ensure t
-  :vc (:url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git"
-			:rev :newest)
-  )
+;; (use-package tramp-rpc
+;;   ;; :straight (tramp-rpc :type git :host github :repo "ArthurHeymans/emacs-tramp-rpc")
+;;   :ensure t
+;;   :vc (:url "https://github.com/ArthurHeymans/emacs-tramp-rpc.git"
+;; 			:rev :newest)
+;;   )
 
 
 ;;;; Configure tab-line
@@ -522,8 +523,7 @@ window, it is deleted with `delete-window` function."
 (use-package corfu-terminal
   ;; :straight (corfu-terminal :type git :repo "https://codeberg.org/akib/emacs-corfu-terminal.git")
   :ensure t
-  :vc (:url "https://codeberg.org/akib/emacs-corfu-terminal.git"
-			:rev :newest)
+  ;; :vc (:url "https://codeberg.org/akib/emacs-corfu-terminal.git")
   :unless
   (display-graphic-p)
   :config
@@ -570,6 +570,7 @@ window, it is deleted with `delete-window` function."
 ;;; popup that lists all available shortcuts.
 
 (use-package which-key
+  :ensure t
   :init (which-key-mode)
   :diminish which-key-mode
   :config
@@ -622,11 +623,13 @@ window, it is deleted with `delete-window` function."
 																  )))
 
 (use-package doric-themes
+  :ensure t
   ;; :straight (doric-themes :type git :host github :repo "protesilaos/doric-themes")
   ;; :vc (
   )
 
 (use-package ef-themes
+  :ensure t
   :bind
   ([f6] . toggle-ef-themes-light)
   ([f7] . toggle-ef-themes-dark)
@@ -661,6 +664,7 @@ window, it is deleted with `delete-window` function."
 ;; 4) change terminal profile, then change back
 
 (use-package doom-modeline
+  :ensure t
   ;; :init 
   :config
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
