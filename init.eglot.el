@@ -1243,19 +1243,19 @@ window, it is deleted with `delete-window` function."
   ;; :straight nil
   :init
   (visual-line-mode 1)
-  (org-bullets-mode 1)
   :config
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
   (keymap-unset org-mode-map "M-<up>")
   (keymap-unset org-mode-map "M-<down>")
+  (setq org-hide-emphasis-markers t
+		org-link-descriptive t)
   :hook
   (org-mode . org-bullets-mode)
   :bind(
 		:map org-mode-map
 			 ([f5] . org-present)
 			 ("M-<up>" . org-previous-visible-heading)
-			 ("M-<down>" . org-next-visible-heading)
-		)
+			 ("M-<down>" . org-next-visible-heading))
   :custom-face
   (org-level-1 ((t (:inherit outline-1 :height 1.5))))
   (org-level-2 ((t (:inherit outline-2 :height 1.3))))
@@ -1264,7 +1264,11 @@ window, it is deleted with `delete-window` function."
 
 (use-package org-appear
   :ensure t
-  :hook (org-mode . org-appear-mode))
+  :hook (org-mode . org-appear-mode)
+  :config
+  (setq org-appear-autolinks t
+		org-appear-autoemphasis t)
+  )
 
 ;;; Newick Tree Visualization
 
