@@ -1235,6 +1235,8 @@ window, it is deleted with `delete-window` function."
   (add-hook 'org-present-mode-quit-hook 'my/org-present-end)
   )
 
+;;; Org configurations
+
 (use-package org-bullets
   :ensure t
   :after org)
@@ -1248,18 +1250,21 @@ window, it is deleted with `delete-window` function."
   (keymap-unset org-mode-map "M-<up>")
   (keymap-unset org-mode-map "M-<down>")
   (setq org-hide-emphasis-markers t
-		org-link-descriptive t)
+		org-link-descriptive t
+		org-image-actual-width nil)
   :hook
   (org-mode . org-bullets-mode)
   :bind(
 		:map org-mode-map
-			 ([f5] . org-present)
+			 ([f5] . logos-focus-mode)
 			 ("M-<up>" . org-previous-visible-heading)
 			 ("M-<down>" . org-next-visible-heading))
   :custom-face
   (org-level-1 ((t (:inherit outline-1 :height 1.5))))
   (org-level-2 ((t (:inherit outline-2 :height 1.3))))
-  (org-level-3 ((t (:inherit outline-3 :height 1.1))))
+  (org-level-3 ((t (:inherit outline-3 :height 1.15))))
+  :custom
+  (org-cycle-include-plain-lists 'integrate)
   )
 
 (use-package org-appear
@@ -1269,6 +1274,45 @@ window, it is deleted with `delete-window` function."
   (setq org-appear-autolinks t
 		org-appear-autoemphasis t)
   )
+
+;;; Logos-mode configuration for org presentations
+
+(defun logos-reveal-entry ()
+  "Reveal Org or Outline entry."
+  (cond
+   ((and (eq major-mode 'org-mode)
+         (org-at-heading-p))
+    ;; (org-fold-show-branches)))
+    (outline-show-branches)))
+   ((or (eq major-mode 'outline-mode)
+        (bound-and-true-p outline-minor-mode))
+    (outline-show-branches)))
+
+(defun logos-recenter-top ()
+  "Use `recenter' to reposition the view at the top."
+  (recenter 9))
+
+(use-package logos
+  :ensure t
+  :config
+  (add-hook 'logos-page-motion-hook #'logos-reveal-entry)
+  ;; (add-hook 'logos-page-motion-hook #'logos-recenter-top)
+  :hook
+  (logos-focus-mode . logos-narrow-dwim)
+  :bind  
+  (:map logos-focus-mode-map
+		("C-n" . logos-forward-page-dwim)
+		("C-p" . logos-backward-page-dwim)
+		)
+  :custom
+  (logos-outlines-are-pages t)
+  (logos-hide-mode-line nil)
+  (logos-hide-header-line t)
+  ;; (logos-outline-regexp-alist
+  ;;  `((org-mode . ,(format "\\(^\\*\\{1,2\\} +\\|^-\\{5\\}$\\|%s\\)" logos-page-delimiter)))
+  ;;  ;; `((org-mode . ,(format "\\(^\\*\\{1,2\\})" logos-page-delimiter))))
+  ;; )
+)
 
 ;;; Newick Tree Visualization
 
