@@ -1244,6 +1244,25 @@ window, it is deleted with `delete-window` function."
   :ensure t
   :after org)
 
+(defun org-toggle-inline-images-at-point ()
+  "Taken from [[https://www.reddit.com/r/orgmode/comments/hx5keh/display_a_single_inline_image/?solution=78bb47f295e9cb0178bb47f295e9cb01&js_challenge=1&token=bbbe4bf1c9a2b5160829c4be34da58611428a1c3b6d40d6363d52b0f5d4717dc&jsc_orig_r=]]
+Toggles visibility of one image in org mode buffers."
+  (interactive)
+  (when-let* ((link-region (org-in-regexp org-link-bracket-re 1)))
+    (let ((org-inline-image-overlays-old org-inline-image-overlays))
+	  (save-restriction
+	    (narrow-to-region (car link-region) (cdr link-region))
+	    (if (-intersection (overlays-at (point)) org-inline-image-overlays)
+	        (mapc (lambda (ov)
+		            (when (member ov org-inline-image-overlays)
+			          (delete-overlay ov)
+			          (setq org-inline-image-overlays (delete ov org-inline-image-overlays))))
+		          (overlays-at (point)))
+	      (org-display-inline-images 'include-linked 'refresh))
+	    )
+	  (unless (equal org-inline-image-overlays org-inline-image-overlays-old) t)) ;; if overlays did not change, the link is not inline image
+    ))
+
 (use-package org
   ;; :straight nil
   :init
@@ -1261,7 +1280,9 @@ window, it is deleted with `delete-window` function."
 		:map org-mode-map
 			 ([f5] . logos-focus-mode)
 			 ("M-<up>" . org-previous-visible-heading)
-			 ("M-<down>" . org-next-visible-heading))
+			 ("M-<down>" . org-next-visible-heading)
+			 ("C-M-<return>" . org-toggle-inline-images-at-point)
+			 )
   :custom-face
   (org-level-1 ((t (:inherit outline-1 :height 1.5))))
   (org-level-2 ((t (:inherit outline-2 :height 1.3))))
