@@ -201,6 +201,7 @@ The DWIM behaviour of this command is as follows:
 ;;;; Configure tab-line
 
 (defun my/set-tab-theme ()
+  (interactive)
   (let ((bg (face-attribute 'mode-line :background))
         (fg (face-attribute 'default :foreground))
 		(hg (face-attribute 'default :background))
@@ -240,6 +241,7 @@ The DWIM behaviour of this command is as follows:
 						:weight 'normal
 						:inherit nil
 						:box (list :line-width box-width :color hg)
+						:underline (list :style 'line :position t)
 						)
 	)
   )
@@ -621,7 +623,7 @@ window, it is deleted with `delete-window` function."
 																  :foreground (face-foreground 'error)
 																  :weight 'light
 																  )))
-
+(add-hook 'after-enable-theme-hook 'my/set-tab-theme)
 (use-package doric-themes
   :ensure t
   ;; :straight (doric-themes :type git :host github :repo "protesilaos/doric-themes")
@@ -713,7 +715,7 @@ window, it is deleted with `delete-window` function."
    ;; Set the color for insertions in the diff highlighting to green.
    `(diff-hl-insert ((t (:background unspecified :foreground ,(catppuccin-get-color 'green))))))
   ;; Load the Catppuccin theme without prompting for confirmation.
-  (load-theme 'catppuccin :no-confirm)
+  ;; (load-theme 'catppuccin :no-confirm)
   )
 
 (use-package ember-theme
@@ -721,6 +723,7 @@ window, it is deleted with `delete-window` function."
   :config
   (add-to-list 'custom-theme-load-path
                (file-name-directory (locate-library "ember-theme")))
+  (consult-theme 'ember-light)
 )
 
 (use-package golden-ratio
