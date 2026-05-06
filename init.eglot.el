@@ -1128,16 +1128,24 @@ window, it is deleted with `delete-window` function."
 		("\\.Rd\\'"           . Rd-mode)
 		)
   :bind
-  ("M--" . " <- ")
+  (("M--" . ess-insert-assign))
   :custom(
-		  (ess-r-backend 'lsp)
+		  ;; (ess-r-backend 'lsp)
 		  (ess-style 'RStudio)
 		  (ess-auto-width 'window)
-		  (ess-toggle_underscore nil)
+		  (ess-toggle-underscore nil)
 		  )
-  ;; :hook
+  :hook
+  ((ess-mode . (lambda ()              ;; fix 5: one entry per mode
+                 (add-to-list 'outline-regexp "\\(# \\*+ \\)")))
+   (ess-r-mode . (lambda ()
+                   (add-to-list 'outline-regexp "\\(# \\*+ \\)")))
+   (R-mode . (lambda ()
+               (add-to-list 'outline-regexp "\\(# \\*+ \\)"))))
   ;; (ess-mode . tree-sitter-ess-r-using-r-faces)
   ;; (ess-mode . 'eglot-ensure)
+  :config
+  (outli-mode 1)
   :commands
   ( R )
   )
