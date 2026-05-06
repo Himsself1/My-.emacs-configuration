@@ -969,16 +969,16 @@ window, it is deleted with `delete-window` function."
 
 ;;; Yasnippet
 
-(use-package yasnippet
-  :ensure t
-  :config (yas-global-mode)
-  )
+;; (use-package yasnippet
+;;   :ensure t
+;;   :config (yas-global-mode)
+;;   )
 
-(use-package yasnippet-snippets
-  :ensure t)
+;; (use-package yasnippet-snippets
+;;   :ensure t)
 
-(use-package consult-yasnippet
-  :ensure t)
+;; (use-package consult-yasnippet
+;;   :ensure t)
 
 ;;; Eglot Tree-Sitter and Tree-Sitter-Auto
 
