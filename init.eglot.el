@@ -1127,19 +1127,20 @@ window, it is deleted with `delete-window` function."
   ;; :load-path "/usr/share/emacs/site-lisp/elpa/ess-18.10.3snapshot"
   ;; :straight t
   :ensure t
-  :mode(
-		("/R/.*\\.q\\'"       . R-mode)
-		("\\.[rR]\\'"         . R-mode)
-		("\\.[rR]profile\\'"  . R-mode)
-		("NAMESPACE\\'"       . R-mode)
-		("CITATION\\'"        . R-mode)
-		("\\.[Rr]out"         . R-transcript-mode)
-		("\\.Rd\\'"           . Rd-mode)
-		)
+  ;; :mode(
+  ;; 		("/R/.*\\.q\\'"       . R-mode)
+  ;; 		("\\.[rR]\\'"         . R-mode)
+  ;; 		("\\.[rR]profile\\'"  . R-mode)
+  ;; 		("NAMESPACE\\'"       . R-mode)
+  ;; 		("CITATION\\'"        . R-mode)
+  ;; 		("\\.[Rr]out"         . R-transcript-mode)
+  ;; 		("\\.Rd\\'"           . Rd-mode)
+  ;; 		)
   :bind
   (("M--" . ess-insert-assign))
   :custom(
 		  ;; (ess-r-backend 'lsp)
+		  (ess-indent-with-fancy-comments nil)
 		  (ess-style 'RStudio)
 		  (ess-auto-width 'window)
 		  (ess-toggle-underscore nil)
