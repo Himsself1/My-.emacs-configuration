@@ -131,7 +131,7 @@ The DWIM behaviour of this command is as follows:
 ;; memoize all git candidates in the current project
 (defvar $counsel-git-cands-cache nil)
 (defun $memoize-counsel-git-cands (orig dir)
-  ($memoize-remote (magit-toplevel dir) '$counsel-git-cands-cache orig dir))
+  (memoize-remote (magit-toplevel dir) '$counsel-git-cands-cache orig dir))
 (advice-add 'counsel-git-cands :around #'$memoize-counsel-git-cands)
 
 (use-package emacs
@@ -181,7 +181,7 @@ The DWIM behaviour of this command is as follows:
     (scroll-bar-mode -1))      ;; Disable the scroll bar if it is active.
   (global-hl-line-mode 1)      ;; Disable highlight of the current line
   (global-auto-revert-mode 1)  ;; Enable global auto-revert mode to keep buffers up to date with their corresponding files.
-  (indent-tabs-mode -1)        ;; Disable the use of tabs for indentation (use spaces instead).
+  (setq indent-tabs-mode nil)        ;; Disable the use of tabs for indentation (use spaces instead).
   (xterm-mouse-mode 1)         ;; Enable mouse support in terminal mode.
   (window-divider-mode t)
   ;; Set the default coding system for files to UTF-8.
@@ -356,7 +356,7 @@ window, it is deleted with `delete-window` function."
 
 (dolist (mode '(org-mode-hook
 				term-mode-hook
-				eshel-mode-hook))
+				eshell-mode-hook))
   (add-hook mode (lambda() (display-line-numbers-mode -1))))
 
 
@@ -474,11 +474,11 @@ window, it is deleted with `delete-window` function."
   :ensure t
   ;; :unless
   ;; (display-graphic-p)
-  :bind (
-		 :map corfu-map
-		 ("<tab>" . corfu-complete)
-		 ("<return>" . corfu-insert)
-		 )
+  :bind
+  (:map corfu-mode-map
+		("<tab>" . corfu-complete)
+		("<return>" . corfu-insert)
+		)
   :custom
   (corfu-auto nil)
   ;; (corfu-auto-delay 0.3)
@@ -486,11 +486,19 @@ window, it is deleted with `delete-window` function."
   (corfu-quit-no-match t)
   (corfu-preview-current nil)
   (corfu-min-width 20)
-  (corfu-popupinfo-delay '(1.25 . 0.5))
-  (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
   :config
   (global-corfu-mode)
+
   )
+
+(use-package corfu-popupinfo
+  :after corfu
+  ;; :config
+  ;; (corfu-popupinfo-mode 1) ; shows documentation after `corfu-popupinfo-delay'
+  :custom
+  (corfu-popupinfo-delay '(1.25 . 0.5))
+  )
+
 
 (use-package nerd-icons-corfu
   ;; :straight t
@@ -945,7 +953,8 @@ window, it is deleted with `delete-window` function."
     (after golden-ratio-resize-window)
   (golden-ratio) nil)
 
-(if golden-ratio-mode (progn (ad-activate 'winum-select-window-by-number)))
+(when (bound-and-true-p golden-ratio-mode)
+  (progn (ad-activate 'winum-select-window-by-number)))
 
 ;;; Programming Packages
 
@@ -986,15 +995,15 @@ window, it is deleted with `delete-window` function."
   :bind
   (:map eglot-mode-map
 		("C-c d" . eldoc))
-  :custom(
-		  (eglot-events-buffer-size 0)
-		  (fset #'jsonrpc--log-event #'ignore)
-		  (eglot-extend-to-xref 1)
-		  (eglot-sync-connect 0)
-		  (eldoc-echo-area-use-multiline-p nil)
-		  (eglot-connect-timeout nil)
-		  )
-  )
+  :config
+  ((fset #'jsonrpc--log-event #'ignore))
+  :custom
+  ((eglot-events-buffer-size 0)
+   (eglot-extend-to-xref t)
+   (eglot-sync-connect nil)
+   (eldoc-echo-area-use-multiline-p nil)
+   (eglot-connect-timeout nil)
+   ))
 
 ;; (use-package eglot-booster
 ;;   :straight (eglot-booster
@@ -1096,7 +1105,7 @@ window, it is deleted with `delete-window` function."
 		([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
 		([remap xref-find-references] . lsp-ui-peek-find-references))
   :config
-  (lsp-ui-peak-enable)
+  (lsp-ui-peek-enable)
   )
 
 ;;; Lsp-bridge
