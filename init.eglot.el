@@ -40,7 +40,7 @@
 ;; (setq straight-use-package-by-default t)
 
 (setq package-archives '(("gnu" . "http://elpa.gnu.org/packages/")
-						 ("melpa" . "http://melpa.org/packages/")
+						 ("melpa" . "https://melpa.org/packages/")
 						 ("marmalade" . "http://marmalade-repo.org/packages/")
 						 ("nongnu" . "https://elpa.nongnu.org/nongnu/"))
       )
@@ -51,7 +51,6 @@
   (package-refresh-contents))
 
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 ;;; Raise Garbage collection limit
 
@@ -475,20 +474,17 @@ window, it is deleted with `delete-window` function."
   ;; :unless
   ;; (display-graphic-p)
   :bind
-  (:map corfu-mode-map
+  (:map corfu-map
 		("<tab>" . corfu-complete)
-		("<return>" . corfu-insert)
-		)
+		("<return>" . corfu-insert))
   :custom
-  (corfu-auto nil)
-  ;; (corfu-auto-delay 0.3)
+  ;; (corfu-auto t)
   (corfu-auto-prefix 2)
   (corfu-quit-no-match t)
   (corfu-preview-current nil)
   (corfu-min-width 20)
-  :config
+  :init
   (global-corfu-mode)
-
   )
 
 (use-package corfu-popupinfo
@@ -553,6 +549,7 @@ window, it is deleted with `delete-window` function."
   (company-minimum-prefix-length 2)
   (tab-always-indent 'complete)
   (company-keymap--unbind-quick-access company-active-map) ;; Disables M-# from selecting stuff on company minimap
+  :config
   (set-face-attribute 'company-tooltip-common nil :inherit nil)
   ;; :hook
   ;; (prog-mode . company-mode)
@@ -781,17 +778,16 @@ window, it is deleted with `delete-window` function."
   :vc (:url "https://github.com/jdtsmith/indent-bars.git"
 			:rev :newest)
   :hook (prog-mode . indent-bars-mode) ; or whichever modes you prefer
-  :custom(
-		  (indent-bars-no-descend-lists t)
-		  (indent-bars-no-descend-string t)
-		  ;; (indent-bars-treesit-support t)
-		  (indent-bars-display-on-blank-lines nil)
-		  (indent-bars-pattern ".")
-		  (indent-bars-width-frac 0.5)
-		  (indent-bars-pad-frac 0.01)
-		  ;; (indent-bars-color-by-depth nil)
-		  (indent-bars-highlight-current-depth '(:face default :blend 0.4))
-		  )
+  :custom
+  (indent-bars-no-descend-lists t)
+  (indent-bars-no-descend-string t)
+  ;; (indent-bars-treesit-support t)
+  (indent-bars-display-on-blank-lines nil)
+  (indent-bars-pattern ".")
+  (indent-bars-width-frac 0.5)
+  (indent-bars-pad-frac 0.01)
+  ;; (indent-bars-color-by-depth nil)
+  (indent-bars-highlight-current-depth '(:face default :blend 0.4))
   )
 
 (use-package aggressive-indent
@@ -936,15 +932,15 @@ window, it is deleted with `delete-window` function."
   :config
   (winum-mode)
   :bind
-  (("M-1" . 'winum-select-window-1)
-   ("M-2" . 'winum-select-window-2)
-   ("M-3" . 'winum-select-window-3)
-   ("M-4" . 'winum-select-window-4)
-   ("M-5" . 'winum-select-window-5)
-   ("M-6" . 'winum-select-window-6)
-   ("M-7" . 'winum-select-window-7)
-   ("M-8" . 'winum-select-window-8)
-   ("M-/" . 'winum-select-window-by-number))
+  (("M-1" . winum-select-window-1)
+   ("M-2" . winum-select-window-2)
+   ("M-3" . winum-select-window-3)
+   ("M-4" . winum-select-window-4)
+   ("M-5" . winum-select-window-5)
+   ("M-6" . winum-select-window-6)
+   ("M-7" . winum-select-window-7)
+   ("M-8" . winum-select-window-8)
+   ("M-/" . winum-select-window-by-number))
   )
 
 ;;;; Make winum play nice with golden-ratio-mode
@@ -1137,29 +1133,19 @@ window, it is deleted with `delete-window` function."
   ;; 		("\\.Rd\\'"           . Rd-mode)
   ;; 		)
   :bind
-  (("M--" . ess-insert-assign))
-  :custom(
-		  ;; (ess-r-backend 'lsp)
-		  (ess-indent-with-fancy-comments nil)
-		  (ess-style 'RStudio)
-		  (ess-auto-width 'window)
-		  (ess-toggle-underscore nil)
-		  )
-  :hook
-  ((ess-mode . (lambda ()              ;; fix 5: one entry per mode
-                 (add-to-list 'outline-regexp "\\(# \\*+ \\)")))
-   (ess-r-mode . (lambda ()
-                   (add-to-list 'outline-regexp "\\(# \\*+ \\)")))
-   (R-mode . (lambda ()
-               (add-to-list 'outline-regexp "\\(# \\*+ \\)"))))
-  ;; (ess-mode . tree-sitter-ess-r-using-r-faces)
-  ;; (ess-mode . 'eglot-ensure)
+  ("M--" . ess-insert-assign)
+  :custom
+  (ess-indent-with-fancy-comments nil)
+  (ess-style 'RStudio)
+  (ess-auto-width 'window)
+  (ess-toggle-underscore nil)
   :config
   (outli-mode 1)
   :commands
   ( R )
   )
-
+(add-hook 'ess-r-mode-hook (lambda()
+							  (setq-local outline-regexp "# \\*+ ")))
 ;; (use-package tree-sitter-ess-r
 ;;   :after (ess)
 ;;   :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
