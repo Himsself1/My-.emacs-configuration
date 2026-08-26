@@ -171,8 +171,7 @@ The DWIM behaviour of this command is as follows:
   (setq magit-tramp-pipe-stty-settings 'pty)
   ;; Remove hooks that cause delays over TRAMP
   (remove-hook 'find-file-hook #'doom-modeline-update-buffer-file-name)
-  (remove-hook 'find-file-hook 'forge-bug-reference-setup)
-  
+  (remove-hook 'find-file-hook 'forge-bug-reference-setup)  
   :init                        ;; Initialization settings that apply before the package is loaded.
   (tool-bar-mode -1)           ;; Disable the tool bar for a cleaner interface.
   (menu-bar-mode -1)           ;; Disable the menu bar for a more streamlined look.
@@ -180,7 +179,7 @@ The DWIM behaviour of this command is as follows:
     (scroll-bar-mode -1))      ;; Disable the scroll bar if it is active.
   (global-hl-line-mode 1)      ;; Disable highlight of the current line
   (global-auto-revert-mode 1)  ;; Enable global auto-revert mode to keep buffers up to date with their corresponding files.
-  (setq indent-tabs-mode nil)        ;; Disable the use of tabs for indentation (use spaces instead).
+  (setq-default indent-tabs-mode nil)        ;; Disable the use of tabs for indentation (use spaces instead).
   (xterm-mouse-mode 1)         ;; Enable mouse support in terminal mode.
   (window-divider-mode t)
   ;; Set the default coding system for files to UTF-8.
@@ -201,35 +200,40 @@ The DWIM behaviour of this command is as follows:
 
 (defun my/set-tab-theme ()
   (interactive)
-  (let ((bg (face-attribute 'mode-line :background))
-        (fg (face-attribute 'default :foreground))
-		(hg (face-attribute 'default :background))
-        (base (face-attribute 'mode-line :background))
+  (let ((bg (face-attribute 'mode-line :background nil t))
+        (fg (face-attribute 'default :foreground nil t))
+		(hg (face-attribute 'default :background nil t))
+        (base (face-attribute 'mode-line :background nil t))
+        (box-bg (face-attribute 'isearch :background nil t))
+        (ypsos 0.9)
         (box-width (+ (/ (line-pixel-height) 4) 1)))
     (set-face-attribute 'tab-line nil
-						:background base
+						:background box-bg
 						:foreground fg
-						:height 0.8
+						:height ypsos
 						:inherit nil
-						:box (list :line-width -1 :color base)
+						:box (list :line-width box-width :color box-bg)
 						)
     (set-face-attribute 'tab-line-tab nil
 						:foreground fg
-						:background bg
+						:background hg
+                        :height ypsos
 						:weight 'normal
 						:inherit nil
-						:box (list :line-width box-width :color bg)
+						:box (list :line-width box-width :color hg)
 						)
     (set-face-attribute 'tab-line-tab-inactive nil
 						:foreground fg
-						:background base
+						:background box-bg
+                        :height ypsos
 						:weight 'normal
 						:inherit nil
-						:box (list :line-width box-width :color base)
+						:box (list :line-width box-width :color box-bg)
 						)
     (set-face-attribute 'tab-line-highlight nil
 						:foreground fg
 						:background hg
+                        :height ypsos
 						:weight 'normal
 						:inherit nil
 						:box (list :line-width box-width :color hg)
@@ -237,6 +241,7 @@ The DWIM behaviour of this command is as follows:
     (set-face-attribute 'tab-line-tab-current nil
 						:foreground fg
 						:background hg
+                        :height ypsos
 						:weight 'normal
 						:inherit nil
 						:box (list :line-width box-width :color hg)
@@ -343,6 +348,9 @@ window, it is deleted with `delete-window` function."
 
 ;;; Adds line numbers except in case of eshell
 
+;; Make a list of modes where line numbers should be displayed
+
+
 (use-package display-line-numbers
   ;; :straight nil
   :ensure nil
@@ -350,13 +358,17 @@ window, it is deleted with `delete-window` function."
   (display-line-numbers-width 4)
   (display-line-numbers-grow-only 1)
   :config
-  (global-display-line-numbers-mode 1)
+  (dolist (modes-for-line-numbers '(tex-mode
+								  prog-mode))
+	(add-hook modes-for-line-numbers
+			  (lambda() (display-line-numbers-mode 1))))
+  ;; (global-display-line-numbers-mode 1)
   )
 
-(dolist (mode '(org-mode-hook
-				term-mode-hook
-				eshell-mode-hook))
-  (add-hook mode (lambda() (display-line-numbers-mode -1))))
+;; (dolist (mode '(org-mode-hook
+;; 				term-mode-hook
+;; 				eshell-mode-hook))
+;;   (add-hook mode (lambda() (display-line-numbers-mode -1))))
 
 
 ;;; Automatically update file that was modified elsewhere
@@ -411,6 +423,9 @@ window, it is deleted with `delete-window` function."
 
 (use-package consult
   :ensure t
+  :init
+  (setq xref-show-xrefs-function    #'consult-xref
+        xref-show-definitions-function #'consult-xref)
   :bind (;; A recursive grep
          ("M-s M-g" . consult-grep)
          ;; Search for files names recursively
@@ -495,7 +510,6 @@ window, it is deleted with `delete-window` function."
   (corfu-popupinfo-delay '(1.25 . 0.5))
   )
 
-
 (use-package nerd-icons-corfu
   ;; :straight t
   :ensure t
@@ -506,7 +520,7 @@ window, it is deleted with `delete-window` function."
 (use-package nerd-icons-completion
   ;; :straight t
   :ensure t
-  :after corfu
+  ;; :after corfu
   :init
   (nerd-icons-completion-mode t)
   :hook
@@ -535,7 +549,6 @@ window, it is deleted with `delete-window` function."
   :config
   (corfu-terminal-mode)
   )
-
 
 ;;; Company, for when corfu doesn't work
 
@@ -676,7 +689,7 @@ window, it is deleted with `delete-window` function."
   :config
   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
   (setq doom-modeline-bar-width 4)
-  (setq doom-modeline-height 30)
+  (setq doom-modeline-height 20)
   (setq doom-line-numbers-style 'relative)
   (setq doom-modeline-major-mode-icon t)
   (setq doom-modeline-buffer-state-icon t)
@@ -691,16 +704,16 @@ window, it is deleted with `delete-window` function."
 
 ;; (use-package maple-modeline
 ;;   ;; :quelpa (:fetcher github :repo "honmaple/emacs-maple-modeline")
-;;   :straight (emacs-maple-modeline :type git :repo "https://github.com/honmaple/emacs-maple-modeline")
+;;   :vc (:url "https://github.com/honmaple/emacs-maple-modeline"
+;; 			:rev :newest)
 ;;   ;; :init (maple-modeline-mode 1)
-;;   :hook (after-init . maple-modeline-mode)
 ;;   ;; :custom-face
 ;;   ;; (mode-line ((t (:box nil))))
 ;;   ;; (mode-line-inactive ((t (:box nil))))
-;;   ;; :custom
-;;   ;; (setq maple-modeline-height 15)
-;;   :custom
-;;   (maple-modeline-mode)
+;;   :config
+;;   (setq maple-modeline-height 10)
+;;   (setq maple-modeline-style 'evil)
+;;   (maple-modeline-mode t)
 ;;   )
 
 ;; (set-frame-parameter (selected-frame) 'alpha '(97 . 100))
@@ -836,6 +849,36 @@ window, it is deleted with `delete-window` function."
 ;;   (outline-blank-line t)
 ;;   :init
 ;;   (outline-indent-minor-mode))
+
+;; (use-package kirigami
+;;   :ensure t
+;;   :config
+;;   (kirigami-global-mode t)
+;;   )
+
+(use-package hideshow
+  :ensure nil
+  :hook (prog-mode . hs-minor-mode)
+  :config
+  (defun my/hs-hide-all-except-current ()
+	"Hide all blocks in the buffer except the one containing point."
+	(interactive)
+	(save-excursion
+      (hs-hide-all)
+      (hs-show-block)))
+  (defun my/hs-display-with-line-count (ov)
+    (when (eq (overlay-get ov 'hs) 'code)
+      (overlay-put ov 'display
+                   (propertize
+                    (format " [%d lines ⏵] "
+                            (count-lines (overlay-start ov) (overlay-end ov)))
+					))))
+  (setq hs-set-up-overlay #'my/hs-display-with-line-count)
+  :bind (:map hs-minor-mode-map
+			  ("C-<return>" . hs-toggle-hiding)
+			  ("C-M-<return>" . my/hs-hide-all-except-current)
+			  ("C-S-<return>" . hs-show-all))
+  )
 
 (use-package outli
   ;; :straight '(outli :type git :host github :repo "jdtsmith/outli")
@@ -1273,6 +1316,7 @@ Toggles visibility of one image in org mode buffers."
   (visual-line-mode 1)
   :config
   (setq org-format-latex-options (plist-put org-format-latex-options :scale 2.0))
+  (setq org-startup-folded 'show2levels)
   (keymap-unset org-mode-map "M-<up>")
   (keymap-unset org-mode-map "M-<down>")
   (setq org-hide-emphasis-markers t
