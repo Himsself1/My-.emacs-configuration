@@ -186,7 +186,14 @@ The DWIM behaviour of this command is as follows:
   (modify-coding-system-alist 'file "" 'utf-8)
   )
 
-;;; Tramp alternative
+;;;; Use Kitty Keyboard Protocol in tty
+;; Makes sure that certain shortcuts work in tty
+(use-package kkp
+  :ensure t
+  :hook (tty-setup . global-kkp-mode)
+  )
+
+;;;; Tramp alternative
 
 ;; (use-package tramp-rpc
 ;;   ;; :straight (tramp-rpc :type git :host github :repo "ArthurHeymans/emacs-tramp-rpc")
