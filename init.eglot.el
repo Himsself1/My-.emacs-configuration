@@ -364,12 +364,13 @@ window, it is deleted with `delete-window` function."
   :custom
   (display-line-numbers-width 4)
   (display-line-numbers-grow-only 1)
-  :config
-  (dolist (modes-for-line-numbers '(tex-mode
-								  prog-mode))
-	(add-hook modes-for-line-numbers
-			  (lambda() (display-line-numbers-mode 1))))
+  ;; :config
+  ;; (dolist (modes-for-line-numbers '(tex-mode
+  ;;   							  prog-mode))
+  ;;   (add-hook modes-for-line-numbers
+  ;;   		  (lambda() (display-line-numbers-mode 1))))
   ;; (global-display-line-numbers-mode 1)
+  :hook (prog-mode tex-mode)
   )
 
 ;; (dolist (mode '(org-mode-hook
@@ -387,7 +388,8 @@ window, it is deleted with `delete-window` function."
 
 ;;; Install fonts and all-the-icons
 
-(use-package nerd-icons)
+(use-package nerd-icons
+  :ensure t)
 
 (add-to-list 'default-frame-alist
              '(font . "Iosevka-13"))
@@ -1246,18 +1248,18 @@ window, it is deleted with `delete-window` function."
 					   (forward-line 1))))
   )
 
-(use-package gptel
-  :ensure t
-  :config
-  (setq gptel-model 'gemini)
-  (setq gptel-backend (gptel-make-gemini "Gemini"
-										 :key (nth 0 (your-read-lines "~/my-emacs-config/gemini.api.txt" 1))
-										 :stream t))
-  :bind(
-		:map gptel-mode-map
-		("C-c C-c" . gptel-send)
-		)
-  )
+;; (use-package gptel
+;;   :ensure t
+;;   :config
+;;   (setq gptel-model 'gemini)
+;;   (setq gptel-backend (gptel-make-gemini "Gemini"
+;; 										 :key (nth 0 (your-read-lines "~/my-emacs-config/gemini.api.txt" 1))
+;; 										 :stream t))
+;;   :bind(
+;; 		:map gptel-mode-map
+;; 		("C-c C-c" . gptel-send)
+;; 		)
+;;   )
 
 ;;; Using org-present for casual presentations + configurations.
 
