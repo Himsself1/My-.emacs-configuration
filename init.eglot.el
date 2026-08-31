@@ -138,7 +138,7 @@ The DWIM behaviour of this command is as follows:
   :custom                                         ;; Set custom variables to configure Emacs behavior.
   (column-number-mode t)                          ;; Display the column number in the mode line.
   (delete-selection-mode 1)                       ;; Enable replacing selected text with typed text.
-  (global-auto-revert-non-file-buffers t)         ;; Automatically refresh non-file buffers.
+  ;; (global-auto-revert-non-file-buffers t)         ;; Automatically refresh non-file buffers.
   (history-length 25)                             ;; Set the length of the command history.
   (ispell-dictionary "en_US")                     ;; Set the default dictionary for spell checking.
   (pixel-scroll-precision-mode t)                 ;; Enable precise pixel scrolling.
@@ -178,7 +178,7 @@ The DWIM behaviour of this command is as follows:
   (when scroll-bar-mode
     (scroll-bar-mode -1))      ;; Disable the scroll bar if it is active.
   (global-hl-line-mode 1)      ;; Disable highlight of the current line
-  (global-auto-revert-mode 1)  ;; Enable global auto-revert mode to keep buffers up to date with their corresponding files.
+  ;; (global-auto-revert-mode 1)  ;; Enable global auto-revert mode to keep buffers up to date with their corresponding files.
   (setq-default indent-tabs-mode nil)        ;; Disable the use of tabs for indentation (use spaces instead).
   (xterm-mouse-mode 1)         ;; Enable mouse support in terminal mode.
   (window-divider-mode t)
@@ -381,10 +381,10 @@ window, it is deleted with `delete-window` function."
 
 ;;; Automatically update file that was modified elsewhere
 
-(use-package autorevert
-  :config
-  (global-auto-revert-mode 1)
-  )
+;; (use-package autorevert
+;;   :config
+;;   (global-auto-revert-mode 1)
+;;   )
 
 ;;; Install fonts and all-the-icons
 
@@ -691,23 +691,25 @@ window, it is deleted with `delete-window` function."
 ;; 2) open dconf-editor and search for "font" in search bar. terminal profiles will pop up
 ;; 3) copy the name of the font above to the 'font' menu
 ;; 4) change terminal profile, then change back
-
-(use-package doom-modeline
+(use-package telephone-line
   :ensure t
-  ;; :init 
-  :config
-  (setq doom-modeline-buffer-file-name-style 'relative-to-project)
-  (setq doom-modeline-bar-width 4)
-  (setq doom-modeline-height 20)
-  (setq doom-line-numbers-style 'relative)
-  (setq doom-modeline-major-mode-icon t)
-  (setq doom-modeline-buffer-state-icon t)
-  (setq doom-modeline-major-mode-color-icon t)
-  (setq doom-modeline-project-detection 'auto)
-  (setq doom-modeline-highlight-modified-buffer-name t)
-  (setq find-file-visit-truename t)
-  (doom-modeline-mode 1)
-  )
+  :config (telephone-line-mode))
+;; (use-package doom-modeline
+;;   :ensure t
+;;   ;; :init 
+;;   :config
+;;   (setq doom-modeline-buffer-file-name-style 'relative-to-project)
+;;   (setq doom-modeline-bar-width 4)
+;;   (setq doom-modeline-height 20)
+;;   (setq doom-line-numbers-style 'relative)
+;;   (setq doom-modeline-major-mode-icon t)
+;;   (setq doom-modeline-buffer-state-icon t)
+;;   (setq doom-modeline-major-mode-color-icon t)
+;;   (setq doom-modeline-project-detection 'project)
+;;   (setq doom-modeline-highlight-modified-buffer-name t)
+;;   (setq find-file-visit-truename t)
+;;   (doom-modeline-mode 1)
+;;   )
 
 ;; I get errors with maple modeline
 
@@ -901,9 +903,8 @@ window, it is deleted with `delete-window` function."
   :config
   (global-reveal-mode)
   :bind(
-		([M-down] . outline-next-heading)
-		([M-up] . outline-previous-heading)
-		)
+        ("M-<down>" . outline-next-heading)
+        ("M-<up>"   . outline-previous-heading))
   )
 
 (use-package imenu-list
