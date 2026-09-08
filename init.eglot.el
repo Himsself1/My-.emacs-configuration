@@ -348,6 +348,13 @@ window, it is deleted with `delete-window` function."
     (add-to-list 'tab-line-exclude-modes mode))
   )
 
+(use-package modern-tab
+  :vc (:url "https://github.com/MArpogaus/modern-tab" :rev :newest)
+  :config
+  (modern-tab-line-mode)
+  :custom
+  (setq modern-tab-line-auto-hide 'nil)
+  )
 
 ;;; xterm-mouse-mode toggle
 
