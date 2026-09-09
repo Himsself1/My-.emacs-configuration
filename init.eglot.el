@@ -353,7 +353,7 @@ window, it is deleted with `delete-window` function."
   :config
   (modern-tab-line-mode)
   :custom
-  (setq modern-tab-line-auto-hide 'nil)
+  (modern-tab-line-auto-hide 'nil)
   )
 
 ;;; xterm-mouse-mode toggle
