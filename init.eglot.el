@@ -898,20 +898,23 @@ window, it is deleted with `delete-window` function."
 			  ("C-S-<return>" . hs-show-all))
   )
 
+(use-package outline
+  :ensure nil
+  ;; :hook (prog-mode . outline-minor-mode)
+  :bind
+  (("M-<down>" . outline-next-heading)
+   ("M-<up>"   . outline-previous-heading))
+  )
+
 (use-package outli
   ;; :straight '(outli :type git :host github :repo "jdtsmith/outli")
   :vc( :url "https://github.com/jdtsmith/outli.git"
 	   :rev :newest)
-  ;; :load-path "~/.emacs.d/outli"
+  ;; :demand t
   :hook
   (prog-mode . outli-mode)
-  ;; :init
-  ;; (outli-mode)
   :config
   (global-reveal-mode)
-  :bind(
-        ("M-<down>" . outline-next-heading)
-        ("M-<up>"   . outline-previous-heading))
   )
 
 (use-package imenu-list
@@ -1183,15 +1186,19 @@ window, it is deleted with `delete-window` function."
   ;; :load-path "/usr/share/emacs/site-lisp/elpa/ess-18.10.3snapshot"
   ;; :straight t
   :ensure t
-  ;; :mode(
-  ;; 		("/R/.*\\.q\\'"       . R-mode)
-  ;; 		("\\.[rR]\\'"         . R-mode)
-  ;; 		("\\.[rR]profile\\'"  . R-mode)
-  ;; 		("NAMESPACE\\'"       . R-mode)
-  ;; 		("CITATION\\'"        . R-mode)
-  ;; 		("\\.[Rr]out"         . R-transcript-mode)
-  ;; 		("\\.Rd\\'"           . Rd-mode)
-  ;; 		)
+  :mode(
+		("/R/.*\\.q\\'"       . R-mode)
+		("\\.[rR]\\'"         . R-mode)
+		("\\.[rR]profile\\'"  . R-mode)
+		("NAMESPACE\\'"       . R-mode)
+		("CITATION\\'"        . R-mode)
+		("\\.[Rr]out"         . R-transcript-mode)
+		("\\.Rd\\'"           . Rd-mode)
+		)
+  :hook
+  ;; ess overwrites outline-regexpr. Added a hook to change that.
+  (ess-r-mode . (lambda ()
+                  (remove-hook 'hack-local-variables-hook #'ess-r-set-outline-style t)))
   :bind
   ("M--" . ess-insert-assign)
   :custom
@@ -1199,13 +1206,11 @@ window, it is deleted with `delete-window` function."
   (ess-style 'RStudio)
   (ess-auto-width 'window)
   (ess-toggle-underscore nil)
-  :config
-  (outli-mode 1)
   :commands
-  ( R )
+  (R)
   )
-(add-hook 'ess-r-mode-hook (lambda()
-							  (setq-local outline-regexp "# \\*+ ")))
+;; (add-hook 'ess-r-mode-hook (lambda()
+;; 							  (setq-local outline-regexp "# \\*+ ")))
 ;; (use-package tree-sitter-ess-r
 ;;   :after (ess)
 ;;   :hook (ess-r-mode . tree-sitter-ess-r-mode-activate))
