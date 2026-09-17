@@ -902,8 +902,8 @@ window, it is deleted with `delete-window` function."
   :ensure nil
   ;; :hook (prog-mode . outline-minor-mode)
   :bind
-  (("M-<down>" . outline-next-heading)
-   ("M-<up>"   . outline-previous-heading))
+  (("M-<down>" . outline-next-visible-heading)
+   ("M-<up>"   . outline-previous-visible-heading))
   )
 
 (use-package outli
