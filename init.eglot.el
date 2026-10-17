@@ -673,8 +673,8 @@ window, it is deleted with `delete-window` function."
   ;; (consult-theme 'ef-duo-light)
   :init
   (setq custom-safe-themes t) 
-  (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio ember-light doric-wind))
-  (setq ef-themes-to-toggle-dark '(doom-monokai-pro ef-dream ember catppuccin))
+  (setq ef-themes-to-toggle-light '(ef-duo-light ef-kassio ember-light au-parchment-day))
+  (setq ef-themes-to-toggle-dark '(doom-monokai-pro ef-dream ember au-whispergrove-night))
   (defun toggle-ef-themes-dark ()
     (interactive)
     (mapc #'disable-theme custom-enabled-themes)
@@ -759,8 +759,15 @@ window, it is deleted with `delete-window` function."
   :config
   (add-to-list 'custom-theme-load-path
                (file-name-directory (locate-library "ember-theme")))
-  (consult-theme 'ember-light)
+  ;; (consult-theme 'ember-light)
 )
+
+(use-package au-themes
+  :vc (:url "https://github.com/szymonwilczek/au-themes")
+  :ensure t
+  :config
+  (consult-theme 'au-whispergrove-night)
+  )
 
 (use-package golden-ratio
   :ensure t
